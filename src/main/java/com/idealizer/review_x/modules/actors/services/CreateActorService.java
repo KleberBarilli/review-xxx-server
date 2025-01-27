@@ -1,8 +1,8 @@
-package com.idealizer.review_x.actors.services;
+package com.idealizer.review_x.modules.actors.services;
 
 import com.idealizer.review_x.Person;
-import com.idealizer.review_x.actors.entities.ActorEntity;
-import com.idealizer.review_x.actors.repositories.ActorRepository;
+import com.idealizer.review_x.modules.actors.entities.Actor;
+import com.idealizer.review_x.modules.actors.repositories.ActorRepository;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -15,15 +15,16 @@ public class CreateActorService {
         this.actorRepository = actorRepository;
     }
 
-    public ActorEntity execute(ActorEntity actor) {
+    public Actor execute(Actor actor) {
 
-        ActorEntity actorDto = new ActorEntity();
+        Actor actorDto = new Actor();
         Person person = new Person();
 
         person.setName(actor.getPerson().getName());
         person.setDescription(actor.getPerson().getDescription());
         person.setAvatarUrl(actor.getPerson().getAvatarUrl());
         person.setBirthDate(actor.getPerson().getBirthDate());
+        person.setNationality(actor.getPerson().getNationality());
 
 
         actorDto.setPerson(person);

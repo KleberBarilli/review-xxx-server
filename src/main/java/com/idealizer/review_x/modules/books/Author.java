@@ -1,30 +1,49 @@
-package com.idealizer.review_x.actors.entities;
+package com.idealizer.review_x.modules.books;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.idealizer.review_x.Person;
 import jakarta.persistence.*;
 
+import java.util.List;
 import java.util.Objects;
+import java.util.UUID;
 
 @Entity
-@Table(name = "actors")
-public class ActorEntity {
+@Table
+public class Author {
+
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue(strategy = jakarta.persistence.GenerationType.UUID)
+    private UUID id;
 
     @Embedded
     @JsonProperty("person")
     private Person person;
 
-    public void setId(Long id) {
+    @OneToMany(mappedBy = "author")
+    private List<Book> books;
+
+
+    public UUID getId() {
+        return id;
+    }
+
+    public void setId(UUID id) {
         this.id = id;
+    }
+
+    public Person getPerson() {
+        return person;
+    }
+
+    public void setPerson(Person person) {
+        this.person = person;
     }
 
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
-        ActorEntity that = (ActorEntity) o;
+        Author that = (Author) o;
         return Objects.equals(id, that.id) && Objects.equals(person, that.person);
     }
 
@@ -32,13 +51,4 @@ public class ActorEntity {
     public int hashCode() {
         return Objects.hash(id, person);
     }
-
-    public void setPerson(Person person) {
-        this.person = person;
-    }
-
-    public Person getPerson() {
-        return person;
-    }
-
 }

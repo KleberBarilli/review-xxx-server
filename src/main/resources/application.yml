@@ -1,0 +1,18 @@
+spring:
+  application:
+    name: review-x
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+      format_sql: true
+  datasource:
+    url: jdbc:postgresql://localhost:5432/review_x
+    username: postgres
+    password: docker
+    driver-class-name: org.postgresql.Driver
+  main:
+    lazy-initialization: true
+app:
+  config:
+    variavel: x

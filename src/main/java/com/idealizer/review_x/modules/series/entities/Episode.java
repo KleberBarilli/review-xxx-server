@@ -1,16 +1,16 @@
-package com.idealizer.review_x.series.entities;
+package com.idealizer.review_x.modules.series.entities;
 
 import jakarta.persistence.*;
-import lombok.Data;
+
+import java.util.UUID;
 
 @Entity
 @Table(name = "series_episodes")
-@Data
-public class EpisodeEntity {
+public class Episode {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID id;
 
     private String name;
 
@@ -29,5 +29,5 @@ public class EpisodeEntity {
 
     @ManyToOne()
     @JoinColumn(name = "serie_id", nullable = false)
-    private SerieEntity serie;
+    private Serie serie;
 }

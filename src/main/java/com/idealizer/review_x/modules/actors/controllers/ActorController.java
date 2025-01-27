@@ -1,9 +1,8 @@
-package com.idealizer.review_x.actors.controllers;
+package com.idealizer.review_x.modules.actors.controllers;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.idealizer.review_x.Person;
-import com.idealizer.review_x.actors.entities.ActorEntity;
-import com.idealizer.review_x.actors.services.CreateActorService;
+import com.idealizer.review_x.modules.actors.entities.Actor;
+import com.idealizer.review_x.modules.actors.services.CreateActorService;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,7 +21,7 @@ public class ActorController {
     }
 
     @PostMapping
-    public ActorEntity createActor (@RequestBody ActorEntity actor) throws JsonProcessingException {
+    public Actor createActor (@RequestBody Actor actor) throws JsonProcessingException {
 
         return this.createActorService.execute(actor);
     }

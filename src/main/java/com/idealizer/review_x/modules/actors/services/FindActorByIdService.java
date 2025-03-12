@@ -4,15 +4,18 @@ import com.idealizer.review_x.modules.actors.entities.Actor;
 import com.idealizer.review_x.modules.actors.repositories.ActorRepository;
 import org.springframework.stereotype.Service;
 
-@Service
-public class CreateActorService {
-    private final ActorRepository actorRepository;
+import java.util.Optional;
+import java.util.UUID;
 
-    public CreateActorService(ActorRepository actorRepository) {
+@Service
+public class FindActorByIdService {
+    private final ActorRepository actorRepository;
+    public FindActorByIdService(ActorRepository actorRepository) {
         this.actorRepository = actorRepository;
     }
 
-    public void execute(Actor actor) {
-         actorRepository.save(actor);
+    public Optional<Actor> execute(UUID id) {
+        return actorRepository.findById(id);
     }
+
 }

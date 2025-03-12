@@ -4,15 +4,16 @@ import com.idealizer.review_x.modules.actors.entities.Actor;
 import com.idealizer.review_x.modules.actors.repositories.ActorRepository;
 import org.springframework.stereotype.Service;
 
-@Service
-public class CreateActorService {
-    private final ActorRepository actorRepository;
+import java.util.List;
 
-    public CreateActorService(ActorRepository actorRepository) {
+@Service
+public class FindActorService {
+    private final ActorRepository actorRepository;
+    public FindActorService( ActorRepository actorRepository) {
         this.actorRepository = actorRepository;
     }
 
-    public void execute(Actor actor) {
-         actorRepository.save(actor);
+    public List<Actor> execute(String name, String nationality){
+        return this.actorRepository.findByNameAndNationality(name, nationality);
     }
 }

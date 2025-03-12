@@ -3,12 +3,14 @@ package com.idealizer.review_x.modules.actors.entities;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.idealizer.review_x.Person;
 import jakarta.persistence.*;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.util.Objects;
 import java.util.UUID;
 
 @Entity
 @Table(name = "actors", schema = "public")
+@EntityListeners(AuditingEntityListener.class)
 public class Actor {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -34,7 +36,9 @@ public class Actor {
         this.id = id;
     }
 
-
+    public UUID getId() {
+        return id;
+    }
 
     public void setPerson(Person person) {
         this.person = person;

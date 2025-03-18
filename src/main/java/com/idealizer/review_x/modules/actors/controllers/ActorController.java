@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.idealizer.review_x.modules.actors.controllers.dto.ActorDTO;
 import com.idealizer.review_x.modules.actors.entities.Actor;
 import com.idealizer.review_x.modules.actors.services.*;
+import jakarta.validation.Valid;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -41,7 +42,7 @@ public class ActorController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> createActor (@RequestBody ActorDTO actor) throws JsonProcessingException {
+    public ResponseEntity<Void> createActor (@RequestBody @Valid ActorDTO actor) throws JsonProcessingException {
 
         Actor actorEntity = actor.toEntity();
 
@@ -53,7 +54,7 @@ public class ActorController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Void> updateActor(@PathVariable("id") String id, @RequestBody ActorDTO dto) {
+    public ResponseEntity<Void> updateActor(@PathVariable("id") String id, @RequestBody @Valid ActorDTO dto) {
 
         var actorId = UUID.fromString(id);
 

@@ -23,22 +23,6 @@ public record ActorDTO(UUID id,
                        @NotBlank
                        @Size(min = 3, max = 50)
                        String nationality, LocalDateTime createdAt, LocalDateTime updatedAt) {
-
-
-    public Actor toEntity() {
-        Actor actor = new Actor();
-        Person person = new Person();
-        person.setName(this.name);
-        person.setBirthDate(this.birthDate);
-        person.setAvatarUrl(this.avatarUrl);
-        person.setDescription(this.description);
-        person.setNationality(this.nationality);
-
-        actor.setPerson(person);
-
-        return actor;
-    }
-
 }
 
 

@@ -14,6 +14,6 @@ public class FindActorService {
     }
 
     public List<Actor> execute(String name, String nationality){
-        return this.actorRepository.findByNameAndNationality(name, nationality);
+        return this.actorRepository.findAll();
     }
 }

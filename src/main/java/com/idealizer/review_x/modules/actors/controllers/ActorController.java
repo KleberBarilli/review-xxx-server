@@ -1,15 +1,14 @@
 package com.idealizer.review_x.modules.actors.controllers;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.idealizer.review_x.common.controller.GenericController;
 import com.idealizer.review_x.modules.actors.controllers.dto.ActorDTO;
 import com.idealizer.review_x.modules.actors.controllers.mappers.ActorMapper;
 import com.idealizer.review_x.modules.actors.entities.Actor;
 import com.idealizer.review_x.modules.actors.services.*;
 import jakarta.validation.Valid;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
 import java.util.List;
@@ -20,7 +19,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/actors")
-public class ActorController {
+public class ActorController implements GenericController {
 
 
     private CreateActorService createActorService;
@@ -49,8 +48,7 @@ public class ActorController {
     public ResponseEntity<Void> createActor (@RequestBody @Valid ActorDTO dto) throws JsonProcessingException {
         Actor actor = actorMapper.toEntity(dto);
         this.createActorService.execute(actor);
-        URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
-                .buildAndExpand(actor.getId()).toUri();
+        URI location = getLocationHeader(actor.getId());
         return ResponseEntity.created(location).build();
     }
 

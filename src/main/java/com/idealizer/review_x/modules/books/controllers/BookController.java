@@ -1,8 +1,9 @@
 package com.idealizer.review_x.modules.books.controllers;
 
-import com.idealizer.review_x.common.dto.ResponseError;
-import com.idealizer.review_x.exceptions.DuplicatedException;
+import com.idealizer.review_x.common.controller.GenericController;
+import com.idealizer.review_x.modules.books.Book;
 import com.idealizer.review_x.modules.books.controllers.dto.CreateBookDTO;
+import com.idealizer.review_x.modules.books.controllers.mappers.BookMapper;
 import com.idealizer.review_x.modules.books.services.CreateBookService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
@@ -13,22 +14,21 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/books")
-public class BookController {
+public class BookController implements GenericController {
 
-    private  CreateBookService createBookService;
+    private final BookMapper bookMapper;
+    private final CreateBookService createBookService;
 
-    public BookController (CreateBookService createBookService) {
+    public BookController(CreateBookService createBookService, BookMapper bookMapper) {
         this.createBookService = createBookService;
+        this.bookMapper = bookMapper;
     }
 
     @PostMapping
     public ResponseEntity<Object> createBook(@RequestBody @Valid CreateBookDTO dto) {
-        try {
-            return ResponseEntity.ok(dto);
-        } catch (DuplicatedException e) {
-            var errorDto = ResponseError.conflict(e.getMessage());
-            return ResponseEntity.status(errorDto.status()).body(errorDto);
-        }
+        Book book = bookMapper.toEntity(dto);
+        var url = getLocationHeader(book.getId());
+        return ResponseEntity.created(url).build();
     }
 
 }

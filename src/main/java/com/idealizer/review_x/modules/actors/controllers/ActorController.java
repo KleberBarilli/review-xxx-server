@@ -11,6 +11,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,6 +28,7 @@ import java.util.stream.Collectors;
 @Tag(name = "Actors")
 public class ActorController implements GenericController {
 
+    private static final Logger logger = LoggerFactory.getLogger(ActorController.class);
 
     private CreateActorService createActorService;
     private UpdateActorService updateActorService;
@@ -55,6 +58,7 @@ public class ActorController implements GenericController {
             @ApiResponse(responseCode = "201", description = "Actor created successfully"),
     })
     public ResponseEntity<Void> createActor (@RequestBody @Valid ActorDTO dto) throws JsonProcessingException {
+        logger.info("Creating a new actor: {}", dto);
         Actor actor = actorMapper.toEntity(dto);
         this.createActorService.execute(actor);
         URI location = getLocationHeader(actor.getId());
@@ -64,6 +68,7 @@ public class ActorController implements GenericController {
     @PutMapping("/{id}")
     @Operation(summary = "Update an actor")
     public ResponseEntity<Void> updateActor(@PathVariable("id") String id, @RequestBody @Valid ActorDTO dto) {
+        logger.info("Updating actor with id: {}", id);
         var actorId = UUID.fromString(id);
         Optional<Actor> actorOptional = this.findActorByIdService.execute(actorId);
         if(actorOptional.isEmpty()) {
@@ -86,6 +91,7 @@ public class ActorController implements GenericController {
         Optional<Actor> actorOptional = this.findActorByIdService.execute(UUID.fromString(id));
         var actorId = UUID.fromString(id);
 
+        logger.info("Finding actor by id: {}", actorId);
         return findActorByIdService
                 .execute(actorId)
                 .map(actor -> {
@@ -111,6 +117,7 @@ public class ActorController implements GenericController {
     @DeleteMapping("/{id}")
     @Operation(summary = "Delete an actor")
     public ResponseEntity<Void> delete(@PathVariable("id") String id) {
+        logger.info("Deleting actor with id: {}", id);
         this.deleteActorService.execute(UUID.fromString(id));
         return ResponseEntity.noContent().build();
     }

@@ -4,6 +4,8 @@ import com.idealizer.review_x.common.dto.FieldError;
 import com.idealizer.review_x.common.dto.ResponseError;
 import com.idealizer.review_x.exceptions.BadRequestException;
 import com.idealizer.review_x.exceptions.DuplicatedException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -16,9 +18,12 @@ import java.util.stream.Collectors;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
+    private static final Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
     public ResponseError handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
+        logger.error("Validation error", e.getMessage());
         List<org.springframework.validation.FieldError> fieldErrors = e.getFieldErrors();
         List<FieldError> errors = fieldErrors
                 .stream()
@@ -30,12 +35,14 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(DuplicatedException.class)
     @ResponseStatus(HttpStatus.CONFLICT)
     public ResponseError handleDuplicatedException(DuplicatedException e) {
+        logger.error("Duplicated error", e.getMessage());
         return ResponseError.conflict(e.getMessage());
     }
 
     @ExceptionHandler(BadRequestException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseError handleBadRequestException(BadRequestException e) {
+        logger.error("Bad request error", e.getMessage());
         return ResponseError
                 .badRequest(e.getMessage());
     }
@@ -43,6 +50,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(RuntimeException.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ResponseError handleInternalServerErrorException(RuntimeException e) {
+        logger.error("Internal server error", e);
         return new ResponseError(
                 HttpStatus.INTERNAL_SERVER_ERROR.value(),
                 "Internal server error",

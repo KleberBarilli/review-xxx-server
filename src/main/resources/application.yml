@@ -24,9 +24,9 @@ spring:
       ddl-auto: update
       format_sql: true
   datasource:
-    url: ${DB_URL}
-    username: ${DB_USER}
-    password: ${DB_PASSWORD}
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/postgres}
+    username: ${DB_USER:postgres}
+    password: ${DB_PASSWORD:docker}
     driver-class-name: org.postgresql.Driver
   main:
     lazy-initialization: true

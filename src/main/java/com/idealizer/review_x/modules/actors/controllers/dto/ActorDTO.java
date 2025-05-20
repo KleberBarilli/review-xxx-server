@@ -3,6 +3,7 @@ package com.idealizer.review_x.modules.actors.controllers.dto;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.idealizer.review_x.Person;
 import com.idealizer.review_x.modules.actors.entities.Actor;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Past;
 import jakarta.validation.constraints.Size;
@@ -10,7 +11,7 @@ import jakarta.validation.constraints.Size;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.UUID;
-
+@Schema(name = "Actor")
 public record ActorDTO(UUID id,
                        @NotBlank
                        @Size(min = 3, max = 150)

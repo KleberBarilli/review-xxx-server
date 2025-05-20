@@ -19,12 +19,16 @@ spring:
       ddl-auto: update
       format_sql: true
   datasource:
-    url: jdbc:postgresql://localhost:5432/review_x
-    username: postgres
-    password: docker
+    url: ${DB_URL}
+    username: ${DB_USER}
+    password: ${DB_PASSWORD}
     driver-class-name: org.postgresql.Driver
   main:
     lazy-initialization: true
 app:
   config:
     variavel: x
+
+
+springdoc:
+  override-with-generic-response: true

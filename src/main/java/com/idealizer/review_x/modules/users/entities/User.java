@@ -1,41 +1,38 @@
 package com.idealizer.review_x.modules.users.entities;
 
-import jakarta.persistence.*;
+import org.bson.types.ObjectId;
 import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.LastModifiedDate;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
-import java.util.UUID;
 
-@Entity
-@Table(name = "users", schema = "public")
-@EntityListeners(AuditingEntityListener.class)
+@Document(collection = "users")
 public class User {
+
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID id;
+    private ObjectId id;
 
-    @Column(name = "name", length = 100, nullable = false)
     private String name;
-
-    @Column(name = "avatar_url")
     private String avatarUrl;
-
-    @Column(name = "email", length = 100, nullable = false, unique = true)
     private String email;
-
-    @Column(name = "letterboxd_url")
     private String letterboxdUrl;
 
     @CreatedDate
-    @Column(name = "created_at", columnDefinition = "TIMESTAMP")
     private LocalDateTime createdAt;
 
     @LastModifiedDate
-    @Column(name = "updated_at", columnDefinition = "TIMESTAMP")
     private LocalDateTime updatedAt;
+
+    public ObjectId getId() {
+        return id;
+    }
+
+    public void setId(ObjectId id) {
+        this.id = id;
+    }
 
     public String getName() {
         return name;
@@ -43,14 +40,6 @@ public class User {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public UUID getId() {
-        return id;
-    }
-
-    public void setId(UUID id) {
-        this.id = id;
     }
 
     public String getAvatarUrl() {
@@ -93,11 +82,20 @@ public class User {
         this.updatedAt = updatedAt;
     }
 
+    // equals e hashCode
+
     @Override
     public boolean equals(Object o) {
-        if (o == null || getClass() != o.getClass()) return false;
+        if (o == null || getClass() != o.getClass())
+            return false;
         User user = (User) o;
-        return Objects.equals(id, user.id) && Objects.equals(name, user.name) && Objects.equals(avatarUrl, user.avatarUrl) && Objects.equals(email, user.email) && Objects.equals(letterboxdUrl, user.letterboxdUrl) && Objects.equals(createdAt, user.createdAt) && Objects.equals(updatedAt, user.updatedAt);
+        return Objects.equals(id, user.id)
+                && Objects.equals(name, user.name)
+                && Objects.equals(avatarUrl, user.avatarUrl)
+                && Objects.equals(email, user.email)
+                && Objects.equals(letterboxdUrl, user.letterboxdUrl)
+                && Objects.equals(createdAt, user.createdAt)
+                && Objects.equals(updatedAt, user.updatedAt);
     }
 
     @Override

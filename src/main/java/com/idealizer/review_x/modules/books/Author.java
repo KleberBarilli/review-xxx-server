@@ -2,33 +2,26 @@ package com.idealizer.review_x.modules.books;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.idealizer.review_x.Person;
-import jakarta.persistence.*;
+import org.bson.types.ObjectId;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.util.List;
 import java.util.Objects;
-import java.util.UUID;
 
-@Entity
-@Table
+@Document(collection = "authors")
 public class Author {
 
     @Id
-    @GeneratedValue(strategy = jakarta.persistence.GenerationType.UUID)
-    private UUID id;
+    private ObjectId id;
 
-    @Embedded
     @JsonProperty("person")
     private Person person;
 
-    @OneToMany(mappedBy = "author")
-    private List<Book> books;
-
-
-    public UUID getId() {
+    public ObjectId getId() {
         return id;
     }
 
-    public void setId(UUID id) {
+    public void setId(ObjectId id) {
         this.id = id;
     }
 

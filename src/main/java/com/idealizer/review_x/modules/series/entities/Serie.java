@@ -1,26 +1,21 @@
 package com.idealizer.review_x.modules.series.entities;
 
-import com.idealizer.review_x.modules.actors.entities.Actor;
-import com.idealizer.review_x.modules.directors.entities.Director;
-import jakarta.persistence.*;
+import org.bson.types.ObjectId;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.ArrayList;
 import java.util.Objects;
 import java.util.Set;
-import java.util.UUID;
 
-@Entity
-@Table(name = "series")
-
+@Document(collection = "series")
 public class Serie {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID id;
+    private ObjectId id;
 
     private String title;
 
-    @Column(name = "alternative_titles")
     private Set<String> alternativeTitles;
 
     private String synopsis;
@@ -29,30 +24,18 @@ public class Serie {
 
     private ArrayList<String> genres;
 
-    @Column(name = "poster_url")
     private String posterUrl;
 
-    @ManyToMany
-    @JoinTable(
-            name = "series_directors",
-            joinColumns = @JoinColumn(name = "serie_id"),
-            inverseJoinColumns = @JoinColumn(name = "director_id")
-    )
-    private Set<Director> directors;
+    private Set<ObjectId> actorIds;
 
-    @ManyToMany
-    @JoinTable(
-            name = "series_actors",
-            joinColumns = @JoinColumn(name = "serie_id"),
-            inverseJoinColumns = @JoinColumn(name = "actor_id")
-    )
-    private Set<Actor> actors;
+    private Set<ObjectId> directorIds;
 
-    public UUID getId() {
+
+    public ObjectId getId() {
         return id;
     }
 
-    public void setId(UUID id) {
+    public void setId(ObjectId id) {
         this.id = id;
     }
 
@@ -104,31 +87,39 @@ public class Serie {
         this.posterUrl = posterUrl;
     }
 
-    public Set<Director> getDirectors() {
-        return directors;
+    public Set<ObjectId> getActorIds() {
+        return actorIds;
     }
 
-    public void setDirectors(Set<Director> directors) {
-        this.directors = directors;
+    public void setActorIds(Set<ObjectId> actorIds) {
+        this.actorIds = actorIds;
     }
 
-    public Set<Actor> getActors() {
-        return actors;
+    public Set<ObjectId> getDirectorIds() {
+        return directorIds;
     }
 
-    public void setActors(Set<Actor> actors) {
-        this.actors = actors;
+    public void setDirectorIds(Set<ObjectId> directorIds) {
+        this.directorIds = directorIds;
     }
 
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         Serie that = (Serie) o;
-        return Objects.equals(id, that.id) && Objects.equals(title, that.title) && Objects.equals(alternativeTitles, that.alternativeTitles) && Objects.equals(synopsis, that.synopsis) && Objects.equals(year, that.year) && Objects.equals(genres, that.genres) && Objects.equals(posterUrl, that.posterUrl) && Objects.equals(directors, that.directors) && Objects.equals(actors, that.actors);
+        return Objects.equals(id, that.id) &&
+                Objects.equals(title, that.title) &&
+                Objects.equals(alternativeTitles, that.alternativeTitles) &&
+                Objects.equals(synopsis, that.synopsis) &&
+                Objects.equals(year, that.year) &&
+                Objects.equals(genres, that.genres) &&
+                Objects.equals(posterUrl, that.posterUrl) &&
+                Objects.equals(actorIds, that.actorIds) &&
+                Objects.equals(directorIds, that.directorIds);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, title, alternativeTitles, synopsis, year, genres, posterUrl, directors, actors);
+        return Objects.hash(id, title, alternativeTitles, synopsis, year, genres, posterUrl, actorIds, directorIds);
     }
 }

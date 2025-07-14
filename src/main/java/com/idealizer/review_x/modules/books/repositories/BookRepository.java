@@ -1,17 +1,16 @@
 package com.idealizer.review_x.modules.books.repositories;
 
-import com.idealizer.review_x.modules.books.Author;
 import com.idealizer.review_x.modules.books.Book;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+
+import org.bson.types.ObjectId;
+import org.springframework.data.mongodb.repository.MongoRepository;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
-public interface BookRepository extends JpaRepository<Book, UUID>, JpaSpecificationExecutor<Book> {
+public interface BookRepository extends MongoRepository<Book, ObjectId> {
 
-    List<Book> findByAuthor(Author author);
+    List<Book> findByAuthorId(String authorId);
 
     Optional<Book> findByIsbn(String isbn);
 

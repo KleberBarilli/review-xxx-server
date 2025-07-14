@@ -11,9 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 public abstract class BookMapper {
 
     @Autowired
-    AuthorRepository authorRepository;
+    protected AuthorRepository authorRepository;
 
-
-    @Mapping(target = "author", expression = "java(authorRepository.findById(dto.authorId()).orElse(null))")
+    @Mapping(source = "authorId", target = "authorId")
     public abstract Book toEntity(CreateBookDTO dto);
 }

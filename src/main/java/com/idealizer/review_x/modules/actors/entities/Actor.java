@@ -2,27 +2,41 @@ package com.idealizer.review_x.modules.actors.entities;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.idealizer.review_x.Person;
-import jakarta.persistence.*;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import org.bson.types.ObjectId;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.Objects;
-import java.util.UUID;
 
-@Entity
-@Table(name = "actors", schema = "public")
-@EntityListeners(AuditingEntityListener.class)
+@Document(collection = "actors")
 public class Actor {
-    @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID id;
 
-    @Embedded
+    @Id
+    private ObjectId id;
+
     @JsonProperty("person")
     private Person person;
 
+    public ObjectId getId() {
+        return id;
+    }
+
+    public void setId(ObjectId id) {
+        this.id = id;
+    }
+
+    public Person getPerson() {
+        return person;
+    }
+
+    public void setPerson(Person person) {
+        this.person = person;
+    }
+
     @Override
     public boolean equals(Object o) {
-        if (o == null || getClass() != o.getClass()) return false;
+        if (o == null || getClass() != o.getClass())
+            return false;
         Actor that = (Actor) o;
         return Objects.equals(id, that.id) && Objects.equals(person, that.person);
     }
@@ -31,21 +45,4 @@ public class Actor {
     public int hashCode() {
         return Objects.hash(id, person);
     }
-
-    public void setId(UUID id) {
-        this.id = id;
-    }
-
-    public UUID getId() {
-        return id;
-    }
-
-    public void setPerson(Person person) {
-        this.person = person;
-    }
-
-    public Person getPerson() {
-        return person;
-    }
-
 }

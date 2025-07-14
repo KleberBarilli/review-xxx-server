@@ -1,11 +1,12 @@
 package com.idealizer.review_x.modules.users.repositories;
 
 import com.idealizer.review_x.modules.users.entities.User;
-import org.springframework.data.jpa.repository.JpaRepository;
+
+import org.bson.types.ObjectId;
+import org.springframework.data.mongodb.repository.MongoRepository;
 
 import java.util.Optional;
-import java.util.UUID;
 
-public interface UserRepository extends JpaRepository<User, UUID> {
+public interface UserRepository extends MongoRepository<User, ObjectId> {
     Optional<User> findByEmail(String email);
 }

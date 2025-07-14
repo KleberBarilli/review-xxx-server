@@ -1,13 +1,13 @@
 package com.idealizer.review_x.common.controller;
 
+import org.bson.types.ObjectId;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
-import java.util.UUID;
 
 public interface GenericController {
 
-    default URI getLocationHeader(UUID id){
+    default URI getLocationHeader(ObjectId id) {
         return ServletUriComponentsBuilder
                 .fromCurrentRequest()
                 .path("/{id}")

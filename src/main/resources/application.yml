@@ -1,9 +1,11 @@
 spring:
   application:
-      name: review-x
+    name: review-x
+
   output:
     ansi:
       enabled: always
+
   security:
     oauth2:
       client:
@@ -18,22 +20,17 @@ spring:
             token-uri: https://oauth2.googleapis.com/token
             user-info-uri: https://www.googleapis.com/oauth2/v3/userinfo
             user-name-attribute: sub
-  jpa:
-    show-sql: true
-    hibernate:
-      ddl-auto: update
-      format_sql: true
-  datasource:
-    url: ${DB_URL:jdbc:postgresql://localhost:5432/postgres}
-    username: ${DB_USER:postgres}
-    password: ${DB_PASSWORD:docker}
-    driver-class-name: org.postgresql.Driver
+
+  data:
+    mongodb:
+      uri: ${MONGODB_URI}
+
   main:
     lazy-initialization: true
+
 app:
   config:
     variavel: x
-
 
 logging:
   pattern:
@@ -46,10 +43,9 @@ logging:
       idealizer:
         review_x: trace
     org:
-        springframework:
-          web: info
-          security: info
-
+      springframework:
+        web: info
+        security: info
 
 management:
   server:

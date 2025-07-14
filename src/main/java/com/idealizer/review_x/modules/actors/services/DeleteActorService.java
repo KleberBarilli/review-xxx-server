@@ -1,9 +1,9 @@
 package com.idealizer.review_x.modules.actors.services;
 
 import com.idealizer.review_x.modules.actors.repositories.ActorRepository;
-import org.springframework.stereotype.Service;
 
-import java.util.UUID;
+import org.bson.types.ObjectId;
+import org.springframework.stereotype.Service;
 
 @Service
 public class DeleteActorService {
@@ -13,7 +13,7 @@ public class DeleteActorService {
         this.actorRepository = actorRepository;
     }
 
-    public void execute(UUID id) {
+    public void execute(ObjectId id) {
         this.actorRepository.deleteById(id);
     }
 }

@@ -1,23 +1,23 @@
 package com.idealizer.review_x.modules.directors.entities;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.idealizer.review_x.Person;
-import jakarta.persistence.*;
+import org.bson.types.ObjectId;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.Objects;
-import java.util.UUID;
 
-
-@Entity
-@Table(name = "directors")
+@Document(collation = "directors")
 public class Director {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID id;
+    private ObjectId id;
 
     @Override
     public boolean equals(Object o) {
-        if (o == null || getClass() != o.getClass()) return false;
+        if (o == null || getClass() != o.getClass())
+            return false;
         Director that = (Director) o;
         return Objects.equals(id, that.id) && Objects.equals(person, that.person);
     }
@@ -27,7 +27,7 @@ public class Director {
         return Objects.hash(id, person);
     }
 
-    @Embedded
+    @JsonProperty("person")
     private Person person;
 
 }

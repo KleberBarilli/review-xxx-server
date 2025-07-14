@@ -1,33 +1,86 @@
 package com.idealizer.review_x.modules.series.entities;
 
-import jakarta.persistence.*;
+import org.bson.types.ObjectId;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.util.UUID;
-
-@Entity
-@Table(name = "series_episodes")
+@Document(collection = "series_episodes")
 public class Episode {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID id;
+    private ObjectId id;
 
     private String name;
-
     private String synopsis;
-
     private Integer season;
-
     private Integer episode;
-
-    @Column(name = "poster_url", nullable = true)
     private String posterUrl;
-
-    @Column(name = "video_url")
     private String videoUrl;
 
+    private ObjectId serieId;
 
-    @ManyToOne()
-    @JoinColumn(name = "serie_id", nullable = false)
-    private Serie serie;
+
+    public ObjectId getId() {
+        return id;
+    }
+
+    public void setId(ObjectId id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getSynopsis() {
+        return synopsis;
+    }
+
+    public void setSynopsis(String synopsis) {
+        this.synopsis = synopsis;
+    }
+
+    public Integer getSeason() {
+        return season;
+    }
+
+    public void setSeason(Integer season) {
+        this.season = season;
+    }
+
+    public Integer getEpisode() {
+        return episode;
+    }
+
+    public void setEpisode(Integer episode) {
+        this.episode = episode;
+    }
+
+    public String getPosterUrl() {
+        return posterUrl;
+    }
+
+    public void setPosterUrl(String posterUrl) {
+        this.posterUrl = posterUrl;
+    }
+
+    public String getVideoUrl() {
+        return videoUrl;
+    }
+
+    public void setVideoUrl(String videoUrl) {
+        this.videoUrl = videoUrl;
+    }
+
+    public ObjectId getSerieId() {
+        return serieId;
+    }
+
+    public void setSerieId(ObjectId serieId) {
+        this.serieId = serieId;
+    }
 }

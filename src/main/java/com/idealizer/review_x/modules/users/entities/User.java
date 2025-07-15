@@ -7,6 +7,7 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
@@ -27,10 +28,10 @@ public class User {
     private MobileDeviceType mobileDevice;
 
     @CreatedDate
-    private LocalDateTime createdAt;
+    private Instant createdAt;
 
     @LastModifiedDate
-    private LocalDateTime updatedAt;
+    private Instant updatedAt;
 
     public ObjectId getId() {
         return id;
@@ -67,6 +68,7 @@ public class User {
     public String getBio() {
         return bio;
     }
+
     public void setBio(String bio) {
         this.bio = bio;
     }
@@ -82,38 +84,42 @@ public class User {
     public String getSteamUrl() {
         return steamUrl;
     }
+
     public void setSteamUrl(String steamUrl) {
         this.steamUrl = steamUrl;
     }
+
     public String getLocale() {
         return locale;
     }
+
     public void setLocale(String locale) {
         this.locale = locale;
     }
+
     public MobileDeviceType getMobileDevice() {
         return mobileDevice;
     }
+
     public void setMobileDevice(MobileDeviceType mobileDevice) {
         this.mobileDevice = mobileDevice;
     }
 
-    public LocalDateTime getCreatedAt() {
+    public Instant getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(LocalDateTime createdAt) {
+    public void setCreatedAt(Instant createdAt) {
         this.createdAt = createdAt;
     }
 
-    public LocalDateTime getUpdatedAt() {
+    public Instant getUpdatedAt() {
         return updatedAt;
     }
 
-    public void setUpdatedAt(LocalDateTime updatedAt) {
+    public void setUpdatedAt(Instant updatedAt) {
         this.updatedAt = updatedAt;
     }
-
 
     @Override
     public boolean equals(Object o) {
@@ -134,6 +140,6 @@ public class User {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name ,bio, avatarUrl, email, letterboxdUrl,steamUrl, locale, createdAt, updatedAt);
+        return Objects.hash(id, name, bio, avatarUrl, email, letterboxdUrl, steamUrl, locale, createdAt, updatedAt);
     }
 }

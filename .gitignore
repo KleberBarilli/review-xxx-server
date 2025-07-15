@@ -36,3 +36,5 @@ commands.txt
 
 ##logs
 logs/
+
+.env

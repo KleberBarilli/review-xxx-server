@@ -1,4 +1,4 @@
-package com.idealizer.review_x.modules.games;
+package com.idealizer.review_x.modules.games.repositories;
 
 import com.idealizer.review_x.modules.games.entities.Game;
 import org.bson.types.ObjectId;

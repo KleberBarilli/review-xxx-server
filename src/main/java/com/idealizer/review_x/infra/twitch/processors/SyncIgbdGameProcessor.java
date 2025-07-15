@@ -110,7 +110,7 @@ public class SyncIgbdGameProcessor {
                             .set("totalRatingCount", game.getTotalRatingCount())
                             .set("genres", game.getGenres())
                             .set("platforms", game.getPlatforms())
-                            .set("dlcs", game.getDlcIds())
+                            .set("dlcIds", game.getDlcIds())
                             .set("updatedAt", Instant.now())
                             .setOnInsert("createdAt", Instant.now());
 

@@ -17,5 +17,6 @@ public record IgdbGameDTO(
         @JsonProperty("total_rating_count")
         Integer totalRatingCount,
         List<String> genres,
-        List<String> platforms
+        List<String> platforms,
+        List<Long>dlcs
 ) {}

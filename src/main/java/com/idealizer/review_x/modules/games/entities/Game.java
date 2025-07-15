@@ -26,8 +26,13 @@ public class Game {
     private Double totalRating;
     private Integer totalRatingCount;
 
-    private List<String> genres;
+    private List<GameGenre> genres;
     private List<GamePlatform> platforms;
+    private String cover; // to do
+    private List<Long> dlcIds;
+    private List<String> screenshots; // to do
+    private Instant createdAt;
+    private Instant updatedAt;
 
     public Game() {
     }
@@ -104,11 +109,11 @@ public class Game {
         this.totalRatingCount = totalRatingCount;
     }
 
-    public List<String> getGenres() {
+    public List<GameGenre> getGenres() {
         return genres;
     }
 
-    public void setGenres(List<String> genres) {
+    public void setGenres(List<GameGenre> genres) {
         this.genres = genres;
     }
 
@@ -160,14 +165,7 @@ public class Game {
         this.updatedAt = updatedAt;
     }
 
-    private String cover;
 
-    private List<Long> dlcIds;
-
-    private List<String> screenshots;
-
-    private Instant createdAt;
-    private Instant updatedAt;
 
     @Override
     public boolean equals(Object o) {

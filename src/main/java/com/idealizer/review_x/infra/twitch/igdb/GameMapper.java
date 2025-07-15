@@ -1,17 +1,14 @@
 package com.idealizer.review_x.infra.twitch.igdb;
 
 import com.idealizer.review_x.modules.games.entities.Game;
+import com.idealizer.review_x.modules.games.entities.GameGenre;
 import com.idealizer.review_x.modules.games.entities.GamePlatform;
 
 import java.time.Instant;
 import java.time.LocalDate;
-import java.time.ZoneId;
 import java.time.ZoneOffset;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
+import java.util.*;
+
 
 public class GameMapper {
 
@@ -27,9 +24,23 @@ public class GameMapper {
         );
         game.setTotalRating(dto.totalRating());
         game.setTotalRatingCount(dto.totalRatingCount());
-        game.setGenres(dto.genres());
-        game.setPlatforms(mapPlatformIdsToEnums(dto.platforms().stream().map(Integer::parseInt).toList()));
+        game.setDlcIds(dto.dlcs());
+        game.setGenres(mapGenreIdsToEnums(
+                dto.genres() == null ? List.of() : dto.genres().stream()
+                        .filter(Objects::nonNull)
+                        .filter(genre -> genre.matches("\\d+"))
+                        .map(Integer::parseInt)
+                        .toList()
+        ));
+        game.setPlatforms(mapPlatformIdsToEnums(
+                dto.platforms() == null ? List.of() : dto.platforms().stream()
+                        .filter(Objects::nonNull)
+                        .filter(platform -> platform.matches("\\d+"))
+                        .map(Integer::parseInt)
+                        .toList()
+        ));
         game.setUpdatedAt(Instant.now());
+
 
         return game;
     }
@@ -67,6 +78,28 @@ public class GameMapper {
         }
 
         return new ArrayList<>(platformSet);
+    }
+
+    public static List<GameGenre> mapGenreIdsToEnums(List<Integer> ids) {
+        if (ids == null) return List.of();
+
+        Set<GameGenre> genreSet = new HashSet<>();
+        boolean hasOther = false;
+
+        for (Integer id : ids) {
+            GameGenre genre = GameGenre.fromIgdbId(id);
+            if (genre == GameGenre.OTHER) {
+                hasOther = true;
+            } else {
+                genreSet.add(genre);
+            }
+        }
+
+        if (hasOther) {
+            genreSet.add(GameGenre.OTHER);
+        }
+
+        return new ArrayList<>(genreSet);
     }
 }
 

@@ -18,5 +18,5 @@ public record IgdbGameDTO(
         Integer totalRatingCount,
         List<String> genres,
         List<String> platforms,
-        List<Long>dlcs
+        List<Long> dlcs
 ) {}

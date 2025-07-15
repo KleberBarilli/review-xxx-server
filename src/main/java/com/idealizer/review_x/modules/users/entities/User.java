@@ -4,6 +4,7 @@ import org.bson.types.ObjectId;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDateTime;
@@ -16,9 +17,14 @@ public class User {
     private ObjectId id;
 
     private String name;
-    private String avatarUrl;
+    @Indexed(unique = true)
     private String email;
+    private String bio;
+    private String avatarUrl;
     private String letterboxdUrl;
+    private String steamUrl;
+    private String locale;
+    private MobileDeviceType mobileDevice;
 
     @CreatedDate
     private LocalDateTime createdAt;
@@ -58,12 +64,38 @@ public class User {
         this.email = email;
     }
 
+    public String getBio() {
+        return bio;
+    }
+    public void setBio(String bio) {
+        this.bio = bio;
+    }
+
     public String getLetterboxdUrl() {
         return letterboxdUrl;
     }
 
     public void setLetterboxdUrl(String letterboxdUrl) {
         this.letterboxdUrl = letterboxdUrl;
+    }
+
+    public String getSteamUrl() {
+        return steamUrl;
+    }
+    public void setSteamUrl(String steamUrl) {
+        this.steamUrl = steamUrl;
+    }
+    public String getLocale() {
+        return locale;
+    }
+    public void setLocale(String locale) {
+        this.locale = locale;
+    }
+    public MobileDeviceType getMobileDevice() {
+        return mobileDevice;
+    }
+    public void setMobileDevice(MobileDeviceType mobileDevice) {
+        this.mobileDevice = mobileDevice;
     }
 
     public LocalDateTime getCreatedAt() {
@@ -82,7 +114,6 @@ public class User {
         this.updatedAt = updatedAt;
     }
 
-    // equals e hashCode
 
     @Override
     public boolean equals(Object o) {
@@ -91,15 +122,18 @@ public class User {
         User user = (User) o;
         return Objects.equals(id, user.id)
                 && Objects.equals(name, user.name)
+                && Objects.equals(bio, user.bio)
                 && Objects.equals(avatarUrl, user.avatarUrl)
                 && Objects.equals(email, user.email)
                 && Objects.equals(letterboxdUrl, user.letterboxdUrl)
+                && Objects.equals(steamUrl, user.steamUrl)
+                && Objects.equals(locale, user.locale)
                 && Objects.equals(createdAt, user.createdAt)
                 && Objects.equals(updatedAt, user.updatedAt);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, avatarUrl, email, letterboxdUrl, createdAt, updatedAt);
+        return Objects.hash(id, name ,bio, avatarUrl, email, letterboxdUrl,steamUrl, locale, createdAt, updatedAt);
     }
 }

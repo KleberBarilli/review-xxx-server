@@ -47,6 +47,14 @@ public class GlobalExceptionHandler {
                 .badRequest(e.getMessage());
     }
 
+    @ExceptionHandler(IllegalArgumentException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ResponseError handleBadRequestException(IllegalArgumentException e) {
+        logger.error("Illegal argument exception", e.getMessage());
+        return ResponseError
+                .badRequest(e.getMessage());
+    }
+
     @ExceptionHandler(RuntimeException.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ResponseError handleInternalServerErrorException(RuntimeException e) {
@@ -56,4 +64,5 @@ public class GlobalExceptionHandler {
                 "Internal server error",
                 List.of());
     }
+
 }

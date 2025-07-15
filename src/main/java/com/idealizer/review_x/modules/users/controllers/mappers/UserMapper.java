@@ -1,13 +1,13 @@
 package com.idealizer.review_x.modules.users.controllers.mappers;
 
+import com.idealizer.review_x.modules.users.controllers.dto.SocialLoginDTO;
 import org.mapstruct.Mapper;
 
-import com.idealizer.review_x.modules.users.controllers.dto.UserDTO;
 import com.idealizer.review_x.modules.users.entities.User;
 
 @Mapper(componentModel = "spring")
 public interface UserMapper {
-    User toEntity(UserDTO dto);
+    User toEntity(SocialLoginDTO dto);
 
-    UserDTO toDTO(User user);
+    SocialLoginDTO toDTO(User user);
 }

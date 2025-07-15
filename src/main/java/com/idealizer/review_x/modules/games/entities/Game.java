@@ -27,25 +27,9 @@ public class Game {
     private Integer totalRatingCount;
 
     private List<String> genres;
-    private List<String> platforms;
+    private List<GamePlatform> platforms;
 
-    public Game(ObjectId id, Long igdbId, String name, String slug, String summary, String storyline, LocalDate firstReleaseDate, Double totalRating, Integer totalRatingCount, List<String> genres, List<String> platforms, String cover, List<Long> dlcIds, List<String> screenshots, Instant createdAt, Instant updatedAt) {
-        this.id = id;
-        this.igdbId = igdbId;
-        this.name = name;
-        this.slug = slug;
-        this.summary = summary;
-        this.storyline = storyline;
-        this.firstReleaseDate = firstReleaseDate;
-        this.totalRating = totalRating;
-        this.totalRatingCount = totalRatingCount;
-        this.genres = genres;
-        this.platforms = platforms;
-        this.cover = cover;
-        this.dlcIds = dlcIds;
-        this.screenshots = screenshots;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
+    public Game() {
     }
 
     public ObjectId getId() {
@@ -128,11 +112,11 @@ public class Game {
         this.genres = genres;
     }
 
-    public List<String> getPlatforms() {
+    public List<GamePlatform> getPlatforms() {
         return platforms;
     }
 
-    public void setPlatforms(List<String> platforms) {
+    public void setPlatforms(List<GamePlatform> platforms) {
         this.platforms = platforms;
     }
 

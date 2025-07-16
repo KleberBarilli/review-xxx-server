@@ -2,8 +2,8 @@ package com.idealizer.review_x.common.controller;
 
 import com.idealizer.review_x.common.dto.FieldError;
 import com.idealizer.review_x.common.dto.ResponseError;
-import com.idealizer.review_x.exceptions.BadRequestException;
-import com.idealizer.review_x.exceptions.DuplicatedException;
+import com.idealizer.review_x.application.exceptions.BadRequestException;
+import com.idealizer.review_x.application.exceptions.DuplicatedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;

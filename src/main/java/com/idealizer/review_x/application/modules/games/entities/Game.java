@@ -17,8 +17,10 @@ public class Game {
     private ObjectId id;
 
     @Indexed(unique = true)
+    @Field(value = "igdb_id")
     private Long igdbId;
     private String name;
+    @Indexed
     private String slug;
     private String summary;
     private String storyline;

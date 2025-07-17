@@ -6,7 +6,6 @@ import com.idealizer.review_x.common.controller.GenericController;
 import com.idealizer.review_x.application.modules.actors.controllers.dto.ActorDTO;
 import com.idealizer.review_x.application.modules.actors.controllers.mappers.ActorMapper;
 import com.idealizer.review_x.application.modules.actors.entities.Actor;
-import com.idealizer.review_x.modules.actors.services.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;

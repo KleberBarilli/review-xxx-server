@@ -1,20 +1,7 @@
 package com.idealizer.review_x.application.modules.games.services;
 
-import com.idealizer.review_x.application.modules.games.entities.Game;
-import com.idealizer.review_x.application.modules.games.repositories.GameRepository;
-import org.springframework.stereotype.Service;
+import com.idealizer.review_x.application.modules.games.controllers.dto.FindGamesResponse;
 
-import java.util.List;
-
-@Service
-public class FindManyGamesService {
-    private final GameRepository gameRepository;
-
-    public FindManyGamesService (GameRepository gameRepository) {
-        this.gameRepository = gameRepository;
-    }
-
-    public List<Game> execute() {
-        return gameRepository.findAll();
-    }
+public interface FindManyGamesService {
+    FindGamesResponse execute(int limit, int offset, String sortBy, String order);
 }

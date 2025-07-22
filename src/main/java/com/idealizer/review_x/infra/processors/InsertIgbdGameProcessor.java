@@ -9,15 +9,14 @@ import com.idealizer.review_x.infra.libs.twitch.igdb.IgdbGameDTO;
 import com.idealizer.review_x.application.modules.games.entities.Game;
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.BulkOperations;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
-import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -31,20 +30,20 @@ import java.util.logging.Logger;
 import static com.idealizer.review_x.infra.libs.twitch.igdb.IgdbConstants.IGDB_BASE_URL;
 
 @Component
-public class SyncIgbdGameProcessor {
+public class InsertIgbdGameProcessor {
 
-    private static final Logger logger = Logger.getLogger(SyncIgbdGameProcessor.class.getName());
+    private static final Logger logger = Logger.getLogger(InsertIgbdGameProcessor.class.getName());
     private static final ObjectMapper mapper = new ObjectMapper();
     private static final HttpClient httpClient = HttpClient.newHttpClient();
 
-    private static final int PAGE_SIZE = 100;
+    private static final int PAGE_SIZE = 500;
 
     @Value("${TWITCH_CLIENT_ID}")
     private String clientId;
 
     private final MongoTemplate mongoTemplate;
 
-    public SyncIgbdGameProcessor(MongoTemplate mongoTemplate) {
+    public InsertIgbdGameProcessor(MongoTemplate mongoTemplate) {
         this.mongoTemplate = mongoTemplate;
     }
 
@@ -62,30 +61,31 @@ public class SyncIgbdGameProcessor {
         return provider.getAccessToken();
     }
 
-    @Scheduled(cron = "0 11 20 * * *", zone = "America/Sao_Paulo")
-
+    @Scheduled(cron = "0 32 00 * * *", zone = "America/Sao_Paulo")
 
     public void importGames() {
 
-        logger.info("Starting full game import from IGDB...");
+        Query query = new Query().with(Sort.by(Sort.Direction.DESC, "igdb_id")).limit(1);
+        Game latestGame = mongoTemplate.findOne(query, Game.class);
+        Long lastGameId = latestGame != null ? latestGame.getIgdbId() : 0;
+        logger.info("Starting full game insert from IGDB...");
+        logger.info("Last game ID in database: " + lastGameId);
         String accessToken = getAccessToken();
         logger.info("Access token retrieved successfully.");
         Instant now = Instant.now();
 
         int offset = 0;
-        int totalImported = 0;
         int page = 1;
 
         while (true) {
             String igdbQuery = String.format("""
-                    fields id,name,slug,summary,storyline,first_release_date,total_rating,total_rating_count,genres,
-                    game_modes,cover.image_id,screenshots.image_id,
-                    platforms,expansions,similar_games,updated_at;
-                    where version_parent = null & category = 0;
-                    sort total_rating_count desc;
-                    limit %d;
-                    offset %d;
-                    """, PAGE_SIZE, offset);
+                fields id,name,slug,summary,storyline,first_release_date,total_rating,total_rating_count,genres,
+                game_modes,cover.image_id,screenshots.image_id,platforms,expansions,similar_games,updated_at;
+                where version_parent = null & category = 0 & id > %d;
+                sort id asc;
+                limit %d;
+                offset %d;
+                """,lastGameId, PAGE_SIZE, offset);
 
             HttpRequest request = HttpRequest.newBuilder()
                     .uri(URI.create(IGDB_BASE_URL + "/games"))
@@ -97,62 +97,46 @@ public class SyncIgbdGameProcessor {
 
             try {
                 HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
-
                 if (response.statusCode() != 200) {
-                    logger.severe("Failed to fetch games (offset " + offset + "): " + response.body());
+                    logger.severe("Failed to fetch games: " + response.body());
                     break;
                 }
 
-                List<IgdbGameDTO> games = mapper.readValue(response.body(), new TypeReference<>() {
-                });
-                if (games.isEmpty()) {
-                    logger.info("No more games to import. Finished.");
-                    break;
-                }
+                List<IgdbGameDTO> games = mapper.readValue(response.body(), new TypeReference<>() {});
+                if (games.isEmpty()) break;
 
                 BulkOperations bulkOps = mongoTemplate.bulkOps(BulkOperations.BulkMode.UNORDERED, Game.class);
 
+                boolean hasInserts = false;
                 for (IgdbGameDTO dto : games) {
                     Game game = GameMapper.toEntity(dto);
-                    Query query = new Query(Criteria.where("igdb_id").is(game.getIgdbId())
-                            .andOperator(Criteria.where("updatedAt").lt(game.getUpdatedAt().getEpochSecond())));
-                    Update update = new Update()
-                            .set("dlcsIgdbIds", game.getDlcsIgdbIds())
-                            .set("name", game.getName())
-                            .set("slug", game.getSlug())
-                            .set("summary", game.getSummary())
-                            .set("storyline", game.getStoryline())
-                            .set("firstReleaseDate", game.getFirstReleaseDate())
-                            .set("totalRating", game.getTotalRating())
-                            .set("totalRatingCount", game.getTotalRatingCount())
-                            .set("genres", game.getGenres())
-                            .set("platforms", game.getPlatforms())
-                            .set("updatedAt", now)
-                            .setOnInsert("createdAt", now)
-                            .set("cover", game.getCover())
-                            .set("screenshots", game.getScreenshots())
-                            .set("similarGamesIgdbIds", game.getSimilarGamesIgdbIds())
-                            .set("modes", game.getModes());
-
-                    bulkOps.upsert(query, update);
+                    boolean exists = mongoTemplate.exists(
+                            new Query(Criteria.where("igdb_id").is(game.getIgdbId())), Game.class
+                    );
+                    if (!exists) {
+                        game.setCreatedAt(now);
+                        game.setUpdatedAt(now);
+                        bulkOps.insert(game);
+                        hasInserts = true;
+                    }
                 }
 
-                bulkOps.execute();
-                totalImported += games.size();
-                logger.info("Imported page (offset " + offset + ") with " + games.size() + " games.");
-                logger.info("Page " + page + ": Imported " + games.size() + " games (Total: " + totalImported + ")");
-
+                if (hasInserts) {
+                    bulkOps.execute();
+                    logger.info("Page " + page + ": Inserted new games.");
+                } else {
+                    logger.info("Page " + page + ": No new games to insert.");
+                }
                 offset += PAGE_SIZE;
                 page++;
 
-            } catch (IOException | InterruptedException e) {
-                logger.severe("Error importing games: " + e.getMessage());
-                Thread.currentThread().interrupt();
+            } catch (Exception e) {
+                logger.severe("Error inserting new games: " + e.getMessage());
                 break;
             }
         }
 
-        logger.info("Total games imported/updated: " + totalImported);
+        logger.info("Finished IGDB new game insert.");
     }
 }
 

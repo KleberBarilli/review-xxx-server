@@ -24,6 +24,7 @@ spring:
   data:
     mongodb:
       uri: ${MONGODB_URI}
+      auto-index-creation: true
 
   main:
     lazy-initialization: true

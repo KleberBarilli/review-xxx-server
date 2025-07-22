@@ -10,7 +10,6 @@ import java.time.LocalDate;
 import java.time.ZoneOffset;
 import java.util.*;
 
-
 public class GameMapper {
 
     public static Game toEntity(IgdbGameDTO dto) {
@@ -21,42 +20,39 @@ public class GameMapper {
         game.setSummary(dto.summary());
         game.setStoryline(dto.storyline());
         game.setFirstReleaseDate(
-                toLocalDate(dto.firstReleaseDate())
-        );
+                toLocalDate(dto.firstReleaseDate()));
         game.setCover(dto.cover() == null ? null : dto.cover().imageId());
         game.setScreenshots(dto.screenshots() == null
                 ? List.of()
                 : dto.screenshots().stream()
-                .map(IgdbImageDTO::imageId)
-                .toList()
-        );
+                        .map(IgdbImageDTO::imageId)
+                        .toList());
         game.setTotalRating(dto.totalRating());
         game.setTotalRatingCount(dto.totalRatingCount());
         game.setDlcsIgdbIds(dto.expansions());
         game.setGenres(mapGenreIdsToEnums(
-                dto.genres() == null ? List.of() : dto.genres().stream()
-                        .filter(Objects::nonNull)
-                        .filter(genre -> genre.matches("\\d+"))
-                        .map(Integer::parseInt)
-                        .toList()
-        ));
+                dto.genres() == null ? List.of()
+                        : dto.genres().stream()
+                                .filter(Objects::nonNull)
+                                .filter(genre -> genre.matches("\\d+"))
+                                .map(Integer::parseInt)
+                                .toList()));
         game.setPlatforms(mapPlatformIdsToEnums(
-                dto.platforms() == null ? List.of() : dto.platforms().stream()
+                dto.platforms() == null ? List.of()
+                        : dto.platforms().stream()
+                                .filter(Objects::nonNull)
+                                .filter(platform -> platform.matches("\\d+"))
+                                .map(Integer::parseInt)
+                                .toList()));
+        game.setModes(dto.gameModes() == null ? List.of()
+                : dto.gameModes().stream()
                         .filter(Objects::nonNull)
-                        .filter(platform -> platform.matches("\\d+"))
+                        .filter(mode -> mode.matches("\\d+"))
                         .map(Integer::parseInt)
-                        .toList()
-        ));
-        game.setModes(dto.gameModes() == null ? List.of() : dto.gameModes().stream()
-                .filter(Objects::nonNull)
-                .filter(mode -> mode.matches("\\d+"))
-                .map(Integer::parseInt)
-                .map(GameMode::fromIgdbId)
-                .toList()
-        );
-        game.setUpdatedAt(Instant.now());
+                        .map(GameMode::fromIgdbId)
+                        .toList());
+        game.setUpdatedAt(dto.updatedAt() != null ? Instant.ofEpochSecond(dto.updatedAt()) : null);
         game.setSimilarGamesIgdbIds(dto.similarGames());
-
 
         return game;
     }
@@ -68,14 +64,16 @@ public class GameMapper {
     }
 
     private static LocalDate toLocalDate(Long timestamp) {
-        if (timestamp == null) return null;
+        if (timestamp == null)
+            return null;
         return Instant.ofEpochSecond(timestamp)
                 .atZone(ZoneOffset.UTC)
                 .toLocalDate();
     }
 
     public static List<GamePlatform> mapPlatformIdsToEnums(List<Integer> ids) {
-        if (ids == null) return List.of();
+        if (ids == null)
+            return List.of();
 
         Set<GamePlatform> platformSet = new HashSet<>();
         boolean hasOther = false;
@@ -97,7 +95,8 @@ public class GameMapper {
     }
 
     public static List<GameGenre> mapGenreIdsToEnums(List<Integer> ids) {
-        if (ids == null) return List.of();
+        if (ids == null)
+            return List.of();
 
         Set<GameGenre> genreSet = new HashSet<>();
         boolean hasOther = false;
@@ -118,4 +117,3 @@ public class GameMapper {
         return new ArrayList<>(genreSet);
     }
 }
-

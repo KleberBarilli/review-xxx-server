@@ -1,8 +1,7 @@
 package com.idealizer.review_x.application.modules.games.services.implementations;
 
-import com.idealizer.review_x.application.modules.games.controllers.dto.FindGamesResponse;
-import com.idealizer.review_x.application.modules.games.controllers.dto.GameDTO;
-import com.idealizer.review_x.application.modules.games.controllers.dto.SimpleGameDTO;
+import com.idealizer.review_x.application.modules.games.controllers.dto.FindGamesResponseDTO;
+import com.idealizer.review_x.application.modules.games.controllers.dto.SimpleGameResponseDTO;
 import com.idealizer.review_x.application.modules.games.entities.Game;
 import com.idealizer.review_x.application.modules.games.repositories.GameRepository;
 import com.idealizer.review_x.application.modules.games.services.FindManyGamesService;
@@ -24,7 +23,7 @@ public class FindManyGamesServiceImpl implements FindManyGamesService {
     }
 
     @Override
-    public FindGamesResponse execute(int limit, int pageNumber, String sort, String order) {
+    public FindGamesResponseDTO execute(int limit, int pageNumber, String sort, String order) {
 
         Sort sortOrder = order.equalsIgnoreCase(Sort.Direction.ASC.name()) ? Sort.by(sort).ascending()
                 : Sort.by(sort).descending();
@@ -33,9 +32,9 @@ public class FindManyGamesServiceImpl implements FindManyGamesService {
         Pageable pageable = PageRequest.of(pageNumber, limit, sortOrder);
         Page<Game> games = gameRepository.findAll(pageable);
         List<Game> listOfGames = games.getContent();
-        List<SimpleGameDTO> data = listOfGames.stream().map(game -> {
+        List<SimpleGameResponseDTO> data = listOfGames.stream().map(game -> {
             ;
-            SimpleGameDTO simpleGameDTO = new SimpleGameDTO();
+            SimpleGameResponseDTO simpleGameDTO = new SimpleGameResponseDTO();
             simpleGameDTO.setId(game.getId() != null ? game.getId().toHexString() : null);
             simpleGameDTO.setExternalId(game.getIgdbId());
             simpleGameDTO.setName(game.getName());
@@ -50,7 +49,7 @@ public class FindManyGamesServiceImpl implements FindManyGamesService {
             return simpleGameDTO;
         }).collect(Collectors.toList());
 
-        FindGamesResponse gamesResponse = new FindGamesResponse();
+        FindGamesResponseDTO gamesResponse = new FindGamesResponseDTO();
         gamesResponse.setpageNumber(pageNumber);
         gamesResponse.setLimit(games.getSize());
         gamesResponse.setTotalElements(games.getTotalElements());

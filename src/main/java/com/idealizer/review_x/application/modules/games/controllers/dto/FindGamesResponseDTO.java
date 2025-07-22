@@ -13,19 +13,19 @@ import java.util.Objects;
         "last",
         "data"
 })
-public class FindGamesResponse {
-    private List<SimpleGameDTO> data;
+public class FindGamesResponseDTO {
+    private List<SimpleGameResponseDTO> data;
     private int pageNumber;
     private int limit;
     private long totalElements;
     private int totalPages;
     private boolean last;
 
-    public FindGamesResponse() {
+    public FindGamesResponseDTO() {
     }
 
-    public FindGamesResponse(List<SimpleGameDTO> data, int pageNumber, int limit, long totalElements, boolean last,
-            int totalPages) {
+    public FindGamesResponseDTO(List<SimpleGameResponseDTO> data, int pageNumber, int limit, long totalElements, boolean last,
+                                int totalPages) {
         this.pageNumber = pageNumber;
         this.limit = limit;
         this.totalElements = totalElements;
@@ -34,11 +34,11 @@ public class FindGamesResponse {
         this.data = data;
     }
 
-    public List<SimpleGameDTO> getData() {
+    public List<SimpleGameResponseDTO> getData() {
         return data;
     }
 
-    public void setData(List<SimpleGameDTO> data) {
+    public void setData(List<SimpleGameResponseDTO> data) {
         this.data = data;
     }
 
@@ -86,7 +86,7 @@ public class FindGamesResponse {
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass())
             return false;
-        FindGamesResponse that = (FindGamesResponse) o;
+        FindGamesResponseDTO that = (FindGamesResponseDTO) o;
         return pageNumber == that.pageNumber && limit == that.limit && totalElements == that.totalElements
                 && totalPages == that.totalPages && last == that.last && Objects.equals(data, that.data);
     }

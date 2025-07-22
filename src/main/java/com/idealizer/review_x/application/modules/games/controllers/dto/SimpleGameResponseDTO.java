@@ -8,20 +8,15 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.util.List;
 
-public class GameDTO {
+public class SimpleGameResponseDTO {
     private String id;
     private Long externalId;
-    private List<Long> dlcsIds;
-    private List<Long> similarGamesIds;
     private String name;
     private LocalDate firstReleaseDate;
     private List<GameGenre> genres;
     private List<GameMode> modes;
     private List<GamePlatform> platforms;
-    private String storyline;
-    private String summary;
     private String cover;
-    private List<String> screenshots;
     private Double rating;
     private Integer ratingCount;
     private Instant updatedAt;
@@ -40,22 +35,6 @@ public class GameDTO {
 
     public void setExternalId(Long externalId) {
         this.externalId = externalId;
-    }
-
-    public List<Long> getDlcsIds() {
-        return dlcsIds;
-    }
-
-    public void setDlcsIds(List<Long> dlcsIds) {
-        this.dlcsIds = dlcsIds;
-    }
-
-    public List<Long> getSimilarGamesIds() {
-        return similarGamesIds;
-    }
-
-    public void setSimilarGamesIds(List<Long> similarGamesIds) {
-        this.similarGamesIds = similarGamesIds;
     }
 
     public String getName() {
@@ -98,36 +77,12 @@ public class GameDTO {
         this.platforms = platforms;
     }
 
-    public String getStoryline() {
-        return storyline;
-    }
-
-    public void setStoryline(String storyline) {
-        this.storyline = storyline;
-    }
-
-    public String getSummary() {
-        return summary;
-    }
-
-    public void setSummary(String summary) {
-        this.summary = summary;
-    }
-
     public String getCover() {
         return cover;
     }
 
     public void setCover(String cover) {
         this.cover = cover;
-    }
-
-    public List<String> getScreenshots() {
-        return screenshots;
-    }
-
-    public void setScreenshots(List<String> screenshots) {
-        this.screenshots = screenshots;
     }
 
     public Double getRating() {

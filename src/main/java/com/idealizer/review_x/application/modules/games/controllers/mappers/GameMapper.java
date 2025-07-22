@@ -7,6 +7,8 @@ import org.bson.types.ObjectId;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
+import java.util.List;
+
 @Mapper(componentModel = "spring")
 public interface GameMapper {
 
@@ -32,6 +34,7 @@ public interface GameMapper {
     @Mapping(target = "rating", source = "totalRating")
     @Mapping(target = "ratingCount", source = "totalRatingCount")
     SimpleGameResponseDTO toSimpleDomain(Game game);
+    List<SimpleGameResponseDTO> toSimpleDomainList(List<Game> games);
 
     default ObjectId map(String value) {
         return value != null ? new ObjectId(value) : null;

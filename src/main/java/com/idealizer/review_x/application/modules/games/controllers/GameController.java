@@ -2,8 +2,6 @@ package com.idealizer.review_x.application.modules.games.controllers;
 
 import com.idealizer.review_x.application.modules.games.controllers.dto.FindGamesResponseDTO;
 import com.idealizer.review_x.application.modules.games.controllers.dto.GameResponseDTO;
-import com.idealizer.review_x.application.modules.games.controllers.dto.SimpleGameResponseDTO;
-import com.idealizer.review_x.application.modules.games.controllers.mappers.GameMapper;
 import com.idealizer.review_x.application.modules.games.services.FindGameByIdService;
 import com.idealizer.review_x.application.modules.games.services.FindManyGamesService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -23,23 +21,23 @@ public class GameController {
 
     private final FindManyGamesService findManyGamesService;
     private final FindGameByIdService findGameByIdService;
-    private final GameMapper gameMapper;
 
-    public GameController(FindManyGamesService findManyGamesService, FindGameByIdService findGameByIdService , GameMapper gameMapper) {
+    public GameController(FindManyGamesService findManyGamesService, FindGameByIdService findGameByIdService) {
         this.findManyGamesService = findManyGamesService;
         this.findGameByIdService = findGameByIdService;
-        this.gameMapper = gameMapper;
     }
 
     @GetMapping
     @Operation(summary = "Find all games", description = "Returns a paginated list of games with sorting options")
-    public FindGamesResponseDTO findAll(
+    public  ResponseEntity<FindGamesResponseDTO> findAll(
             @RequestParam(value = "limit", defaultValue = "10") int limit,
             @RequestParam(value = "pageNumber", defaultValue = "0") int pageNumber,
             @RequestParam(value = "sort", defaultValue = "total_rating_count") String sort,
             @RequestParam(value = "order", defaultValue = "desc") String order) {
         logger.info("Fetching all games");
-        return findManyGamesService.execute(limit, pageNumber, sort, order);
+        FindGamesResponseDTO response = findManyGamesService.execute(limit, pageNumber, sort, order);
+        return ResponseEntity.ok(response);
+
     }
 
     @GetMapping("/{id}")
@@ -49,10 +47,8 @@ public class GameController {
 
         return findGameByIdService
                 .execute(gameId)
-                .map(game -> {
-                    GameResponseDTO dto = gameMapper.toDetailedDomain(game);
-                    return ResponseEntity.ok(dto);
-                }).orElseGet(() -> ResponseEntity.notFound().build());
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
 }

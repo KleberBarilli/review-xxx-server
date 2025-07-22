@@ -1,8 +1,7 @@
 package com.idealizer.review_x.application.modules.games.services.implementations;
 
-import com.idealizer.review_x.application.modules.games.controllers.dto.GameResponseDTO;
-import com.idealizer.review_x.application.modules.games.controllers.mappers.GameMapper;
-import com.idealizer.review_x.application.modules.games.entities.Game;
+import com.idealizer.review_x.application.modules.games.services.outputs.GameResponseDTO;
+import com.idealizer.review_x.application.modules.games.services.mappers.GameMapper;
 import com.idealizer.review_x.application.modules.games.repositories.GameRepository;
 import com.idealizer.review_x.application.modules.games.services.FindGameByIdService;
 import org.bson.types.ObjectId;

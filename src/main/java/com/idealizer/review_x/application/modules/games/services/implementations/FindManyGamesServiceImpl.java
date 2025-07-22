@@ -1,8 +1,8 @@
 package com.idealizer.review_x.application.modules.games.services.implementations;
 
-import com.idealizer.review_x.application.modules.games.controllers.dto.FindGamesResponseDTO;
-import com.idealizer.review_x.application.modules.games.controllers.dto.SimpleGameResponseDTO;
-import com.idealizer.review_x.application.modules.games.controllers.mappers.GameMapper;
+import com.idealizer.review_x.application.modules.games.services.outputs.FindGamesResponseDTO;
+import com.idealizer.review_x.application.modules.games.services.outputs.SimpleGameResponseDTO;
+import com.idealizer.review_x.application.modules.games.services.mappers.GameMapper;
 import com.idealizer.review_x.application.modules.games.entities.Game;
 import com.idealizer.review_x.application.modules.games.repositories.GameRepository;
 import com.idealizer.review_x.application.modules.games.services.FindManyGamesService;
@@ -13,7 +13,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class FindManyGamesServiceImpl implements FindManyGamesService {

@@ -17,6 +17,8 @@ public class Provider {
     private PlatformType platform;
     private String note;
 
+    public Provider (){}
+
     public Provider(ObjectId id, PlatformType platform, String note, String accessToken, String clientId, String clientSecret, Instant expiresAt, Instant createdAt, Instant updatedAt) {
         this.id = id;
         this.platform = platform;

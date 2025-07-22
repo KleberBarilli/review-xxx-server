@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+
 public record IgdbGameDTO(
         Long id,
         String name,
@@ -18,5 +19,19 @@ public record IgdbGameDTO(
         Integer totalRatingCount,
         List<String> genres,
         List<String> platforms,
-        List<Long> dlcs
+        @JsonProperty("game_modes")
+        List<String> gameModes,
+        List<Long> expansions,
+        @JsonProperty("similar_games")
+        List<Long>similarGames,
+        IgdbImageDTO cover,
+        List<IgdbImageDTO> screenshots,
+        @JsonProperty("updated_at")
+        Long updatedAt
+) {}
+
+record IgdbImageDTO(
+        Long id,
+        @JsonProperty("image_id")
+        String imageId
 ) {}

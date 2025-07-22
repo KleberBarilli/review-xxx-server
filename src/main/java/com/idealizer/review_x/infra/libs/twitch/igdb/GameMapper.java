@@ -2,6 +2,7 @@ package com.idealizer.review_x.infra.libs.twitch.igdb;
 
 import com.idealizer.review_x.application.modules.games.entities.Game;
 import com.idealizer.review_x.application.modules.games.entities.GameGenre;
+import com.idealizer.review_x.application.modules.games.entities.GameMode;
 import com.idealizer.review_x.application.modules.games.entities.GamePlatform;
 
 import java.time.Instant;
@@ -22,9 +23,16 @@ public class GameMapper {
         game.setFirstReleaseDate(
                 toLocalDate(dto.firstReleaseDate())
         );
+        game.setCover(dto.cover() == null ? null : dto.cover().imageId());
+        game.setScreenshots(dto.screenshots() == null
+                ? List.of()
+                : dto.screenshots().stream()
+                .map(IgdbImageDTO::imageId)
+                .toList()
+        );
         game.setTotalRating(dto.totalRating());
         game.setTotalRatingCount(dto.totalRatingCount());
-        game.setDlcIds(dto.dlcs());
+        game.setDlcsIgdbIds(dto.expansions());
         game.setGenres(mapGenreIdsToEnums(
                 dto.genres() == null ? List.of() : dto.genres().stream()
                         .filter(Objects::nonNull)
@@ -39,7 +47,15 @@ public class GameMapper {
                         .map(Integer::parseInt)
                         .toList()
         ));
+        game.setModes(dto.gameModes() == null ? List.of() : dto.gameModes().stream()
+                .filter(Objects::nonNull)
+                .filter(mode -> mode.matches("\\d+"))
+                .map(Integer::parseInt)
+                .map(GameMode::fromIgdbId)
+                .toList()
+        );
         game.setUpdatedAt(Instant.now());
+        game.setSimilarGamesIgdbIds(dto.similarGames());
 
 
         return game;

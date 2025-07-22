@@ -2,6 +2,8 @@ package com.idealizer.review_x.infra.processors;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.idealizer.review_x.application.modules.provider.entities.PlatformType;
+import com.idealizer.review_x.application.modules.provider.entities.Provider;
 import com.idealizer.review_x.infra.libs.twitch.igdb.GameMapper;
 import com.idealizer.review_x.infra.libs.twitch.igdb.IgdbGameDTO;
 import com.idealizer.review_x.application.modules.games.entities.Game;
@@ -35,13 +37,10 @@ public class SyncIgbdGameProcessor {
     private static final ObjectMapper mapper = new ObjectMapper();
     private static final HttpClient httpClient = HttpClient.newHttpClient();
 
-    private static final int PAGE_SIZE = 500;
+    private static final int PAGE_SIZE = 100;
 
     @Value("${TWITCH_CLIENT_ID}")
     private String clientId;
-
-    @Value("${TWITCH_ACCESS_TOKEN}")
-    private String accessToken;
 
     private final MongoTemplate mongoTemplate;
 
@@ -54,9 +53,24 @@ public class SyncIgbdGameProcessor {
         TimeZone.setDefault(TimeZone.getTimeZone(ZoneId.of("America/Sao_Paulo")));
     }
 
-    @Scheduled(cron = "0 0 2 * * *", zone = "America/Sao_Paulo")
+    private String getAccessToken() {
+        Query query = new Query(Criteria.where("platform").is(PlatformType.TWITCH));
+        Provider provider = mongoTemplate.findOne(query, Provider.class, "providers");
+        if (provider == null) {
+            throw new IllegalStateException("Provider not found for platform: TWITCH");
+        }
+        return provider.getAccessToken();
+    }
+
+    @Scheduled(cron = "0 11 20 * * *", zone = "America/Sao_Paulo")
+
+
     public void importGames() {
+
         logger.info("Starting full game import from IGDB...");
+        String accessToken = getAccessToken();
+        logger.info("Access token retrieved successfully.");
+        Instant now = Instant.now();
 
         int offset = 0;
         int totalImported = 0;
@@ -64,9 +78,11 @@ public class SyncIgbdGameProcessor {
 
         while (true) {
             String igdbQuery = String.format("""
-                    fields id,name,slug,summary,storyline,first_release_date,total_rating,total_rating_count,genres,platforms,dlcs;
-                    where total_rating != null & total_rating_count > 50 & version_parent = null & category = 0;
-                    sort total_rating desc;
+                    fields id,name,slug,summary,storyline,first_release_date,total_rating,total_rating_count,genres,
+                    game_modes,cover.image_id,screenshots.image_id,
+                    platforms,expansions,similar_games,updated_at;
+                    where version_parent = null & category = 0;
+                    sort total_rating_count desc;
                     limit %d;
                     offset %d;
                     """, PAGE_SIZE, offset);
@@ -98,9 +114,10 @@ public class SyncIgbdGameProcessor {
 
                 for (IgdbGameDTO dto : games) {
                     Game game = GameMapper.toEntity(dto);
-
-                    Query query = new Query(Criteria.where("igdbId").is(game.getIgdbId()));
+                    Query query = new Query(Criteria.where("igdb_id").is(game.getIgdbId())
+                            .andOperator(Criteria.where("updatedAt").lt(game.getUpdatedAt().getEpochSecond())));
                     Update update = new Update()
+                            .set("dlcsIgdbIds", game.getDlcsIgdbIds())
                             .set("name", game.getName())
                             .set("slug", game.getSlug())
                             .set("summary", game.getSummary())
@@ -110,9 +127,12 @@ public class SyncIgbdGameProcessor {
                             .set("totalRatingCount", game.getTotalRatingCount())
                             .set("genres", game.getGenres())
                             .set("platforms", game.getPlatforms())
-                            .set("dlcIds", game.getDlcIds())
-                            .set("updatedAt", Instant.now())
-                            .setOnInsert("createdAt", Instant.now());
+                            .set("updatedAt", now)
+                            .setOnInsert("createdAt", now)
+                            .set("cover", game.getCover())
+                            .set("screenshots", game.getScreenshots())
+                            .set("similarGamesIgdbIds", game.getSimilarGamesIgdbIds())
+                            .set("modes", game.getModes());
 
                     bulkOps.upsert(query, update);
                 }
@@ -125,8 +145,6 @@ public class SyncIgbdGameProcessor {
                 offset += PAGE_SIZE;
                 page++;
 
-                Thread.sleep(2000);
-
             } catch (IOException | InterruptedException e) {
                 logger.severe("Error importing games: " + e.getMessage());
                 Thread.currentThread().interrupt();
@@ -137,3 +155,4 @@ public class SyncIgbdGameProcessor {
         logger.info("Total games imported/updated: " + totalImported);
     }
 }
+

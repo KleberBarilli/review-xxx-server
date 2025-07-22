@@ -19,6 +19,12 @@ public class Game {
     @Indexed(unique = true)
     @Field(value = "igdb_id")
     private Long igdbId;
+    @Field(value = "parent_igdb_id")
+    private Long parentIgdbId;
+    @Field(value = "dlcs_igdb_ids")
+    private List<Long> dlcsIgdbIds;
+    @Field(value = "similar_games_igdb_ids")
+    private List<Long> similarGamesIgdbIds;
     private String name;
     @Indexed
     private String slug;
@@ -33,10 +39,9 @@ public class Game {
 
     private List<GameGenre> genres;
     private List<GamePlatform> platforms;
-    private String cover; // to do
-    @Field(value = "dlc_ids")
-    private List<Long> dlcIds;
-    private List<String> screenshots; // to do
+    private List<GameMode> modes;
+    private String cover;
+    private List<String> screenshots;
     @Field(value = "created_at")
     private Instant createdAt;
     @Field(value = "updated_at")
@@ -61,6 +66,27 @@ public class Game {
         this.igdbId = igdbId;
     }
 
+    public Long getParentIgdbId() {
+        return parentIgdbId;
+    }
+
+    public void setParentIgdbId(Long parentIgdbId) {
+        this.parentIgdbId = parentIgdbId;
+    }
+
+    public List<Long> getDlcsIgdbIds() {
+        return dlcsIgdbIds;
+    }
+    public void setDlcsIgdbIds(List<Long> dlcsIgdbIds) {
+        this.dlcsIgdbIds = dlcsIgdbIds;
+    }
+
+    public List<Long> getSimilarGamesIgdbIds() {
+        return similarGamesIgdbIds;
+    }
+    public void setSimilarGamesIgdbIds(List<Long> similarGamesIgdbIds) {
+        this.similarGamesIgdbIds = similarGamesIgdbIds;
+    }
     public String getName() {
         return name;
     }
@@ -133,20 +159,20 @@ public class Game {
         this.platforms = platforms;
     }
 
+    public List<GameMode> getModes() {
+        return modes;
+    }
+    public void setModes(List<GameMode> modes) {
+        this.modes = modes;
+    }
+
+
     public String getCover() {
         return cover;
     }
 
     public void setCover(String cover) {
         this.cover = cover;
-    }
-
-    public List<Long> getDlcIds() {
-        return dlcIds;
-    }
-
-    public void setDlcIds(List<Long> dlcIds) {
-        this.dlcIds = dlcIds;
     }
 
     public List<String> getScreenshots() {
@@ -174,16 +200,4 @@ public class Game {
     }
 
 
-
-    @Override
-    public boolean equals(Object o) {
-        if (o == null || getClass() != o.getClass()) return false;
-        Game game = (Game) o;
-        return Objects.equals(id, game.id) && Objects.equals(igdbId, game.igdbId) && Objects.equals(name, game.name) && Objects.equals(slug, game.slug) && Objects.equals(summary, game.summary) && Objects.equals(storyline, game.storyline) && Objects.equals(firstReleaseDate, game.firstReleaseDate) && Objects.equals(totalRating, game.totalRating) && Objects.equals(totalRatingCount, game.totalRatingCount) && Objects.equals(genres, game.genres) && Objects.equals(platforms, game.platforms) && Objects.equals(cover, game.cover) && Objects.equals(dlcIds, game.dlcIds) && Objects.equals(screenshots, game.screenshots) && Objects.equals(createdAt, game.createdAt) && Objects.equals(updatedAt, game.updatedAt);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, igdbId, name, slug, summary, storyline, firstReleaseDate, totalRating, totalRatingCount, genres, platforms, cover, dlcIds, screenshots, createdAt, updatedAt);
-    }
 }

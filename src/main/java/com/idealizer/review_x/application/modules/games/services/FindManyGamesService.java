@@ -1,7 +1,7 @@
 package com.idealizer.review_x.application.modules.games.services;
 
-import com.idealizer.review_x.application.modules.games.controllers.dto.FindGamesResponse;
+import com.idealizer.review_x.application.modules.games.services.outputs.FindGamesResponseDTO;
 
 public interface FindManyGamesService {
-    FindGamesResponse execute(int limit, int offset, String sortBy, String order);
+    FindGamesResponseDTO execute(int limit, int offset, String sortBy, String order);
 }

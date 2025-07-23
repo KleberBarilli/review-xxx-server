@@ -55,6 +55,8 @@ jobs:
       - name: Push Docker image
         run: docker push ${{ secrets.DOCKER_USERNAME }}/deploy_review_x
 
-      # ec2
-      # - name: Deploy steps
-      #   run: docker-compose up -d
+      - name: Trigger DO App Platform deploy
+        run: |
+          curl -X POST "https://api.digitalocean.com/v2/apps/${{ secrets.DIGITALOCEAN_APP_ID }}/deployments" \
+          -H "Authorization: Bearer ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}" \
+          -H "Content-Type: application/json"

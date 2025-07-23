@@ -9,7 +9,6 @@ API RESTful desenvolvida em **Java 21** com **Spring Boot**, voltada para gerenc
 - **Java 21**
 - **Spring Boot 3.x**
 - **Spring Data MongoDB**
-- **Redis** (cache em memória)
 
 ---
 

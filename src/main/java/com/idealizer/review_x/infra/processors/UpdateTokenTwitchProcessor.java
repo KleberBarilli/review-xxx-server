@@ -18,7 +18,6 @@ import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
 import java.time.Instant;
 import java.time.ZoneId;
-import java.util.Optional;
 import java.util.TimeZone;
 import java.util.logging.Logger;
 
@@ -33,7 +32,6 @@ public class UpdateTokenTwitchProcessor {
 
     @Value("${TWITCH_CLIENT_SECRET}")
     private String clientSecret;
-
 
     public UpdateTokenTwitchProcessor(ProviderRepository providerRepository) {
         this.providerRepository = providerRepository;
@@ -51,12 +49,10 @@ public class UpdateTokenTwitchProcessor {
 
             Provider provider = providerRepository.findByPlatform(PlatformType.TWITCH);
 
-
             String url = String.format(
                     "https://id.twitch.tv/oauth2/token?client_id=%s&client_secret=%s&grant_type=client_credentials",
                     URLEncoder.encode(clientId, StandardCharsets.UTF_8),
-                    URLEncoder.encode(clientSecret, StandardCharsets.UTF_8)
-            );
+                    URLEncoder.encode(clientSecret, StandardCharsets.UTF_8));
 
             HttpRequest request = HttpRequest.newBuilder()
                     .uri(URI.create(url))

@@ -15,6 +15,6 @@ public class LoginViewController {
     @GetMapping("/")
     @ResponseBody
     public String home(Authentication authentication) {
-        return "Olá" + authentication;
+        return "Olá mundo" + authentication;
     }
 }

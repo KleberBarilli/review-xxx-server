@@ -14,7 +14,7 @@ jobs:
       - name: Setup Java
         uses: actions/setup-java@v3
         with:
-          distribution: 'amazoncorretto'
+          distribution: 'corretto'
           java-version: '21.0.6'
 
       - name: Cache Maven dependencies
@@ -40,7 +40,7 @@ jobs:
       - name: Setup Java
         uses: actions/setup-java@v3
         with:
-          distribution: 'amazoncorretto'
+          distribution: 'corretto'
           java-version: '21.0.6'
 
       - name: Build project

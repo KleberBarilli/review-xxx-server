@@ -1,0 +1,54 @@
+# name: Deploy Beta
+
+# on:
+#   push:
+#     branches: [main]
+
+# jobs:
+#   build:
+#     runs-on: ubuntu-latest
+#     steps:
+#       - name: Checkout code
+#         uses: actions/checkout@v3
+
+#       - name: Setup Java
+#         uses: actions/setup-java@v3
+#         with:
+#           distribution: 'amazoncorretto'
+#           java-version: '21.0.6'
+
+#       - name: Build project
+#         run: mvn clean install -DskipTests
+
+#       - name: Login Docker Hub
+#         run: docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+
+#       - name: Build docker image
+#         run: docker build -t ${{ secrets.DOCKER_USERNAME }}/deploy_review_x .
+
+#       - name: Push docker image
+#         run: docker push ${{ secrets.DOCKER_USERNAME }}/deploy_review_x
+
+#   deploy:
+#     needs: build
+#     runs-on: self-hosted
+#     steps:
+#       - name: Checkout code
+#         uses: actions/checkout@v3
+
+#       - name: Set environment file
+#         run: |
+#           echo "DOCKER_USERNAME=${{ secrets.DOCKER_USERNAME }}" > .env
+#           echo "MONGODB_URI=${{ secrets.MONGODB_URI }}" >> .env
+#           echo "TWITCH_CLIENT_ID=${{ secrets.TWITCH_CLIENT_ID }}" >> .env
+#           echo "TWITCH_CLIENT_SECRET=${{ secrets.TWITCH_CLIENT_SECRET }}" >> .env
+#           echo "PROVIDER_SECRET_KEY=${{ secrets.PROVIDER_SECRET_KEY }}" >> .env
+
+#       - name: Docker Compose Pull
+#         run: docker-compose pull
+
+#       - name: Docker Compose Down
+#         run: docker-compose down
+
+#       - name: Docker Compose Up
+#         run: docker-compose up -d

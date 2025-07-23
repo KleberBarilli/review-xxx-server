@@ -1,13 +1,14 @@
 services:
   app:
-    build: .
+    image: ${DOCKER_USERNAME}/deploy_review_x:latest
     container_name: review-xxx-server
     ports:
       - "8080:8080"
     environment:
-      MONGODB_URI: ${MONGODB_URI}
-      TWITCH_CLIENT_ID: ${TWITCH_CLIENT_ID}
-      TWITCH_CLIENT_SECRET: ${TWITCH_CLIENT_SECRET}
-      PROVIDER_SECRET_KEY: ${PROVIDER_SECRET_KEY}
+      - MONGODB_URI=${MONGODB_URI}
+      - TWITCH_CLIENT_ID=${TWITCH_CLIENT_ID}
+      - TWITCH_CLIENT_SECRET=${TWITCH_CLIENT_SECRET}
+      - PROVIDER_SECRET_KEY=${PROVIDER_SECRET_KEY}
     volumes:
       - ./logs:/app/logs
+    restart: always

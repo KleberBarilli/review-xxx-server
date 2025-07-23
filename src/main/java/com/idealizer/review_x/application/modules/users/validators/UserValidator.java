@@ -13,7 +13,6 @@ public class UserValidator {
     }
 
     public void validate(User user) {
-
         // if (user.getBio().length() > 10) {
         // throw new IllegalArgumentException(messageUtil.get("user.bio.tooLong",
         // null,LocaleUtil.from(user.getLocale())));

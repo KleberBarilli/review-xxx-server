@@ -1,6 +1,7 @@
 services:
   app:
-    image: ${DOCKER_USERNAME}/deploy_review_x:latest
+    #image: ${DOCKER_USERNAME}/deploy_review_x:latest
+    build: .
     container_name: review-xxx-server
     ports:
       - "8080:8080"

@@ -4,8 +4,10 @@ import com.idealizer.review_x.application.modules.games.services.outputs.FindGam
 import com.idealizer.review_x.application.modules.games.services.outputs.GameResponseDTO;
 import com.idealizer.review_x.application.modules.games.services.FindGameByIdService;
 import com.idealizer.review_x.application.modules.games.services.FindManyGamesService;
+import com.idealizer.review_x.infra.http.modules.game.dto.FindAllGamesDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import org.bson.types.ObjectId;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -30,12 +32,9 @@ public class GameController {
     @GetMapping
     @Operation(summary = "Find all games", description = "Returns a paginated list of games with sorting options")
     public  ResponseEntity<FindGamesResponseDTO> findAll(
-            @RequestParam(value = "limit", defaultValue = "10") int limit,
-            @RequestParam(value = "pageNumber", defaultValue = "0") int pageNumber,
-            @RequestParam(value = "sort", defaultValue = "total_rating_count") String sort,
-            @RequestParam(value = "order", defaultValue = "desc") String order) {
+            @Valid FindAllGamesDTO dto) {
         logger.info("Fetching all games");
-        FindGamesResponseDTO response = findManyGamesService.execute(limit, pageNumber, sort, order);
+        FindGamesResponseDTO response = findManyGamesService.execute( dto.limit(), dto.pageNumber(), dto.sort(), dto.order());
         return ResponseEntity.ok(response);
 
     }

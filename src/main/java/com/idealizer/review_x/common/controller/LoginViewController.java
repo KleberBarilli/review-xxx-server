@@ -7,14 +7,14 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 public class LoginViewController {
-    //@GetMapping("/login")
-    //public String login() {
-     //   return "login";
-    //}
+    // @GetMapping("/login")
+    // public String login() {
+    // return "login";
+    // }
 
     @GetMapping("/")
     @ResponseBody
     public String home(Authentication authentication) {
-        return "Olá" + authentication;
+        return "Olá mundo!" + authentication;
     }
 }

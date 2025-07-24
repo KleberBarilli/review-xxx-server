@@ -1,0 +1,38 @@
+# .github/labeler.yml
+
+config:
+  - src/main/java/com/idealizer/review_x/config/**/*
+
+common:
+  - src/main/java/com/idealizer/review_x/common/**/*
+
+app:
+  - src/main/java/com/idealizer/review_x/application/**/*
+
+infra:
+  - src/main/java/com/idealizer/review_x/infra/**/*
+
+resources:
+  - src/main/resources/**/*
+
+processors:
+  - src/main/java/com/idealizer/review_x/infra/processors/**/*
+
+test:
+  - src/test/java/com/idealizer/review_x/**/*
+
+documentation:
+  - docs/**/*
+
+docker:
+  - Dockerfile
+  - docker-compose.yml
+  - ./docker/**/*
+
+github:
+  - .github/**/*
+
+dependencies:
+  - pom.xml
+  - .mvn/**/*
+  - .github/dependabot.yml

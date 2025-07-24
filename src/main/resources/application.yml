@@ -50,7 +50,7 @@ logging:
 
 management:
   server:
-    port: 9090
+    port: 9091
   endpoints:
     web:
       exposure:

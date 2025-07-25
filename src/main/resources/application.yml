@@ -62,3 +62,5 @@ management:
 
 springdoc:
   override-with-generic-response: true
+server:
+  port: 9090

@@ -1,4 +1,4 @@
-package com.idealizer.review_x.common.dto;
+package com.idealizer.review_x.infra.http.dto;
 
 import org.springframework.http.HttpStatus;
 

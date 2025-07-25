@@ -17,9 +17,11 @@ public class User {
     @Id
     private ObjectId id;
 
+    @Indexed(unique = true)
     private String name;
     @Indexed(unique = true)
     private String email;
+    private String password;
     private String bio;
     @Field(value = "avatar_url")
     private String avatarUrl;
@@ -55,14 +57,6 @@ public class User {
         this.name = name;
     }
 
-    public String getAvatarUrl() {
-        return avatarUrl;
-    }
-
-    public void setAvatarUrl(String avatarUrl) {
-        this.avatarUrl = avatarUrl;
-    }
-
     public String getEmail() {
         return email;
     }
@@ -71,12 +65,28 @@ public class User {
         this.email = email;
     }
 
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
     public String getBio() {
         return bio;
     }
 
     public void setBio(String bio) {
         this.bio = bio;
+    }
+
+    public String getAvatarUrl() {
+        return avatarUrl;
+    }
+
+    public void setAvatarUrl(String avatarUrl) {
+        this.avatarUrl = avatarUrl;
     }
 
     public String getLetterboxdUrl() {
@@ -129,23 +139,13 @@ public class User {
 
     @Override
     public boolean equals(Object o) {
-        if (o == null || getClass() != o.getClass())
-            return false;
+        if (o == null || getClass() != o.getClass()) return false;
         User user = (User) o;
-        return Objects.equals(id, user.id)
-                && Objects.equals(name, user.name)
-                && Objects.equals(bio, user.bio)
-                && Objects.equals(avatarUrl, user.avatarUrl)
-                && Objects.equals(email, user.email)
-                && Objects.equals(letterboxdUrl, user.letterboxdUrl)
-                && Objects.equals(steamUrl, user.steamUrl)
-                && Objects.equals(locale, user.locale)
-                && Objects.equals(createdAt, user.createdAt)
-                && Objects.equals(updatedAt, user.updatedAt);
+        return Objects.equals(id, user.id) && Objects.equals(name, user.name) && Objects.equals(email, user.email) && Objects.equals(password, user.password) && Objects.equals(bio, user.bio) && Objects.equals(avatarUrl, user.avatarUrl) && Objects.equals(letterboxdUrl, user.letterboxdUrl) && Objects.equals(steamUrl, user.steamUrl) && Objects.equals(locale, user.locale) && mobileDevice == user.mobileDevice && Objects.equals(createdAt, user.createdAt) && Objects.equals(updatedAt, user.updatedAt);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, bio, avatarUrl, email, letterboxdUrl, steamUrl, locale, createdAt, updatedAt);
+        return Objects.hash(id, name, email, password, bio, avatarUrl, letterboxdUrl, steamUrl, locale, mobileDevice, createdAt, updatedAt);
     }
 }

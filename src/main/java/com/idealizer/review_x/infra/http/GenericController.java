@@ -1,4 +1,4 @@
-package com.idealizer.review_x.common.controller;
+package com.idealizer.review_x.infra.http;
 
 import org.bson.types.ObjectId;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;

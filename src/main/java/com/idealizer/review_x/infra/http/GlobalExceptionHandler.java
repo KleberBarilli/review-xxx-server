@@ -1,7 +1,7 @@
-package com.idealizer.review_x.common.controller;
+package com.idealizer.review_x.infra.http;
 
-import com.idealizer.review_x.common.dto.FieldError;
-import com.idealizer.review_x.common.dto.ResponseError;
+import com.idealizer.review_x.infra.http.dto.FieldError;
+import com.idealizer.review_x.infra.http.dto.ResponseError;
 import com.idealizer.review_x.application.exceptions.BadRequestException;
 import com.idealizer.review_x.application.exceptions.DuplicatedException;
 import org.slf4j.Logger;

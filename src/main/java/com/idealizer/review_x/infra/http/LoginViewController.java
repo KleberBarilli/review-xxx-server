@@ -1,4 +1,4 @@
-package com.idealizer.review_x.common.controller;
+package com.idealizer.review_x.infra.http;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;

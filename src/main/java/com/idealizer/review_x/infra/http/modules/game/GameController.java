@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.logging.Logger;
 
 @RestController
-@RequestMapping("/api/games")
+@RequestMapping("/api/public/games")
 @Tag(name = "Games")
 public class GameController {
 

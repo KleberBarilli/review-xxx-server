@@ -1,6 +1,8 @@
 package com.idealizer.review_x.infra.http.modules.user;
 
+import com.idealizer.review_x.application.user.responses.CurrentLoggedUserResponse;
 import com.idealizer.review_x.application.user.responses.LoginResponse;
+import com.idealizer.review_x.application.user.usecases.FindCurrentLoggedUserUseCase;
 import com.idealizer.review_x.application.user.usecases.SignInUseCase;
 import com.idealizer.review_x.application.user.usecases.SignUpUseCase;
 import com.idealizer.review_x.common.LocaleUtil;
@@ -14,6 +16,8 @@ import org.springframework.http.ResponseEntity;
 
 import org.springframework.security.core.AuthenticationException;
 
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -27,12 +31,14 @@ public class UserController {
 
     private final SignUpUseCase signUpUseCase;
     private final SignInUseCase signInUseCase;
+    private final FindCurrentLoggedUserUseCase findCurrentLoggedUserUseCase;
     private final MessageUtil messageUtil;
 
 
-    public UserController(SignUpUseCase signUpUseCase, SignInUseCase signInUseCase, MessageUtil messageUtil) {
+    public UserController(SignUpUseCase signUpUseCase, SignInUseCase signInUseCase, FindCurrentLoggedUserUseCase findCurrentLoggedUserUseCase ,MessageUtil messageUtil) {
         this.signUpUseCase = signUpUseCase;
         this.signInUseCase = signInUseCase;
+        this.findCurrentLoggedUserUseCase = findCurrentLoggedUserUseCase;
         this.messageUtil = messageUtil;
     }
 
@@ -50,7 +56,7 @@ public class UserController {
     }
 
     @PostMapping("/signUp")
-    public ResponseEntity<?> registerUser(@RequestBody SignupRequestDTO signupRequestDTO) {
+    public ResponseEntity<?> registerUser(@RequestBody @Valid SignupRequestDTO signupRequestDTO) {
         try {
             signUpUseCase.execute(signupRequestDTO);
         } catch (Exception e) {
@@ -62,6 +68,14 @@ public class UserController {
         return ResponseEntity.ok(Map.of(
                 "message", messageUtil.get("user.registered", null, LocaleUtil.from(signupRequestDTO.locale()))
         ));
+    }
+
+    @GetMapping("/me")
+    public ResponseEntity<?> getCurrentUser(@AuthenticationPrincipal UserDetails userDetails) {
+
+        CurrentLoggedUserResponse user = findCurrentLoggedUserUseCase.execute(userDetails.getUsername());
+
+        return ResponseEntity.ok(user);
     }
 
 }

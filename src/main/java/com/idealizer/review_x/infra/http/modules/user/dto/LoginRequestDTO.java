@@ -1,8 +1,13 @@
 package com.idealizer.review_x.infra.http.modules.user.dto;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+
 public record LoginRequestDTO(
-    String username,
-    String password,
-    String locale
+        @Schema(defaultValue = "username123")
+        String username,
+        @Schema(defaultValue = "password123")
+        String password,
+        @Schema(defaultValue = "en")
+        String locale
 ) {
 }

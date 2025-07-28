@@ -1,0 +1,87 @@
+package com.idealizer.review_x.application.user.responses;
+
+import com.idealizer.review_x.domain.user.entities.MobileDeviceType;
+
+public class CurrentLoggedUserResponse {
+    private String id;
+    private String username;
+    private String email;
+    private String bio;
+    private String avatarUrl;
+    private String steamUrl;
+    private String letterboxdUrl;
+    private String locale;
+    private MobileDeviceType mobileDevice;
+
+    public String getLetterboxdUrl() {
+        return letterboxdUrl;
+    }
+
+    public void setLetterboxdUrl(String letterboxdUrl) {
+        this.letterboxdUrl = letterboxdUrl;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getBio() {
+        return bio;
+    }
+
+    public void setBio(String bio) {
+        this.bio = bio;
+    }
+
+    public String getAvatarUrl() {
+        return avatarUrl;
+    }
+
+    public void setAvatarUrl(String avatarUrl) {
+        this.avatarUrl = avatarUrl;
+    }
+
+    public String getSteamUrl() {
+        return steamUrl;
+    }
+
+    public void setSteamUrl(String steamUrl) {
+        this.steamUrl = steamUrl;
+    }
+
+    public String getLocale() {
+        return locale;
+    }
+
+    public void setLocale(String locale) {
+        this.locale = locale;
+    }
+
+    public MobileDeviceType getMobileDevice() {
+        return mobileDevice;
+    }
+
+    public void setMobileDevice(MobileDeviceType mobileDevice) {
+        this.mobileDevice = mobileDevice;
+    }
+}

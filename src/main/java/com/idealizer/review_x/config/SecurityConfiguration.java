@@ -1,17 +1,14 @@
 package com.idealizer.review_x.config;
 
-import com.idealizer.review_x.application.security.jwt.AuthEntryPointJwt;
-import com.idealizer.review_x.application.security.jwt.JwtAuthTokenFilter;
+import com.idealizer.review_x.security.jwt.AuthEntryPointJwt;
+import com.idealizer.review_x.security.jwt.JwtAuthTokenFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
-import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -39,6 +36,7 @@ public class SecurityConfiguration {
         http.csrf(csrf ->
                 csrf.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
                         .ignoringRequestMatchers(("/api/users/signIn"))
+                        .ignoringRequestMatchers(("/api/users/signUp"))
                         .ignoringRequestMatchers(("/api/public/**"))
         );
         http.authorizeHttpRequests((requests)
@@ -46,14 +44,13 @@ public class SecurityConfiguration {
                 .requestMatchers("/api/csrf-token").permitAll()
                 .requestMatchers("/api/public/**").permitAll()
                 .requestMatchers("/api/users/signIn").permitAll()
+                .requestMatchers("/api/users/signUp").permitAll()
                 .anyRequest().authenticated());
 
         //http.csrf(AbstractHttpConfigurer::disable);
-        //http.formLogin(withDefaults());
         http.exceptionHandling(exception ->
                 exception.authenticationEntryPoint(unauthorizedHandler));
         http.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
-        http.httpBasic(Customizer.withDefaults());
 
         return http.build();
     }

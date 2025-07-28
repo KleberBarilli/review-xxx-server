@@ -1,23 +1,23 @@
 package com.idealizer.review_x.infra.http.modules.user;
 
-import com.idealizer.review_x.application.security.jwt.JwtUtils;
+import com.idealizer.review_x.application.user.responses.LoginResponse;
+import com.idealizer.review_x.application.user.usecases.SignInUseCase;
+import com.idealizer.review_x.application.user.usecases.SignUpUseCase;
+import com.idealizer.review_x.common.LocaleUtil;
+import com.idealizer.review_x.common.MessageUtil;
 import com.idealizer.review_x.infra.http.modules.user.dto.LoginRequestDTO;
-import com.idealizer.review_x.infra.http.modules.user.dto.LoginResponseDTO;
+import com.idealizer.review_x.infra.http.modules.user.dto.SignupRequestDTO;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
+
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
+
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 
 @RestController
@@ -25,38 +25,43 @@ import java.util.stream.Collectors;
 @Tag(name = "Users")
 public class UserController {
 
-    private final JwtUtils jwtUtils;
-    private final AuthenticationManager authenticationManager;
+    private final SignUpUseCase signUpUseCase;
+    private final SignInUseCase signInUseCase;
+    private final MessageUtil messageUtil;
 
-    public UserController(
-                          JwtUtils jwtUtils, AuthenticationManager authenticationManager) {
-        this.jwtUtils = jwtUtils;
-        this.authenticationManager = authenticationManager;
+
+    public UserController(SignUpUseCase signUpUseCase, SignInUseCase signInUseCase, MessageUtil messageUtil) {
+        this.signUpUseCase = signUpUseCase;
+        this.signInUseCase = signInUseCase;
+        this.messageUtil = messageUtil;
     }
+
     @PostMapping("/signIn")
-    public ResponseEntity<?> authenticateUser(@RequestBody LoginRequestDTO loginRequestDTO) {
-        Authentication authentication;
+    public ResponseEntity<?> authenticateUser(@RequestBody @Valid LoginRequestDTO dto) {
         try {
-            authentication = authenticationManager
-                    .authenticate(new UsernamePasswordAuthenticationToken(loginRequestDTO.username(), loginRequestDTO.password()));
+            LoginResponse response = signInUseCase.execute(dto.username(), dto.password(), dto.locale());
+            return ResponseEntity.ok(response);
         } catch (AuthenticationException exception) {
             Map<String, Object> map = new HashMap<>();
-            map.put("message", "Bad credentials");
-            map.put("status", false);
-            return new ResponseEntity<Object>(map, HttpStatus.NOT_FOUND);
+            map.put("message", messageUtil.get("user.badCredentials", null, LocaleUtil.from(dto.locale())));
+            return new ResponseEntity<Object>(map, HttpStatus.UNAUTHORIZED);
         }
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-        String jwtToken = jwtUtils.generateTokenFromUsername(userDetails);
 
-        List<String> roles = userDetails.getAuthorities().stream()
-                .map(item -> item.getAuthority())
-                .collect(Collectors.toList());
-
-        LoginResponseDTO response = new LoginResponseDTO(jwtToken, userDetails.getUsername(), roles);
-
-        return ResponseEntity.ok(response);
     }
 
+    @PostMapping("/signUp")
+    public ResponseEntity<?> registerUser(@RequestBody SignupRequestDTO signupRequestDTO) {
+        try {
+            signUpUseCase.execute(signupRequestDTO);
+        } catch (Exception e) {
+            Map<String, Object> map = new HashMap<>();
+            map.put("message", e.getMessage());
+            return new ResponseEntity<Object>(map, HttpStatus.BAD_REQUEST);
+        }
+
+        return ResponseEntity.ok(Map.of(
+                "message", messageUtil.get("user.registered", null, LocaleUtil.from(signupRequestDTO.locale()))
+        ));
+    }
 
 }

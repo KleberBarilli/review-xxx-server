@@ -54,8 +54,8 @@ public class SignUpUseCase {
 
         User user = userMapper.toEntity(dto);
 
-        String hashedPassword = passwordEncoder.encode(user.getPassword());
         userValidator.validate(user);
+        String hashedPassword = passwordEncoder.encode(user.getPassword());
         user.setPassword(hashedPassword);
         userRepository.save(user);
 

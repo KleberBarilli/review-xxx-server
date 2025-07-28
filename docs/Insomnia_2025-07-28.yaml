@@ -1,0 +1,639 @@
+type: collection.insomnia.rest/5.0
+name: Games
+meta:
+  id: wrk_cf1806c9d07340f29da5baa9aa34a978
+  created: 1752614411763
+  modified: 1752614424508
+  description: ""
+collection:
+  - name: Users
+    meta:
+      id: fld_16ccd871774241d188405d96c5177d0d
+      created: 1753711322089
+      modified: 1753724227354
+      sortKey: -1753711322089
+      description: ""
+    children:
+      - url: "{{ _.local_url }}/api/users/signUp"
+        name: SignUP
+        meta:
+          id: req_04dbcfb2c0144b76903792df5cd381bb
+          created: 1753711324219
+          modified: 1753713492803
+          isPrivate: false
+          description: ""
+          sortKey: -1753711324219
+        method: POST
+        body:
+          mimeType: application/json
+          text: |-
+            {
+            	"name": "Skyzz",
+            	"email": "kb1@gmail.com",
+            	"password": "senha123",
+            	"locale":"pt_BR"
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: User-Agent
+            value: insomnia/11.3.0
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _.local_url }}/api/users/signIn"
+        name: SignIN
+        meta:
+          id: req_27c65cf8fa204b028724367c8f604928
+          created: 1753711756080
+          modified: 1753724014067
+          isPrivate: false
+          description: ""
+          sortKey: -1753590030316.5
+        method: POST
+        body:
+          mimeType: application/json
+          text: |-
+            {
+            	"username": "Skyzz",
+            	"password": "senha123",
+            	"locale": "pt_BR"
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: User-Agent
+            value: insomnia/11.3.0
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+  - name: IGDB
+    meta:
+      id: fld_28a9333853544aa18b42d8c6978a6f58
+      created: 1753724270123
+      modified: 1753724270123
+      sortKey: -1753724270123
+      description: ""
+    children:
+      - url: https://api.igdb.com/v4/platforms
+        name: Platforms
+        meta:
+          id: req_dacdd3f0ff5342c1a5333073353dba86
+          created: 1752614499639
+          modified: 1753724326053
+          isPrivate: false
+          description: ""
+          sortKey: -1753724275183
+        method: POST
+        body:
+          mimeType: ""
+          text: fields
+            abbreviation,alternative_name,category,checksum,created_at,generation,name,platform_family,platform_logo,platform_type,slug,summary,updated_at,url,versions,websites;limit
+            500;
+        headers:
+          - name: Client-ID
+            value: "{{ _.client }}"
+            id: pair_60b58b31cab74a118626a671d7b77fcc
+          - name: Authorization
+            value: Bearer {{ _.token }}
+            id: pair_bffb7a193ddc44e2909ccb54fb4983bf
+          - name: Accept
+            value: application/json
+            id: pair_0a96509273ef4a3db44f27f8e5f29736
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: https://api.igdb.com/v4/genres
+        name: Genres
+        meta:
+          id: req_d4a7ff8c682f4d348eda46fdb5bfc161
+          created: 1752616754333
+          modified: 1753724337757
+          isPrivate: false
+          description: ""
+          sortKey: -1753724275283
+        method: POST
+        body:
+          mimeType: ""
+          text: fields checksum,created_at,name,slug,updated_at,url;limit 200;
+        headers:
+          - name: Client-ID
+            value: "{{ _.client }}"
+            id: pair_0c0e3783994248b2a221afcccf3ef677
+          - name: Authorization
+            value: Bearer {{ _.token }}
+            id: pair_22c7bedb8ead4e518bbd9f896f2c55e3
+          - name: Accept
+            value: application/json
+            id: pair_6d9f2297f55543ffa735ca6a0236d30c
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: https://api.igdb.com/v4/game_versions
+        name: DLCS
+        meta:
+          id: req_782de0eea8cb40279663c1cb9dc8bede
+          created: 1752619698502
+          modified: 1753724274229
+          isPrivate: false
+          description: ""
+          sortKey: -1753724274183
+        method: POST
+        body:
+          mimeType: ""
+          text: |
+            fields checksum,created_at,features,game,games,updated_at,url;
+            where id = (170451, 157580, 226413, 170449, 170450);
+        headers:
+          - name: Client-ID
+            value: "{{ _.client }}"
+            id: pair_338035cc8df04d6f8e5d3cc20940844c
+          - name: Authorization
+            value: Bearer {{ _.token }}
+            id: pair_abaa873f14a648e7820f43133c152c3b
+          - name: Accept
+            value: application/json
+            id: pair_fe6bc87017e4469cbbeeb1693e4f628f
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: https://api.igdb.com/v4/games
+        name: Game Especifico
+        meta:
+          id: req_3b33fe3044dc4596bf3e76c36bcd33ce
+          created: 1752619841571
+          modified: 1753724310776
+          isPrivate: false
+          description: ""
+          sortKey: -1753724274883
+        method: POST
+        body:
+          mimeType: ""
+          text: |
+            fields
+              id,
+              name,
+              category,
+              expansions,
+              game_modes,
+            	platforms,
+            	tags,
+              similar_games;
+            where id = 1942;
+            where category != 1;
+        headers:
+          - name: Client-ID
+            value: "{{ _.client }}"
+            id: pair_338035cc8df04d6f8e5d3cc20940844c
+          - name: Authorization
+            value: Bearer {{ _.token }}
+            id: pair_abaa873f14a648e7820f43133c152c3b
+          - name: Accept
+            value: application/json
+            id: pair_fe6bc87017e4469cbbeeb1693e4f628f
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: https://api.igdb.com/v4/games
+        name: Game Especifico ALL FIELDS
+        meta:
+          id: req_0e2e22765f7448829b79d442fba68a76
+          created: 1753117043747
+          modified: 1753724320808
+          isPrivate: false
+          description: ""
+          sortKey: -1753724274983
+        method: POST
+        body:
+          mimeType: ""
+          text: |
+            fields
+              id,
+              name,
+              slug,
+              category,
+              summary,
+              storyline,
+              first_release_date,
+              total_rating,
+              total_rating_count,
+              cover.image_id,
+              screenshots.image_id,
+              expansions,
+              game_modes,
+              genres,
+              platforms,
+              involved_companies.company.name,
+              involved_companies.publisher,
+              involved_companies.developer,
+              similar_games;
+            where id = 1942;
+        headers:
+          - name: Client-ID
+            value: "{{ _.client }}"
+            id: pair_338035cc8df04d6f8e5d3cc20940844c
+          - name: Authorization
+            value: Bearer {{ _.token }}
+            id: pair_abaa873f14a648e7820f43133c152c3b
+          - name: Accept
+            value: application/json
+            id: pair_fe6bc87017e4469cbbeeb1693e4f628f
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: https://api.igdb.com/v4/game_modes
+        name: Game Modes
+        meta:
+          id: req_6dde5af1c5834c09af5250379b339201
+          created: 1753117087215
+          modified: 1753724281487
+          isPrivate: false
+          description: ""
+          sortKey: -1753724274383
+        method: POST
+        body:
+          mimeType: ""
+          text: |
+            fields id, name, slug;
+            limit  50;
+        headers:
+          - name: Client-ID
+            value: "{{ _.client }}"
+            id: pair_338035cc8df04d6f8e5d3cc20940844c
+          - name: Authorization
+            value: Bearer {{ _.token }}
+            id: pair_abaa873f14a648e7820f43133c152c3b
+          - name: Accept
+            value: application/json
+            id: pair_fe6bc87017e4469cbbeeb1693e4f628f
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: https://api.igdb.com/v4/keywords
+        name: Tags
+        meta:
+          id: req_9565ba2bf903419fa0c77e197920b345
+          created: 1753119007900
+          modified: 1753724278866
+          isPrivate: false
+          description: ""
+          sortKey: -1753724274283
+        method: POST
+        body:
+          mimeType: ""
+          text: |
+            fields id, name, slug;
+            where id = (
+              536871010,
+              536871041,
+              4613,
+              37825
+            );
+            limit 100;
+        headers:
+          - name: Client-ID
+            value: "{{ _.client }}"
+            id: pair_338035cc8df04d6f8e5d3cc20940844c
+          - name: Authorization
+            value: Bearer {{ _.token }}
+            id: pair_abaa873f14a648e7820f43133c152c3b
+          - name: Accept
+            value: application/json
+            id: pair_fe6bc87017e4469cbbeeb1693e4f628f
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: https://api.igdb.com/v4/games/count
+        name: Game COunt
+        meta:
+          id: req_579e2db73333422887831dbfd2b5060d
+          created: 1753120650896
+          modified: 1753724321990
+          isPrivate: false
+          description: ""
+          sortKey: -1753724275083
+        method: POST
+        body:
+          mimeType: ""
+          text: |
+            where category = 0;
+        headers:
+          - name: Client-ID
+            value: "{{ _.client }}"
+            id: pair_338035cc8df04d6f8e5d3cc20940844c
+          - name: Authorization
+            value: Bearer {{ _.token }}
+            id: pair_abaa873f14a648e7820f43133c152c3b
+          - name: Accept
+            value: application/json
+            id: pair_fe6bc87017e4469cbbeeb1693e4f628f
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: https://api.igdb.com/v4/games
+        name: Games
+        meta:
+          id: req_28d19b27f9c345ca993a209b257acf5e
+          created: 1753120904126
+          modified: 1753724288704
+          isPrivate: false
+          description: ""
+          sortKey: -1753724274483
+        method: POST
+        body:
+          mimeType: ""
+          text: |+
+            fields id, name, updated_at, videos;
+
+        headers:
+          - name: Client-ID
+            value: "{{ _.client }}"
+            id: pair_338035cc8df04d6f8e5d3cc20940844c
+          - name: Authorization
+            value: Bearer {{ _.token }}
+            id: pair_abaa873f14a648e7820f43133c152c3b
+          - name: Accept
+            value: application/json
+            id: pair_fe6bc87017e4469cbbeeb1693e4f628f
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: https://api.igdb.com/v4/games
+        name: Games to sync
+        meta:
+          id: req_0cc9d62b77544bae827a7f78cadcc017
+          created: 1753291822488
+          modified: 1753724301210
+          isPrivate: false
+          description: ""
+          sortKey: -1753724274683
+        method: POST
+        body:
+          mimeType: ""
+          text: >
+            fields id, name, slug, summary, storyline, first_release_date,
+            total_rating, total_rating_count, genres, game_modes,
+            cover.image_id, screenshots.image_id, platforms, expansions,
+            similar_games, updated_at;
+
+            where updated_at > 1753119215;
+
+            sort total_rating_count desc;
+
+            limit 1;
+
+            offset 0;
+        headers:
+          - name: Client-ID
+            value: "{{ _.client }}"
+            id: pair_338035cc8df04d6f8e5d3cc20940844c
+          - name: Authorization
+            value: Bearer {{ _.token }}
+            id: pair_abaa873f14a648e7820f43133c152c3b
+          - name: Accept
+            value: application/json
+            id: pair_fe6bc87017e4469cbbeeb1693e4f628f
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: https://api.igdb.com/v4/games/count
+        name: Games to sync COUNT
+        meta:
+          id: req_5064f571c4f443739b37d85d2a024be3
+          created: 1753291963665
+          modified: 1753724304097
+          isPrivate: false
+          description: ""
+          sortKey: -1753724274783
+        method: POST
+        body:
+          mimeType: ""
+          text: >
+            fields id, name, slug, summary, storyline, first_release_date,
+            total_rating, total_rating_count, genres, game_modes,
+            cover.image_id, screenshots.image_id, platforms, expansions,
+            similar_games, updated_at;
+
+            where updated_at > 1753119215;
+
+            sort id asc;
+
+            offset 0;
+        headers:
+          - name: Client-ID
+            value: "{{ _.client }}"
+            id: pair_338035cc8df04d6f8e5d3cc20940844c
+          - name: Authorization
+            value: Bearer {{ _.token }}
+            id: pair_abaa873f14a648e7820f43133c152c3b
+          - name: Accept
+            value: application/json
+            id: pair_fe6bc87017e4469cbbeeb1693e4f628f
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: https://api.igdb.com/v4/game_videos
+        name: Games VIDEOS
+        meta:
+          id: req_cd72a3359389433aaf70671be90fd106
+          created: 1753452688282
+          modified: 1753724296426
+          isPrivate: false
+          description: ""
+          sortKey: -1753724274583
+        method: POST
+        body:
+          mimeType: ""
+          text: |-
+            fields  game, name, video_id;
+            where id = 139717;
+        headers:
+          - name: Client-ID
+            value: "{{ _.client }}"
+            id: pair_338035cc8df04d6f8e5d3cc20940844c
+          - name: Authorization
+            value: Bearer {{ _.token }}
+            id: pair_abaa873f14a648e7820f43133c152c3b
+          - name: Accept
+            value: application/json
+            id: pair_fe6bc87017e4469cbbeeb1693e4f628f
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+  - url: "{{ _.local_url }}/api/csrf-token"
+    name: CSRF Token
+    meta:
+      id: req_3587797cbffc4b119d5676879ac4c9b0
+      created: 1753468736414
+      modified: 1753724232938
+      isPrivate: false
+      description: ""
+      sortKey: -1753468736414
+    method: GET
+    headers:
+      - name: User-Agent
+        value: insomnia/11.3.0
+    authentication:
+      type: basic
+      useISO88591: false
+      disabled: true
+      username: admin
+      password: root
+    settings:
+      renderRequestBody: true
+      encodeUrl: true
+      followRedirects: global
+      cookies:
+        send: true
+        store: true
+      rebuildPath: true
+cookieJar:
+  name: Default Jar
+  meta:
+    id: jar_14b13c1f99bfd68750cc979af1fbf4eaa5e3a1c9
+    created: 1752614411765
+    modified: 1753717708656
+  cookies:
+    - key: __cf_bm
+      value: UIUW4DfzXJ2VCUsRah3TOo4Mi8paQrwg4Y7VS2VGNRo-1753452600-1.0.1.1-_CxXaYkt2.B_ZibHYsLlbv3nk9hMHcT.ehdEf6tuBBC4ouC2NwnruH6WyMHdIBLeaO9xshjqahceeNBkbK90mLjxsXL12J5ZPdAnHhE0Cb4
+      domain: igdb.com
+      path: /
+      secure: true
+      httpOnly: true
+      hostOnly: false
+      creation: 2025-07-15T21:22:02.464Z
+      lastAccessed: 2025-07-25T14:10:00.846Z
+      id: 40d36960-0489-4ca3-a331-1c524eea9a23
+    - key: JSESSIONID
+      value: 50CDB7FB8DD0F01253F800886AB1E76D
+      domain: localhost
+      path: /
+      httpOnly: true
+      hostOnly: true
+      creation: 2025-07-24T18:07:33.344Z
+      lastAccessed: 2025-07-28T15:48:28.656Z
+      id: ebe4c4e5-cb56-4b1a-b221-67773ef8fbd6
+    - key: AUTH_SESSION_ID
+      value: c36d315b-50fa-4732-a69e-ec852dc502e6
+      domain: localhost
+      path: /realms/review-x/
+      secure: true
+      httpOnly: true
+      extensions:
+        - Version=1
+      hostOnly: true
+      creation: 2025-07-24T18:07:33.345Z
+      lastAccessed: 2025-07-24T18:30:24.216Z
+      sameSite: none
+      id: 213c7ef5-416c-4014-a8a4-cbc62f6b4c90
+    - key: AUTH_SESSION_ID_LEGACY
+      value: c36d315b-50fa-4732-a69e-ec852dc502e6
+      domain: localhost
+      path: /realms/review-x/
+      httpOnly: true
+      extensions:
+        - Version=1
+      hostOnly: true
+      creation: 2025-07-24T18:07:33.346Z
+      lastAccessed: 2025-07-24T18:30:24.217Z
+      id: 664fc3c8-0b6f-447f-ba9b-828f9f246ffc
+    - key: KC_RESTART
+      value: eyJhbGciOiJIUzUxMiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICIxMTViNDQ5OS1kNTdlLTQ4NTEtOTlmMS0xMGRlMDQ2M2FkZjgifQ.eyJjaWQiOiJyZXZpZXcteCIsInB0eSI6Im9wZW5pZC1jb25uZWN0IiwicnVyaSI6Imh0dHA6Ly9sb2NhbGhvc3Q6OTA5MC9sb2dpbi9vYXV0aDIvY29kZS9rZXljbG9hay1vaWRjIiwiYWN0IjoiQVVUSEVOVElDQVRFIiwibm90ZXMiOnsic2NvcGUiOiJvcGVuaWQgZW1haWwgcHJvZmlsZSIsImlzcyI6Imh0dHA6Ly9sb2NhbGhvc3Q6ODA4MC9yZWFsbXMvcmV2aWV3LXgiLCJyZXNwb25zZV90eXBlIjoiY29kZSIsInJlZGlyZWN0X3VyaSI6Imh0dHA6Ly9sb2NhbGhvc3Q6OTA5MC9sb2dpbi9vYXV0aDIvY29kZS9rZXljbG9hay1vaWRjIiwic3RhdGUiOiJ5dTdndEZ4LUlBVm1YNWxZRlE2VWQ0Y3lNeHdGcWp4QlpPV2l3MUctR2swPSIsIm5vbmNlIjoiTXJzTlMwTTU3OFFzUVhVS3g3YnNydm9lWEZmeWxnT2pEY2M4cllTU0xodyJ9fQ.x2s5kJexYZAcj2X3_87-8gyTofxkgH52eJDjOVWn1GVL9cvyzw0IOIHnE4KJAjfJzC46BcEG1YG_sKkIXXStqw
+      domain: localhost
+      path: /realms/review-x/
+      httpOnly: true
+      extensions:
+        - Version=1
+      hostOnly: true
+      creation: 2025-07-24T18:07:33.346Z
+      lastAccessed: 2025-07-24T18:30:24.217Z
+      id: 80c104dd-7ed3-4cf9-bede-af5e9ff84ce2
+    - key: XSRF-TOKEN
+      value: 6298b4ad-56f6-4976-a31c-ec7ff102a2b1
+      domain: localhost
+      path: /
+      hostOnly: true
+      creation: 2025-07-25T18:39:26.819Z
+      lastAccessed: 2025-07-25T18:39:26.819Z
+      id: cc4f589b-504f-45f8-a881-1758dc9d7db4
+environments:
+  name: Base Environment
+  meta:
+    id: env_14b13c1f99bfd68750cc979af1fbf4eaa5e3a1c9
+    created: 1752614411764
+    modified: 1753711385443
+    isPrivate: false
+  data:
+    token: bk6154p7jg11ordwqnf0kh1a81rd2b
+    client: yezidkyn4fj1yktaatdjbno5998kl2
+    local_url: http://localhost:9090

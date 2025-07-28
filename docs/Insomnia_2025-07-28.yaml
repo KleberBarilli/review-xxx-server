@@ -6,82 +6,11 @@ meta:
   modified: 1752614424508
   description: ""
 collection:
-  - name: Users
-    meta:
-      id: fld_16ccd871774241d188405d96c5177d0d
-      created: 1753711322089
-      modified: 1753724227354
-      sortKey: -1753711322089
-      description: ""
-    children:
-      - url: "{{ _.local_url }}/api/users/signUp"
-        name: SignUP
-        meta:
-          id: req_04dbcfb2c0144b76903792df5cd381bb
-          created: 1753711324219
-          modified: 1753713492803
-          isPrivate: false
-          description: ""
-          sortKey: -1753711324219
-        method: POST
-        body:
-          mimeType: application/json
-          text: |-
-            {
-            	"name": "Skyzz",
-            	"email": "kb1@gmail.com",
-            	"password": "senha123",
-            	"locale":"pt_BR"
-            }
-        headers:
-          - name: Content-Type
-            value: application/json
-          - name: User-Agent
-            value: insomnia/11.3.0
-        settings:
-          renderRequestBody: true
-          encodeUrl: true
-          followRedirects: global
-          cookies:
-            send: true
-            store: true
-          rebuildPath: true
-      - url: "{{ _.local_url }}/api/users/signIn"
-        name: SignIN
-        meta:
-          id: req_27c65cf8fa204b028724367c8f604928
-          created: 1753711756080
-          modified: 1753724014067
-          isPrivate: false
-          description: ""
-          sortKey: -1753590030316.5
-        method: POST
-        body:
-          mimeType: application/json
-          text: |-
-            {
-            	"username": "Skyzz",
-            	"password": "senha123",
-            	"locale": "pt_BR"
-            }
-        headers:
-          - name: Content-Type
-            value: application/json
-          - name: User-Agent
-            value: insomnia/11.3.0
-        settings:
-          renderRequestBody: true
-          encodeUrl: true
-          followRedirects: global
-          cookies:
-            send: true
-            store: true
-          rebuildPath: true
-  - name: IGDB
+  - name: IGDB - External
     meta:
       id: fld_28a9333853544aa18b42d8c6978a6f58
       created: 1753724270123
-      modified: 1753724270123
+      modified: 1753724413036
       sortKey: -1753724270123
       description: ""
     children:
@@ -530,33 +459,227 @@ collection:
             send: true
             store: true
           rebuildPath: true
-  - url: "{{ _.local_url }}/api/csrf-token"
-    name: CSRF Token
+  - name: LogId
     meta:
-      id: req_3587797cbffc4b119d5676879ac4c9b0
-      created: 1753468736414
-      modified: 1753724232938
-      isPrivate: false
+      id: fld_821c61efea084386a104763233e545a0
+      created: 1753724554172
+      modified: 1753724559835
+      sortKey: -1753724554172
       description: ""
-      sortKey: -1753468736414
-    method: GET
-    headers:
-      - name: User-Agent
-        value: insomnia/11.3.0
-    authentication:
-      type: basic
-      useISO88591: false
-      disabled: true
-      username: admin
-      password: root
-    settings:
-      renderRequestBody: true
-      encodeUrl: true
-      followRedirects: global
-      cookies:
-        send: true
-        store: true
-      rebuildPath: true
+    children:
+      - name: Users
+        meta:
+          id: fld_16ccd871774241d188405d96c5177d0d
+          created: 1753711322089
+          modified: 1753724562300
+          sortKey: -1753724560399
+          description: ""
+        children:
+          - url: "{{ _.local_url }}/api/users/signUp"
+            name: SignUP
+            meta:
+              id: req_04dbcfb2c0144b76903792df5cd381bb
+              created: 1753711324219
+              modified: 1753713492803
+              isPrivate: false
+              description: ""
+              sortKey: -1753711324219
+            method: POST
+            body:
+              mimeType: application/json
+              text: |-
+                {
+                	"name": "Skyzz",
+                	"email": "kb1@gmail.com",
+                	"password": "senha123",
+                	"locale":"pt_BR"
+                }
+            headers:
+              - name: Content-Type
+                value: application/json
+              - name: User-Agent
+                value: insomnia/11.3.0
+            settings:
+              renderRequestBody: true
+              encodeUrl: true
+              followRedirects: global
+              cookies:
+                send: true
+                store: true
+              rebuildPath: true
+          - url: "{{ _.local_url }}/api/users/signIn"
+            name: SignIN
+            meta:
+              id: req_27c65cf8fa204b028724367c8f604928
+              created: 1753711756080
+              modified: 1753724014067
+              isPrivate: false
+              description: ""
+              sortKey: -1753590030316.5
+            method: POST
+            body:
+              mimeType: application/json
+              text: |-
+                {
+                	"username": "Skyzz",
+                	"password": "senha123",
+                	"locale": "pt_BR"
+                }
+            headers:
+              - name: Content-Type
+                value: application/json
+              - name: User-Agent
+                value: insomnia/11.3.0
+            settings:
+              renderRequestBody: true
+              encodeUrl: true
+              followRedirects: global
+              cookies:
+                send: true
+                store: true
+              rebuildPath: true
+      - name: Games
+        meta:
+          id: fld_c0e5e51941f140fc9e99431ad2342b64
+          created: 1753724422646
+          modified: 1753724560328
+          sortKey: -1753724560299
+          description: ""
+        children:
+          - url: "{{ _.local_url }}/api/public/games/687f03e5c4edbe29b5eef3c5"
+            name: Find by Id
+            meta:
+              id: req_894e1b6d3c9342468e8749597feda368
+              created: 1753724436607
+              modified: 1753724460356
+              isPrivate: false
+              description: ""
+              sortKey: -1753724436607
+            method: GET
+            headers:
+              - name: accept
+                value: "*/*"
+              - name: Authorization
+                value: Bearer
+                  eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJTa3l6eiIsImlhdCI6MTc1MzcxNzg5MSwiZXhwIjoxNzUzNzIxNDkxfQ.Vb5JmkHMzB3LBvZDJsgOQ1d90Venp-okP4-YU_W5swU
+            settings:
+              renderRequestBody: true
+              encodeUrl: true
+              followRedirects: global
+              cookies:
+                send: true
+                store: true
+              rebuildPath: true
+          - url: "{{ _.local_url }}/api/public/games"
+            name: Find All
+            meta:
+              id: req_0928330084dc407a8e4eb03670e65164
+              created: 1753724493027
+              modified: 1753724512379
+              isPrivate: false
+              description: ""
+              sortKey: -1753724436707
+            method: GET
+            parameters:
+              - name: limit
+                value: "10"
+                disabled: false
+              - name: pageNumber
+                value: "0"
+                disabled: false
+              - name: sort
+                value: updatedAt
+                disabled: false
+              - name: order
+                value: asc
+                disabled: false
+            headers:
+              - name: accept
+                value: "*/*"
+              - name: Authorization
+                value: Bearer
+                  eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJTa3l6eiIsImlhdCI6MTc1MzcxNzg5MSwiZXhwIjoxNzUzNzIxNDkxfQ.Vb5JmkHMzB3LBvZDJsgOQ1d90Venp-okP4-YU_W5swU
+            settings:
+              renderRequestBody: true
+              encodeUrl: true
+              followRedirects: global
+              cookies:
+                send: true
+                store: true
+              rebuildPath: true
+      - name: Providers
+        meta:
+          id: fld_b40193cd4b434b80bfe5ded316337bf2
+          created: 1753724575012
+          modified: 1753724685977
+          sortKey: -1753724560599
+          description: ""
+        children:
+          - url: "{{ _.local_url }}/api/providers"
+            name: Create
+            meta:
+              id: req_2cf4a652baa141aea0c399f5447043b0
+              created: 1753724646976
+              modified: 1753724690792
+              isPrivate: false
+              description: ""
+              sortKey: -1753724646976
+            method: POST
+            body:
+              mimeType: application/json
+              text: |-
+                {
+                	"platform": "GOOGLE",
+                	"note": "Note",
+                	"accessToken": "accesstoken",
+                	"clientId": "clientId",
+                	"clientSecret": "clientSecret"
+                }
+            headers:
+              - name: accept
+                value: "*/*"
+              - name: key
+                value: your-token
+              - name: Authorization
+                value: Bearer
+                  eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJTa3l6eiIsImlhdCI6MTc1MzcxNzg5MSwiZXhwIjoxNzUzNzIxNDkxfQ.Vb5JmkHMzB3LBvZDJsgOQ1d90Venp-okP4-YU_W5swU
+              - name: Content-Type
+                value: application/json
+            settings:
+              renderRequestBody: true
+              encodeUrl: true
+              followRedirects: global
+              cookies:
+                send: true
+                store: true
+              rebuildPath: true
+      - url: "{{ _.local_url }}/api/csrf-token"
+        name: CSRF Token
+        meta:
+          id: req_3587797cbffc4b119d5676879ac4c9b0
+          created: 1753468736414
+          modified: 1753724564917
+          isPrivate: false
+          description: ""
+          sortKey: -1753724560499
+        method: GET
+        headers:
+          - name: User-Agent
+            value: insomnia/11.3.0
+        authentication:
+          type: basic
+          useISO88591: false
+          disabled: true
+          username: admin
+          password: root
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
 cookieJar:
   name: Default Jar
   meta:

@@ -7,19 +7,23 @@ spring:
       enabled: always
 
   security:
-    oauth2:
-      client:
-        registration:
-          google:
-            client-id: ${GOOGLE_CLIENT_ID}
-            client-secret: ${GOOGLE_CLIENT_SECRET}
-            scope: profile, email
-        provider:
-          google:
-            authorization-uri: https://accounts.google.com/o/oauth2/v2/auth
-            token-uri: https://oauth2.googleapis.com/token
-            user-info-uri: https://www.googleapis.com/oauth2/v3/userinfo
-            user-name-attribute: sub
+    user:
+      name: "admin"
+      password: "root"
+
+#    oauth2:
+#      client:
+#        registration:
+#          google:
+#            client-id: ${GOOGLE_CLIENT_ID}
+#            client-secret: ${GOOGLE_CLIENT_SECRET}
+#            scope: profile, email
+#        provider:
+#          google:
+#            authorization-uri: https://accounts.google.com/o/oauth2/v2/auth
+#            token-uri: https://oauth2.googleapis.com/token
+#            user-info-uri: https://www.googleapis.com/oauth2/v3/userinfo
+#            user-name-attribute: sub
 
   data:
     mongodb:
@@ -58,3 +62,5 @@ management:
 
 springdoc:
   override-with-generic-response: true
+server:
+  port: 9090

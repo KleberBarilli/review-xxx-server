@@ -2,11 +2,11 @@ package com.idealizer.review_x.infra.processors;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.idealizer.review_x.application.modules.provider.entities.PlatformType;
-import com.idealizer.review_x.application.modules.provider.entities.Provider;
+import com.idealizer.review_x.domain.provider.entities.PlatformType;
+import com.idealizer.review_x.domain.provider.entities.Provider;
 import com.idealizer.review_x.infra.libs.twitch.igdb.GameMapper;
 import com.idealizer.review_x.infra.libs.twitch.igdb.IgdbGameDTO;
-import com.idealizer.review_x.application.modules.games.entities.Game;
+import com.idealizer.review_x.domain.games.entities.Game;
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Sort;

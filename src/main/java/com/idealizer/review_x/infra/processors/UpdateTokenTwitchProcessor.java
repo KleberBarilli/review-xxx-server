@@ -2,9 +2,9 @@ package com.idealizer.review_x.infra.processors;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.idealizer.review_x.application.modules.provider.entities.PlatformType;
-import com.idealizer.review_x.application.modules.provider.entities.Provider;
-import com.idealizer.review_x.application.modules.provider.repositories.ProviderRepository;
+import com.idealizer.review_x.domain.provider.entities.PlatformType;
+import com.idealizer.review_x.domain.provider.entities.Provider;
+import com.idealizer.review_x.domain.provider.repositories.ProviderRepository;
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;

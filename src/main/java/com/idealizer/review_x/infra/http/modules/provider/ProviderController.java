@@ -1,7 +1,7 @@
 package com.idealizer.review_x.infra.http.modules.provider;
 
-import com.idealizer.review_x.application.modules.provider.entities.Provider;
-import com.idealizer.review_x.application.modules.provider.services.CreateProviderService;
+import com.idealizer.review_x.application.provider.usecases.CreateProviderUseCase;
+import com.idealizer.review_x.domain.provider.entities.Provider;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
@@ -19,10 +19,10 @@ public class ProviderController {
     @Value("${PROVIDER_SECRET_KEY}")
     private String providerSecretKey;
 
-    private final CreateProviderService createProviderService;
+    private final CreateProviderUseCase createProviderUseCase;
 
-    public ProviderController (CreateProviderService createProviderService) {
-        this.createProviderService = createProviderService;
+    public ProviderController (CreateProviderUseCase createProviderUseCase) {
+        this.createProviderUseCase = createProviderUseCase;
     }
 
     @Operation(summary = "Create provider",
@@ -36,7 +36,7 @@ public class ProviderController {
         if (!providerSecretKey.equals(authorizationHeader)) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized");
         }
-        this.createProviderService.execute(provider);
+        this.createProviderUseCase.execute(provider);
         return ResponseEntity.ok("Provider created successfully");
     }
 }

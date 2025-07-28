@@ -1,0 +1,316 @@
+type: collection.insomnia.rest/5.0
+name: Games
+meta:
+  id: wrk_cf1806c9d07340f29da5baa9aa34a978
+  created: 1752614411763
+  modified: 1752614424508
+  description: ""
+collection:
+  - name: IGDB - External
+    meta:
+      id: fld_28a9333853544aa18b42d8c6978a6f58
+      created: 1753724270123
+      modified: 1753724987859
+      sortKey: -1753724270123
+      description: ""
+  - name: LogId
+    meta:
+      id: fld_821c61efea084386a104763233e545a0
+      created: 1753724554172
+      modified: 1753724559835
+      sortKey: -1753724554172
+      description: ""
+    children:
+      - name: Users
+        meta:
+          id: fld_16ccd871774241d188405d96c5177d0d
+          created: 1753711322089
+          modified: 1753724562300
+          sortKey: -1753724560399
+          description: ""
+        children:
+          - url: "{{ _.local_url }}/api/users/signUp"
+            name: SignUP
+            meta:
+              id: req_04dbcfb2c0144b76903792df5cd381bb
+              created: 1753711324219
+              modified: 1753713492803
+              isPrivate: false
+              description: ""
+              sortKey: -1753711324219
+            method: POST
+            body:
+              mimeType: application/json
+              text: |-
+                {
+                	"name": "Skyzz",
+                	"email": "kb1@gmail.com",
+                	"password": "senha123",
+                	"locale":"pt_BR"
+                }
+            headers:
+              - name: Content-Type
+                value: application/json
+              - name: User-Agent
+                value: insomnia/11.3.0
+            settings:
+              renderRequestBody: true
+              encodeUrl: true
+              followRedirects: global
+              cookies:
+                send: true
+                store: true
+              rebuildPath: true
+          - url: "{{ _.local_url }}/api/users/signIn"
+            name: SignIN
+            meta:
+              id: req_27c65cf8fa204b028724367c8f604928
+              created: 1753711756080
+              modified: 1753724014067
+              isPrivate: false
+              description: ""
+              sortKey: -1753590030316.5
+            method: POST
+            body:
+              mimeType: application/json
+              text: |-
+                {
+                	"username": "Skyzz",
+                	"password": "senha123",
+                	"locale": "pt_BR"
+                }
+            headers:
+              - name: Content-Type
+                value: application/json
+              - name: User-Agent
+                value: insomnia/11.3.0
+            settings:
+              renderRequestBody: true
+              encodeUrl: true
+              followRedirects: global
+              cookies:
+                send: true
+                store: true
+              rebuildPath: true
+      - name: Games
+        meta:
+          id: fld_c0e5e51941f140fc9e99431ad2342b64
+          created: 1753724422646
+          modified: 1753724560328
+          sortKey: -1753724560299
+          description: ""
+        children:
+          - url: "{{ _.local_url }}/api/public/games/687f03e5c4edbe29b5eef3c5"
+            name: Find by Id
+            meta:
+              id: req_894e1b6d3c9342468e8749597feda368
+              created: 1753724436607
+              modified: 1753724460356
+              isPrivate: false
+              description: ""
+              sortKey: -1753724436607
+            method: GET
+            headers:
+              - name: accept
+                value: "*/*"
+              - name: Authorization
+                value: Bearer
+                  eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJTa3l6eiIsImlhdCI6MTc1MzcxNzg5MSwiZXhwIjoxNzUzNzIxNDkxfQ.Vb5JmkHMzB3LBvZDJsgOQ1d90Venp-okP4-YU_W5swU
+            settings:
+              renderRequestBody: true
+              encodeUrl: true
+              followRedirects: global
+              cookies:
+                send: true
+                store: true
+              rebuildPath: true
+          - url: "{{ _.local_url }}/api/public/games"
+            name: Find All
+            meta:
+              id: req_0928330084dc407a8e4eb03670e65164
+              created: 1753724493027
+              modified: 1753724512379
+              isPrivate: false
+              description: ""
+              sortKey: -1753724436707
+            method: GET
+            parameters:
+              - name: limit
+                value: "10"
+                disabled: false
+              - name: pageNumber
+                value: "0"
+                disabled: false
+              - name: sort
+                value: updatedAt
+                disabled: false
+              - name: order
+                value: asc
+                disabled: false
+            headers:
+              - name: accept
+                value: "*/*"
+              - name: Authorization
+                value: Bearer
+                  eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJTa3l6eiIsImlhdCI6MTc1MzcxNzg5MSwiZXhwIjoxNzUzNzIxNDkxfQ.Vb5JmkHMzB3LBvZDJsgOQ1d90Venp-okP4-YU_W5swU
+            settings:
+              renderRequestBody: true
+              encodeUrl: true
+              followRedirects: global
+              cookies:
+                send: true
+                store: true
+              rebuildPath: true
+      - name: Providers
+        meta:
+          id: fld_b40193cd4b434b80bfe5ded316337bf2
+          created: 1753724575012
+          modified: 1753724685977
+          sortKey: -1753724560599
+          description: ""
+        children:
+          - url: "{{ _.local_url }}/api/providers"
+            name: Create
+            meta:
+              id: req_2cf4a652baa141aea0c399f5447043b0
+              created: 1753724646976
+              modified: 1753724690792
+              isPrivate: false
+              description: ""
+              sortKey: -1753724646976
+            method: POST
+            body:
+              mimeType: application/json
+              text: |-
+                {
+                	"platform": "GOOGLE",
+                	"note": "Note",
+                	"accessToken": "accesstoken",
+                	"clientId": "clientId",
+                	"clientSecret": "clientSecret"
+                }
+            headers:
+              - name: accept
+                value: "*/*"
+              - name: key
+                value: your-token
+              - name: Authorization
+                value: Bearer
+                  eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJTa3l6eiIsImlhdCI6MTc1MzcxNzg5MSwiZXhwIjoxNzUzNzIxNDkxfQ.Vb5JmkHMzB3LBvZDJsgOQ1d90Venp-okP4-YU_W5swU
+              - name: Content-Type
+                value: application/json
+            settings:
+              renderRequestBody: true
+              encodeUrl: true
+              followRedirects: global
+              cookies:
+                send: true
+                store: true
+              rebuildPath: true
+      - url: "{{ _.local_url }}/api/csrf-token"
+        name: CSRF Token
+        meta:
+          id: req_3587797cbffc4b119d5676879ac4c9b0
+          created: 1753468736414
+          modified: 1753724564917
+          isPrivate: false
+          description: ""
+          sortKey: -1753724560499
+        method: GET
+        headers:
+          - name: User-Agent
+            value: insomnia/11.3.0
+        authentication:
+          type: basic
+          useISO88591: false
+          disabled: true
+          username: admin
+          password: root
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+cookieJar:
+  name: Default Jar
+  meta:
+    id: jar_14b13c1f99bfd68750cc979af1fbf4eaa5e3a1c9
+    created: 1752614411765
+    modified: 1753717708656
+  cookies:
+    - key: __cf_bm
+      value: UIUW4DfzXJ2VCUsRah3TOo4Mi8paQrwg4Y7VS2VGNRo-1753452600-1.0.1.1-_CxXaYkt2.B_ZibHYsLlbv3nk9hMHcT.ehdEf6tuBBC4ouC2NwnruH6WyMHdIBLeaO9xshjqahceeNBkbK90mLjxsXL12J5ZPdAnHhE0Cb4
+      domain: igdb.com
+      path: /
+      secure: true
+      httpOnly: true
+      hostOnly: false
+      creation: 2025-07-15T21:22:02.464Z
+      lastAccessed: 2025-07-25T14:10:00.846Z
+      id: 40d36960-0489-4ca3-a331-1c524eea9a23
+    - key: JSESSIONID
+      value: 50CDB7FB8DD0F01253F800886AB1E76D
+      domain: localhost
+      path: /
+      httpOnly: true
+      hostOnly: true
+      creation: 2025-07-24T18:07:33.344Z
+      lastAccessed: 2025-07-28T15:48:28.656Z
+      id: ebe4c4e5-cb56-4b1a-b221-67773ef8fbd6
+    - key: AUTH_SESSION_ID
+      value: c36d315b-50fa-4732-a69e-ec852dc502e6
+      domain: localhost
+      path: /realms/review-x/
+      secure: true
+      httpOnly: true
+      extensions:
+        - Version=1
+      hostOnly: true
+      creation: 2025-07-24T18:07:33.345Z
+      lastAccessed: 2025-07-24T18:30:24.216Z
+      sameSite: none
+      id: 213c7ef5-416c-4014-a8a4-cbc62f6b4c90
+    - key: AUTH_SESSION_ID_LEGACY
+      value: c36d315b-50fa-4732-a69e-ec852dc502e6
+      domain: localhost
+      path: /realms/review-x/
+      httpOnly: true
+      extensions:
+        - Version=1
+      hostOnly: true
+      creation: 2025-07-24T18:07:33.346Z
+      lastAccessed: 2025-07-24T18:30:24.217Z
+      id: 664fc3c8-0b6f-447f-ba9b-828f9f246ffc
+    - key: KC_RESTART
+      value: eyJhbGciOiJIUzUxMiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICIxMTViNDQ5OS1kNTdlLTQ4NTEtOTlmMS0xMGRlMDQ2M2FkZjgifQ.eyJjaWQiOiJyZXZpZXcteCIsInB0eSI6Im9wZW5pZC1jb25uZWN0IiwicnVyaSI6Imh0dHA6Ly9sb2NhbGhvc3Q6OTA5MC9sb2dpbi9vYXV0aDIvY29kZS9rZXljbG9hay1vaWRjIiwiYWN0IjoiQVVUSEVOVElDQVRFIiwibm90ZXMiOnsic2NvcGUiOiJvcGVuaWQgZW1haWwgcHJvZmlsZSIsImlzcyI6Imh0dHA6Ly9sb2NhbGhvc3Q6ODA4MC9yZWFsbXMvcmV2aWV3LXgiLCJyZXNwb25zZV90eXBlIjoiY29kZSIsInJlZGlyZWN0X3VyaSI6Imh0dHA6Ly9sb2NhbGhvc3Q6OTA5MC9sb2dpbi9vYXV0aDIvY29kZS9rZXljbG9hay1vaWRjIiwic3RhdGUiOiJ5dTdndEZ4LUlBVm1YNWxZRlE2VWQ0Y3lNeHdGcWp4QlpPV2l3MUctR2swPSIsIm5vbmNlIjoiTXJzTlMwTTU3OFFzUVhVS3g3YnNydm9lWEZmeWxnT2pEY2M4cllTU0xodyJ9fQ.x2s5kJexYZAcj2X3_87-8gyTofxkgH52eJDjOVWn1GVL9cvyzw0IOIHnE4KJAjfJzC46BcEG1YG_sKkIXXStqw
+      domain: localhost
+      path: /realms/review-x/
+      httpOnly: true
+      extensions:
+        - Version=1
+      hostOnly: true
+      creation: 2025-07-24T18:07:33.346Z
+      lastAccessed: 2025-07-24T18:30:24.217Z
+      id: 80c104dd-7ed3-4cf9-bede-af5e9ff84ce2
+    - key: XSRF-TOKEN
+      value: 6298b4ad-56f6-4976-a31c-ec7ff102a2b1
+      domain: localhost
+      path: /
+      hostOnly: true
+      creation: 2025-07-25T18:39:26.819Z
+      lastAccessed: 2025-07-25T18:39:26.819Z
+      id: cc4f589b-504f-45f8-a881-1758dc9d7db4
+environments:
+  name: Base Environment
+  meta:
+    id: env_14b13c1f99bfd68750cc979af1fbf4eaa5e3a1c9
+    created: 1752614411764
+    modified: 1753711385443
+    isPrivate: false
+  data:
+    token: bk6154p7jg11ordwqnf0kh1a81rd2b
+    client: yezidkyn4fj1yktaatdjbno5998kl2
+    local_url: http://localhost:9090

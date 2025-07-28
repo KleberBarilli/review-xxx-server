@@ -15,6 +15,10 @@ public class LoginViewController {
     @GetMapping("/")
     @ResponseBody
     public String home(Authentication authentication) {
-        return "Olá mundo!!!" + authentication;
+        if (authentication != null && authentication.getName() != null) {
+            return "Welcome, " + authentication.getName() + "!";
+        } else {
+            return "Welcome, guest!";
+        }
     }
 }

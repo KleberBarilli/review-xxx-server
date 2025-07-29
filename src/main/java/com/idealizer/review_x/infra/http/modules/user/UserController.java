@@ -96,7 +96,7 @@ public class UserController {
             return ResponseEntity.ok(Map.of(
                     "message", "Avatar uploaded successfully"));
         } catch (Exception e) {
-            return ResponseEntity.status(500).body("Error uploading avatar: " + e.getMessage());
+            return ResponseEntity.status(500).body("An error occurred while uploading the avatar. Please try again later.");
         }
     }
 

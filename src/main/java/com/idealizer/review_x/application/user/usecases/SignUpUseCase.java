@@ -37,18 +37,18 @@ public class SignUpUseCase {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public void execute(SignupRequestDTO dto) {
+    public void execute(SignupRequestDTO dto, String locale) {
         Optional<User> userOptional = userRepository.findByEmailOrName(dto.email(), dto.name());
 
         if (userOptional.isPresent()) {
             User user = userOptional.get();
 
             if (user.getEmail().equals(dto.email())) {
-                throw new DuplicatedException(messageUtil.get("user.email.exists", null, LocaleUtil.from(dto.locale())));
+                throw new DuplicatedException(messageUtil.get("user.email.exists", null, LocaleUtil.from(locale)));
             }
 
             if (user.getName().equals(dto.name())) {
-                throw new DuplicatedException(messageUtil.get("user.name.exists", null, LocaleUtil.from(dto.locale())));
+                throw new DuplicatedException(messageUtil.get("user.name.exists", null, LocaleUtil.from(locale)));
             }
         }
 

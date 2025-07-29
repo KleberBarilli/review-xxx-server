@@ -1,9 +1,9 @@
-package com.idealizer.review_x.infra.http;
+package  com.idealizer.review_x.infra.http;
 
-import com.idealizer.review_x.infra.http.dto.FieldError;
-import com.idealizer.review_x.infra.http.dto.ResponseError;
 import com.idealizer.review_x.common.exceptions.BadRequestException;
 import com.idealizer.review_x.common.exceptions.DuplicatedException;
+import com.idealizer.review_x.infra.http.dto.FieldError;
+import com.idealizer.review_x.infra.http.dto.ResponseError;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -36,7 +36,7 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.CONFLICT)
     public ResponseError handleDuplicatedException(DuplicatedException e) {
         logger.error("Duplicated error", e.getMessage());
-        return ResponseError.conflict(e.getMessage());
+        return ResponseError.conflict("Conflict Error");
     }
 
     @ExceptionHandler(BadRequestException.class)
@@ -44,7 +44,7 @@ public class GlobalExceptionHandler {
     public ResponseError handleBadRequestException(BadRequestException e) {
         logger.error("Bad request error", e.getMessage());
         return ResponseError
-                .badRequest(e.getMessage());
+                .badRequest("Bad Request Error");
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
@@ -52,7 +52,7 @@ public class GlobalExceptionHandler {
     public ResponseError handleBadRequestException(IllegalArgumentException e) {
         logger.error("Illegal argument exception", e.getMessage());
         return ResponseError
-                .badRequest(e.getMessage());
+                .badRequest("Bad Request Error");
     }
 
     @ExceptionHandler(RuntimeException.class)

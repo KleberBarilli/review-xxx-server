@@ -107,7 +107,9 @@ public class UserController {
             return ResponseEntity.ok(Map.of(
                     "message", "Avatar removed successfully"));
         } catch (Exception e) {
-            return ResponseEntity.status(500).body("Error removing avatar: " + e.getMessage());
+            return ResponseEntity.status(500).body("An error occurred while removing the avatar. Please try again later.");
+            e.printStackTrace();
+            return ResponseEntity.status(500).body("An error occurred while removing the avatar. Please try again later.");
         }
     }
 

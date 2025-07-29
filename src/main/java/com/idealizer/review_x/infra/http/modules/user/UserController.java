@@ -24,11 +24,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.logging.Logger;
 
 @RestController
 @RequestMapping("/api/users")
 @Tag(name = "Users")
 public class UserController {
+    private final Logger logger = Logger.getLogger(UserController.class.getName());
 
     private final SignUpUseCase signUpUseCase;
     private final SignInUseCase signInUseCase;
@@ -70,7 +72,8 @@ public class UserController {
             signUpUseCase.execute(signupRequestDTO);
         } catch (Exception e) {
             Map<String, Object> map = new HashMap<>();
-            map.put("message", e.getMessage());
+            logger.severe("Error during user registration: " + e.getMessage());
+            map.put("message", messageUtil.get("user.signUp.error", null, LocaleUtil.from(locale.toString())));
             return new ResponseEntity<Object>(map, HttpStatus.BAD_REQUEST);
         }
 
@@ -128,5 +131,4 @@ public class UserController {
                             LocaleUtil.from(LocaleContextHolder.getLocale().toString())));
         }
     }
-
 }

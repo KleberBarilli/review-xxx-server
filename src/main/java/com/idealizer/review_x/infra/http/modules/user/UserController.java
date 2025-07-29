@@ -69,7 +69,7 @@ public class UserController {
     public ResponseEntity<?> registerUser(@RequestBody @Valid SignupRequestDTO signupRequestDTO) {
         Locale locale = LocaleContextHolder.getLocale();
         try {
-            signUpUseCase.execute(signupRequestDTO);
+            signUpUseCase.execute(signupRequestDTO, locale.toString());
         } catch (Exception e) {
             Map<String, Object> map = new HashMap<>();
             logger.severe("Error during user registration: " + e.getMessage());

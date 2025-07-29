@@ -2,9 +2,7 @@ package com.idealizer.review_x.infra.http.modules.user;
 
 import com.idealizer.review_x.application.user.responses.CurrentLoggedUserResponse;
 import com.idealizer.review_x.application.user.responses.LoginResponse;
-import com.idealizer.review_x.application.user.usecases.FindCurrentLoggedUserUseCase;
-import com.idealizer.review_x.application.user.usecases.SignInUseCase;
-import com.idealizer.review_x.application.user.usecases.SignUpUseCase;
+import com.idealizer.review_x.application.user.usecases.*;
 import com.idealizer.review_x.common.LocaleUtil;
 import com.idealizer.review_x.common.MessageUtil;
 import com.idealizer.review_x.infra.http.modules.user.dto.LoginRequestDTO;
@@ -19,6 +17,7 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -32,13 +31,20 @@ public class UserController {
     private final SignUpUseCase signUpUseCase;
     private final SignInUseCase signInUseCase;
     private final FindCurrentLoggedUserUseCase findCurrentLoggedUserUseCase;
+    private final UploadAvatarUseCase uploadAvatarUseCase;
+    private final RemoveAvatarUseCase removeAvatarUseCase;
     private final MessageUtil messageUtil;
 
 
-    public UserController(SignUpUseCase signUpUseCase, SignInUseCase signInUseCase, FindCurrentLoggedUserUseCase findCurrentLoggedUserUseCase ,MessageUtil messageUtil) {
+    public UserController(SignUpUseCase signUpUseCase, SignInUseCase signInUseCase,
+                          FindCurrentLoggedUserUseCase findCurrentLoggedUserUseCase,
+                          UploadAvatarUseCase uploadAvatarUseCase,
+            RemoveAvatarUseCase removeAvatarUseCase,MessageUtil messageUtil) {
         this.signUpUseCase = signUpUseCase;
         this.signInUseCase = signInUseCase;
         this.findCurrentLoggedUserUseCase = findCurrentLoggedUserUseCase;
+        this.uploadAvatarUseCase = uploadAvatarUseCase;
+        this.removeAvatarUseCase = removeAvatarUseCase;
         this.messageUtil = messageUtil;
     }
 
@@ -76,6 +82,33 @@ public class UserController {
         CurrentLoggedUserResponse user = findCurrentLoggedUserUseCase.execute(userDetails.getUsername());
 
         return ResponseEntity.ok(user);
+    }
+
+    @PatchMapping("/updateAvatar")
+    public ResponseEntity<?> updateAvatar(@AuthenticationPrincipal UserDetails userDetails,
+                                          @RequestParam("file") MultipartFile file) {
+        try {
+            String filename = file.getOriginalFilename();
+            String contentType = file.getContentType();
+            byte[] imageBytes = file.getBytes();
+            uploadAvatarUseCase.execute(userDetails.getUsername(), imageBytes, filename, contentType);
+
+            return ResponseEntity.ok(Map.of(
+                    "message", "Avatar uploaded successfully"));
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("Error uploading avatar: " + e.getMessage());
+        }
+    }
+
+    @DeleteMapping("/removeAvatar")
+    public ResponseEntity<?> removeAvatar(@AuthenticationPrincipal UserDetails userDetails) {
+    try {
+            removeAvatarUseCase.execute(userDetails.getUsername());
+            return ResponseEntity.ok(Map.of(
+                    "message", "Avatar removed successfully"));
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("Error removing avatar: " + e.getMessage());
+        }
     }
 
 }

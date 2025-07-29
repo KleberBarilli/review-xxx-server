@@ -25,7 +25,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-
 @RestController
 @RequestMapping("/api/users")
 @Tag(name = "Users")
@@ -38,11 +37,10 @@ public class UserController {
     private final RemoveAvatarUseCase removeAvatarUseCase;
     private final MessageUtil messageUtil;
 
-
     public UserController(SignUpUseCase signUpUseCase, SignInUseCase signInUseCase,
-                          FindCurrentLoggedUserUseCase findCurrentLoggedUserUseCase,
-                          UploadAvatarUseCase uploadAvatarUseCase,
-                          RemoveAvatarUseCase removeAvatarUseCase, MessageUtil messageUtil) {
+            FindCurrentLoggedUserUseCase findCurrentLoggedUserUseCase,
+            UploadAvatarUseCase uploadAvatarUseCase,
+            RemoveAvatarUseCase removeAvatarUseCase, MessageUtil messageUtil) {
         this.signUpUseCase = signUpUseCase;
         this.signInUseCase = signInUseCase;
         this.findCurrentLoggedUserUseCase = findCurrentLoggedUserUseCase;
@@ -77,14 +75,12 @@ public class UserController {
         }
 
         return ResponseEntity.ok(Map.of(
-                "message", messageUtil.get("user.registered", null, LocaleUtil.from(locale.toString()))
-        ));
+                "message", messageUtil.get("user.registered", null, LocaleUtil.from(locale.toString()))));
     }
 
     @GetMapping("/me")
     public ResponseEntity<?> getCurrentUser(@AuthenticationPrincipal UserDetails userDetails) {
-
-        Locale locale = LocaleContextHolder.getLocale();
+        ;
         CurrentLoggedUserResponse user = findCurrentLoggedUserUseCase.execute(userDetails.getUsername());
 
         return ResponseEntity.ok(user);
@@ -92,12 +88,13 @@ public class UserController {
 
     @PatchMapping("/updateAvatar")
     public ResponseEntity<?> updateAvatar(@AuthenticationPrincipal UserDetails userDetails,
-                                          @RequestParam("file") MultipartFile file) {
+            @RequestParam("file") MultipartFile file) {
         Locale locale = LocaleContextHolder.getLocale();
         try {
 
             String contentType = file.getContentType();
-            if (contentType == null || !List.of("image/jpeg", "image/png", "image/jpg", "image/webp").contains(contentType)) {
+            if (contentType == null
+                    || !List.of("image/jpeg", "image/png", "image/jpg", "image/webp").contains(contentType)) {
                 return ResponseEntity.badRequest().body((messageUtil.get("file.image.invalid",
                         null, LocaleUtil.from(locale.toString()))));
             }
@@ -115,8 +112,7 @@ public class UserController {
                             null, LocaleUtil.from(locale.toString()))));
         } catch (Exception e) {
             return ResponseEntity.status(500).body(messageUtil.get("file.image.upload.error", null,
-                    LocaleUtil.from(locale.toString())
-            ));
+                    LocaleUtil.from(locale.toString())));
         }
     }
 
@@ -128,8 +124,8 @@ public class UserController {
                     "message", "Avatar removed successfully"));
         } catch (Exception e) {
             return ResponseEntity.status(500).body(
-                    messageUtil.get("file.image.remove.error", null, LocaleUtil.from(LocaleContextHolder.getLocale().toString()))
-            );
+                    messageUtil.get("file.image.remove.error", null,
+                            LocaleUtil.from(LocaleContextHolder.getLocale().toString())));
         }
     }
 

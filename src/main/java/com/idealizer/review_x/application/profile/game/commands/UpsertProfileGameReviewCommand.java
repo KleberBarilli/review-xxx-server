@@ -26,23 +26,23 @@ public class UpsertProfileGameReviewCommand {
     private Boolean mastered;
     private List<String> favoriteScreenshots;
 
-
     private String reviewTitle;
     private String reviewContent;
     private Boolean reviewSpoiler;
     private Boolean reviewReplay;
-    private Instant reviewReplayStartedAt;
+    private Instant reviewStartedAt;
     private Instant reviewFinishedAt;
 
     public UpsertProfileGameReviewCommand() {
     }
 
-    public UpsertProfileGameReviewCommand(ObjectId userId, ObjectId gameId, PlatformType sourcePlatform, GamePlatform playedOn,
-                                          String originalName, String slug, ProfileGameStatus status, Integer playtimeInMinutes,
-                                          Integer rating, Boolean playing, Boolean favorite, Boolean owned, Boolean wishlist,
-                                          Boolean mastered, List<String> favoriteScreenshots, String reviewTitle, String reviewContent,
-                                          Boolean reviewSpoiler, Boolean reviewReplay, Instant reviewReplayStartedAt,
-                                          Instant reviewFinishedAt) {
+    public UpsertProfileGameReviewCommand(ObjectId userId, ObjectId gameId, PlatformType sourcePlatform,
+            GamePlatform playedOn,
+            String originalName, String slug, ProfileGameStatus status, Integer playtimeInMinutes,
+            Integer rating, Boolean playing, Boolean favorite, Boolean owned, Boolean wishlist,
+            Boolean mastered, List<String> favoriteScreenshots, String reviewTitle, String reviewContent,
+            Boolean reviewSpoiler, Boolean reviewReplay, Instant reviewStartedAt,
+            Instant reviewFinishedAt) {
         this.userId = userId;
         this.gameId = gameId;
         this.sourcePlatform = sourcePlatform;
@@ -62,7 +62,7 @@ public class UpsertProfileGameReviewCommand {
         this.reviewContent = reviewContent;
         this.reviewSpoiler = reviewSpoiler;
         this.reviewReplay = reviewReplay;
-        this.reviewReplayStartedAt = reviewReplayStartedAt;
+        this.reviewStartedAt = reviewStartedAt;
         this.reviewFinishedAt = reviewFinishedAt;
     }
 
@@ -218,12 +218,12 @@ public class UpsertProfileGameReviewCommand {
         this.reviewReplay = reviewReplay;
     }
 
-    public Instant getReviewReplayStartedAt() {
-        return reviewReplayStartedAt;
+    public Instant getreviewStartedAt() {
+        return reviewStartedAt;
     }
 
-    public void setReviewReplayStartedAt(Instant reviewReplayStartedAt) {
-        this.reviewReplayStartedAt = reviewReplayStartedAt;
+    public void setreviewStartedAt(Instant reviewStartedAt) {
+        this.reviewStartedAt = reviewStartedAt;
     }
 
     public Instant getReviewFinishedAt() {

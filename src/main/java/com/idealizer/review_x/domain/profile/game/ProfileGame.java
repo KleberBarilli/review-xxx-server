@@ -1,6 +1,7 @@
 package com.idealizer.review_x.domain.profile.game;
 
 import com.idealizer.review_x.domain.game.entities.GamePlatform;
+import jakarta.validation.constraints.NotBlank;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
@@ -25,9 +26,9 @@ public class ProfileGame {
     @Id
     private ObjectId id;
 
-
     @Indexed
     @Field(value = "game_id")
+    @NotBlank
     private ObjectId gameId;
 
     @Indexed
@@ -36,6 +37,7 @@ public class ProfileGame {
 
     @Indexed
     @Field(value = "user_id")
+    @NotBlank
     private ObjectId userId;
 
     @Indexed
@@ -46,7 +48,9 @@ public class ProfileGame {
     private GamePlatform playedOn;
 
     @Field(value = "original_name")
+    @NotBlank
     private String originalName;
+    @NotBlank
     private String slug;
     private ProfileGameStatus status;
 
@@ -60,6 +64,8 @@ public class ProfileGame {
     private Boolean owned;
     private Boolean wishlist;
     private Boolean mastered;
+    @Field(value = "has_review")
+    private Boolean hasReview;
 
     @Field(value = "favorite_screenshots")
     private List<String> favoriteScreenshots;
@@ -197,6 +203,12 @@ public class ProfileGame {
 
     public void setMastered(Boolean mastered) {
         this.mastered = mastered;
+    }
+    public  Boolean getHasReview() {
+        return hasReview;
+    }
+    public void setHasReview(Boolean hasReview) {
+        this.hasReview = hasReview;
     }
 
     public List<String> getFavoriteScreenshots() {

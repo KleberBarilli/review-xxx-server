@@ -3,7 +3,7 @@ package com.idealizer.review_x.infra.http.modules.game.profile;
 import com.idealizer.review_x.application.profile.game.commands.UpsertProfileGameReviewCommand;
 import com.idealizer.review_x.application.profile.game.usecases.UpsertProfileGameReviewUseCase;
 import com.idealizer.review_x.infra.http.modules.game.profile.dto.UpsertProfileGameDTO;
-import com.idealizer.review_x.infra.http.modules.game.profile.mappers.ProfileGameMapper;
+import com.idealizer.review_x.infra.http.modules.game.profile.mappers.ProfileGameDTOMapper;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.bson.types.ObjectId;
@@ -21,10 +21,10 @@ public class ProfileGameController {
 
     private static Logger logger = Logger.getLogger(ProfileGameController.class.getName());
 
-    private final ProfileGameMapper profileGameMapper;
+    private final ProfileGameDTOMapper profileGameMapper;
     private final UpsertProfileGameReviewUseCase upsertProfileGameReviewUseCase;
 
-    public ProfileGameController(ProfileGameMapper profileGameMapper,
+    public ProfileGameController(ProfileGameDTOMapper profileGameMapper,
                                  UpsertProfileGameReviewUseCase upsertProfileGameReviewUseCase) {
         this.profileGameMapper = profileGameMapper;
         this.upsertProfileGameReviewUseCase = upsertProfileGameReviewUseCase;

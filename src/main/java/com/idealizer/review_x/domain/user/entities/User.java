@@ -141,11 +141,11 @@ public class User {
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         User user = (User) o;
-        return Objects.equals(id, user.id) && Objects.equals(name, user.name) && Objects.equals(email, user.email) && Objects.equals(password, user.password) && Objects.equals(bio, user.bio) && Objects.equals(avatarUrl, user.avatarUrl) && Objects.equals(letterboxdUrl, user.letterboxdUrl) && Objects.equals(steamUrl, user.steamUrl) && Objects.equals(locale, user.locale) && mobileDevice == user.mobileDevice && Objects.equals(createdAt, user.createdAt) && Objects.equals(updatedAt, user.updatedAt);
+        return Objects.equals(id, user.id) && Objects.equals(name, user.name) && Objects.equals(email, user.email);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, email, password, bio, avatarUrl, letterboxdUrl, steamUrl, locale, mobileDevice, createdAt, updatedAt);
+        return Objects.hash(id, name, email);
     }
 }

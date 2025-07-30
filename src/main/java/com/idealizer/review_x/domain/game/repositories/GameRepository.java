@@ -1,6 +1,6 @@
-package com.idealizer.review_x.domain.games.repositories;
+package com.idealizer.review_x.domain.game.repositories;
 
-import com.idealizer.review_x.domain.games.entities.Game;
+import com.idealizer.review_x.domain.game.entities.Game;
 import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.repository.MongoRepository;
 

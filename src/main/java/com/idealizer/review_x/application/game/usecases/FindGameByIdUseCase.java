@@ -2,7 +2,7 @@ package com.idealizer.review_x.application.game.usecases;
 
 import com.idealizer.review_x.application.game.mappers.GameMapper;
 import com.idealizer.review_x.application.game.responses.GameResponse;
-import com.idealizer.review_x.domain.games.repositories.GameRepository;
+import com.idealizer.review_x.domain.game.repositories.GameRepository;
 import org.bson.types.ObjectId;
 import org.springframework.stereotype.Service;
 

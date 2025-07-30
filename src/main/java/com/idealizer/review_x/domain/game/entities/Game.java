@@ -1,4 +1,4 @@
-package com.idealizer.review_x.domain.games.entities;
+package com.idealizer.review_x.domain.game.entities;
 
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;

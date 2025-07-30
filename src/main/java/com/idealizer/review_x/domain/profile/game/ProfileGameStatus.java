@@ -1,4 +1,4 @@
-package com.idealizer.review_x.domain.profile.games;
+package com.idealizer.review_x.domain.profile.game;
 
 public enum ProfileGameStatus {
     COMPLETED,

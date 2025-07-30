@@ -1,4 +1,4 @@
-package com.idealizer.review_x.domain.games.entities;
+package com.idealizer.review_x.domain.game.entities;
 
 public enum GameGenre {
     POINT_AND_CLICK(2),

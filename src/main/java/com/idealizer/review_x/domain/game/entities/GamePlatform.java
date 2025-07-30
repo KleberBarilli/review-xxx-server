@@ -1,4 +1,4 @@
-package com.idealizer.review_x.domain.games.entities;
+package com.idealizer.review_x.domain.game.entities;
 
 public enum GamePlatform {
     XBOX_360(12),

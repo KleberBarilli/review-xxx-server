@@ -2,7 +2,7 @@ package com.idealizer.review_x.application.game.mappers;
 
 import com.idealizer.review_x.application.game.responses.GameResponse;
 import com.idealizer.review_x.application.game.responses.SimpleGameResponse;
-import com.idealizer.review_x.domain.games.entities.Game;
+import com.idealizer.review_x.domain.game.entities.Game;
 import org.bson.types.ObjectId;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

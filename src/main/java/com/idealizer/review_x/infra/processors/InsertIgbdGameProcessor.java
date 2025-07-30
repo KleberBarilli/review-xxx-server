@@ -6,7 +6,7 @@ import com.idealizer.review_x.domain.provider.entities.PlatformType;
 import com.idealizer.review_x.domain.provider.entities.Provider;
 import com.idealizer.review_x.infra.libs.twitch.igdb.GameMapper;
 import com.idealizer.review_x.infra.libs.twitch.igdb.IgdbGameDTO;
-import com.idealizer.review_x.domain.games.entities.Game;
+import com.idealizer.review_x.domain.game.entities.Game;
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Sort;

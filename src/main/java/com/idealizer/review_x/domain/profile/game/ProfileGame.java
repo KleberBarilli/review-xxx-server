@@ -1,5 +1,6 @@
 package com.idealizer.review_x.domain.profile.game;
 
+import com.idealizer.review_x.domain.game.entities.GamePlatform;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
@@ -17,12 +18,17 @@ import java.util.Objects;
 @Document(collection = "profile_games")
 @CompoundIndexes({
         @CompoundIndex(name = "unique_slug_per_user", def = "{'user_id': 1, 'slug': 1}", unique = true),
-        @CompoundIndex(name = "user_game_idx", def = "{'user_id': 1, 'matched_game_id': 1}", unique = true)
+        @CompoundIndex(name = "user_game_idx", def = "{'user_id': 1, 'game_id': 1}", unique = true)
 })
 
 public class ProfileGame {
     @Id
     private ObjectId id;
+
+
+    @Indexed
+    @Field(value = "game_id")
+    private ObjectId gameId;
 
     @Indexed
     @Field(value = "matched_game_id")
@@ -33,7 +39,11 @@ public class ProfileGame {
     private ObjectId userId;
 
     @Indexed
-    private PlatformType platform;
+    @Field(value = "source_platform")
+    private PlatformType sourcePlatform;
+    @Indexed
+    @Field(value = "played_on")
+    private GamePlatform playedOn;
 
     @Field(value = "original_name")
     private String originalName;
@@ -43,6 +53,7 @@ public class ProfileGame {
     @Indexed
     @Field(value = "playtime_in_minutes")
     private Integer playtimeInMinutes;
+    private Integer rating;
 
     private Boolean playing;
     private Boolean favorite;
@@ -68,6 +79,14 @@ public class ProfileGame {
         this.id = id;
     }
 
+    public ObjectId getGameId() {
+        return gameId;
+    }
+
+    public void setGameId(ObjectId gameId) {
+        this.gameId = gameId;
+    }
+
     public Long getMatchedGameId() {
         return matchedGameId;
     }
@@ -84,12 +103,20 @@ public class ProfileGame {
         this.userId = userId;
     }
 
-    public PlatformType getPlatform() {
-        return platform;
+    public PlatformType getSourcePlatform() {
+        return sourcePlatform;
     }
 
-    public void setPlatform(PlatformType platform) {
-        this.platform = platform;
+    public void setSourcePlatform(PlatformType sourcePlatform) {
+        this.sourcePlatform = sourcePlatform;
+    }
+
+    public GamePlatform getPlayedOn() {
+        return playedOn;
+    }
+
+    public void setPlayedOn(GamePlatform playedOn) {
+        this.playedOn = playedOn;
     }
 
     public String getOriginalName() {
@@ -122,6 +149,14 @@ public class ProfileGame {
 
     public void setPlaytimeInMinutes(Integer playtimeInMinutes) {
         this.playtimeInMinutes = playtimeInMinutes;
+    }
+
+    public Integer getRating() {
+        return rating;
+    }
+
+    public void setRating(Integer rating) {
+        this.rating = rating;
     }
 
     public Boolean getPlaying() {
@@ -194,14 +229,13 @@ public class ProfileGame {
         if (o == null || getClass() != o.getClass()) return false;
         ProfileGame that = (ProfileGame) o;
         return Objects.equals(userId, that.userId) &&
-                Objects.equals(matchedGameId, that.matchedGameId) &&
-                platform == that.platform &&
+                Objects.equals(gameId, that.gameId) &&
                 Objects.equals(slug, that.slug);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(userId, matchedGameId, platform, slug);
+        return Objects.hash(userId, gameId, slug);
     }
 
 

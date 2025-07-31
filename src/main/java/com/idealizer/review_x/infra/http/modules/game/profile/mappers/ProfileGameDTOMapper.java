@@ -1,22 +1,13 @@
 package com.idealizer.review_x.infra.http.modules.game.profile.mappers;
 
-import com.idealizer.review_x.application.profile.game.commands.UpsertProfileGameReviewCommand;
+import com.idealizer.review_x.application.games.profile.game.commands.UpsertProfileGameReviewCommand;
 import com.idealizer.review_x.infra.http.modules.game.profile.dto.UpsertProfileGameDTO;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.NullValuePropertyMappingStrategy;
 import org.mapstruct.factory.Mappers;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
 public interface ProfileGameDTOMapper {
-
-    ProfileGameDTOMapper INSTANCE = Mappers.getMapper(ProfileGameDTOMapper.class);
-
-    @Mapping(target = "reviewTitle", source = "review.title")
-    @Mapping(target = "reviewContent", source = "review.content")
-    @Mapping(target = "reviewSpoiler", source = "review.spoiler")
-    @Mapping(target = "reviewReplay", source = "review.replay")
-    @Mapping(target = "reviewStartedAt", source = "review.startedAt")
-    @Mapping(target = "reviewFinishedAt", source = "review.finishedAt")
-
     UpsertProfileGameReviewCommand toCommand(UpsertProfileGameDTO dto);
 }

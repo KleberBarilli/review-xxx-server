@@ -1,4 +1,4 @@
-package com.idealizer.review_x.application.game.responses;
+package com.idealizer.review_x.application.games.game.responses;
 
 import com.idealizer.review_x.domain.game.entities.GameGenre;
 import com.idealizer.review_x.domain.game.entities.GameMode;

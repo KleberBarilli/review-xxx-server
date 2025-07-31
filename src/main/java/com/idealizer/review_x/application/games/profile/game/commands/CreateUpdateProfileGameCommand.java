@@ -1,93 +1,60 @@
-package com.idealizer.review_x.domain.profile.game;
+package com.idealizer.review_x.application.games.profile.game.commands;
 
 import com.idealizer.review_x.domain.game.entities.GamePlatform;
-import jakarta.validation.constraints.NotBlank;
+import com.idealizer.review_x.domain.profile.game.PlatformType;
+import com.idealizer.review_x.domain.profile.game.ProfileGameStatus;
 import org.bson.types.ObjectId;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.annotation.LastModifiedDate;
-import org.springframework.data.mongodb.core.index.CompoundIndex;
-import org.springframework.data.mongodb.core.index.Indexed;
-import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.data.mongodb.core.mapping.Field;
 
-import java.time.Instant;
 import java.util.List;
-import java.util.Objects;
 
-@Document(collection = "profile_games")
-@CompoundIndex(name = "user_game_idx", def = "{'user_id': 1, 'game_id': 1}", unique = true)
-
-public class ProfileGame {
-    @Id
-    private ObjectId id;
-
-    @Indexed
-    @Field(value = "game_id")
-    @NotBlank
+public class CreateUpdateProfileGameCommand {
+    private ObjectId userId;
     private ObjectId gameId;
 
-    @Indexed
-    @Field(value = "user_id")
-    @NotBlank
-    private ObjectId userId;
-
-    @Indexed
-    @Field(value = "source_platform")
     private PlatformType sourcePlatform;
-    @Indexed
-    @Field(value = "played_on")
     private GamePlatform playedOn;
+    private Boolean hasReview;
     private ProfileGameStatus status;
-
-    @Indexed
-    @Field(value = "playtime_in_minutes")
     private Integer playtimeInMinutes;
     private Integer rating;
-
     private Boolean playing;
-    private Boolean liked;
     private Boolean favorite;
-    @Field(value = "favorite_order")
-    private Integer favoriteOrder;
     private Boolean owned;
     private Boolean wishlist;
     private Boolean mastered;
-    @Field(value = "has_review")
-    private Boolean hasReview;
-
-    @Field(value = "favorite_screenshots")
     private List<String> favoriteScreenshots;
 
-    @Field(value = "created_at")
-    @CreatedDate
-    private Instant createdAt;
-    @Field(value = "updated_at")
-    @LastModifiedDate
-    private Instant updatedAt;
-
-    //duplicated fields below
-    @Field(value = "game_name")
     private String gameName;
-    @Field(value = "game_slug")
     private String gameSlug;
-    @Field(value = "game_cover")
     private String gameCover;
 
-    public ObjectId getId() {
-        return id;
+    public CreateUpdateProfileGameCommand() {
     }
 
-    public void setId(ObjectId id) {
-        this.id = id;
-    }
-
-    public ObjectId getGameId() {
-        return gameId;
-    }
-
-    public void setGameId(ObjectId gameId) {
+    public CreateUpdateProfileGameCommand(ObjectId userId, ObjectId gameId, PlatformType sourcePlatform,
+                                          GamePlatform playedOn, Boolean hasReview,
+                                          ProfileGameStatus status, Integer playtimeInMinutes, Integer rating,
+                                          Boolean playing, Boolean favorite, Boolean owned, Boolean wishlist,
+                                          Boolean mastered, List<String> favoriteScreenshots,
+                                          String gameName, String gameSlug, String gameCover
+                                          ) {
+        this.userId = userId;
         this.gameId = gameId;
+        this.sourcePlatform = sourcePlatform;
+        this.playedOn = playedOn;
+        this.hasReview = hasReview;
+        this.status = status;
+        this.playtimeInMinutes = playtimeInMinutes;
+        this.rating = rating;
+        this.playing = playing;
+        this.favorite = favorite;
+        this.owned = owned;
+        this.wishlist = wishlist;
+        this.mastered = mastered;
+        this.favoriteScreenshots = favoriteScreenshots;
+        this.gameName = gameName;
+        this.gameSlug = gameSlug;
+        this.gameCover = gameCover;
     }
 
     public ObjectId getUserId() {
@@ -96,6 +63,14 @@ public class ProfileGame {
 
     public void setUserId(ObjectId userId) {
         this.userId = userId;
+    }
+
+    public ObjectId getGameId() {
+        return gameId;
+    }
+
+    public void setGameId(ObjectId gameId) {
+        this.gameId = gameId;
     }
 
     public PlatformType getSourcePlatform() {
@@ -112,6 +87,14 @@ public class ProfileGame {
 
     public void setPlayedOn(GamePlatform playedOn) {
         this.playedOn = playedOn;
+    }
+
+    public Boolean getHasReview() {
+        return hasReview;
+    }
+
+    public void setHasReview(Boolean hasReview) {
+        this.hasReview = hasReview;
     }
 
     public ProfileGameStatus getStatus() {
@@ -177,12 +160,6 @@ public class ProfileGame {
     public void setMastered(Boolean mastered) {
         this.mastered = mastered;
     }
-    public  Boolean getHasReview() {
-        return hasReview;
-    }
-    public void setHasReview(Boolean hasReview) {
-        this.hasReview = hasReview;
-    }
 
     public List<String> getFavoriteScreenshots() {
         return favoriteScreenshots;
@@ -190,22 +167,6 @@ public class ProfileGame {
 
     public void setFavoriteScreenshots(List<String> favoriteScreenshots) {
         this.favoriteScreenshots = favoriteScreenshots;
-    }
-
-    public Instant getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(Instant createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public Instant getUpdatedAt() {
-        return updatedAt;
-    }
-
-    public void setUpdatedAt(Instant updatedAt) {
-        this.updatedAt = updatedAt;
     }
 
     public String getGameName() {
@@ -231,36 +192,4 @@ public class ProfileGame {
     public void setGameCover(String gameCover) {
         this.gameCover = gameCover;
     }
-
-    public Boolean getLiked() {
-        return liked;
-    }
-
-    public void setLiked(Boolean liked) {
-        this.liked = liked;
-    }
-
-    public Integer getFavoriteOrder() {
-        return favoriteOrder;
-    }
-
-    public void setFavoriteOrder(Integer favoriteOrder) {
-        this.favoriteOrder = favoriteOrder;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        ProfileGame that = (ProfileGame) o;
-        return Objects.equals(userId, that.userId) &&
-                Objects.equals(gameId, that.gameId);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(userId, gameId);
-    }
-
-
 }

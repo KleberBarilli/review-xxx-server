@@ -1,7 +1,7 @@
-package com.idealizer.review_x.application.game.mappers;
+package com.idealizer.review_x.application.games.game.mappers;
 
-import com.idealizer.review_x.application.game.responses.GameResponse;
-import com.idealizer.review_x.application.game.responses.SimpleGameResponse;
+import com.idealizer.review_x.application.games.game.responses.GameResponse;
+import com.idealizer.review_x.application.games.game.responses.SimpleGameResponse;
 import com.idealizer.review_x.domain.game.entities.Game;
 import org.bson.types.ObjectId;
 import org.mapstruct.Mapper;

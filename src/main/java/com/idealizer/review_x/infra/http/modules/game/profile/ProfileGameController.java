@@ -1,10 +1,11 @@
 package com.idealizer.review_x.infra.http.modules.game.profile;
 
-import com.idealizer.review_x.application.profile.game.commands.UpsertProfileGameReviewCommand;
-import com.idealizer.review_x.application.profile.game.usecases.UpsertProfileGameReviewUseCase;
+import com.idealizer.review_x.application.games.profile.game.commands.UpsertProfileGameReviewCommand;
+import com.idealizer.review_x.application.games.profile.game.usecases.UpsertProfileGameReviewUseCase;
 import com.idealizer.review_x.domain.profile.game.ProfileGameStatus;
 import com.idealizer.review_x.infra.http.modules.game.profile.dto.UpsertProfileGameDTO;
 import com.idealizer.review_x.infra.http.modules.game.profile.mappers.ProfileGameDTOMapper;
+import com.idealizer.review_x.security.services.UserDetailsImpl;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.bson.types.ObjectId;
@@ -36,10 +37,11 @@ public class ProfileGameController {
                                   @RequestParam(defaultValue = "687f03e5c4edbe29b5eef3bb") String gameId,
                                   @Valid @RequestBody UpsertProfileGameDTO dto) {
 
+        ObjectId userId = ((UserDetailsImpl) user).getId();
+
         UpsertProfileGameReviewCommand command = profileGameMapper.toCommand(dto);
         command.setGameId(new ObjectId(gameId));
-        command.setStatus( dto.getStatus() != null ? dto.getStatus() : ProfileGameStatus.TO_PLAY);
-        upsertProfileGameReviewUseCase.execute(command);
+        upsertProfileGameReviewUseCase.execute(command, userId);
 
 
 

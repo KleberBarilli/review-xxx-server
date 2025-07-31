@@ -1,5 +1,6 @@
 package com.idealizer.review_x.domain.profile.game.review;
 
+import jakarta.validation.constraints.PastOrPresent;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
@@ -33,8 +34,10 @@ public class ReviewGame {
     private Integer comments;
 
     @Field(value = "started_at")
+    @PastOrPresent
     private Instant startedAt;
     @Field(value = "finished_at")
+    @PastOrPresent
     private Instant finishedAt;
     @Field(value = "created_at")
     @CreatedDate

@@ -1,9 +1,9 @@
 package com.idealizer.review_x.application.game;
 
-import com.idealizer.review_x.application.game.mappers.GameMapper;
-import com.idealizer.review_x.application.game.responses.FindGameResponse;
-import com.idealizer.review_x.application.game.responses.SimpleGameResponse;
-import com.idealizer.review_x.application.game.usecases.FindGameUseCase;
+import com.idealizer.review_x.application.games.game.mappers.GameMapper;
+import com.idealizer.review_x.application.games.game.responses.FindGameResponse;
+import com.idealizer.review_x.application.games.game.responses.SimpleGameResponse;
+import com.idealizer.review_x.application.games.game.usecases.FindGameUseCase;
 import com.idealizer.review_x.domain.game.entities.Game;
 import com.idealizer.review_x.domain.game.repositories.GameRepository;
 import org.bson.types.ObjectId;

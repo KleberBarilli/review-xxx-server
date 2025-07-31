@@ -1,4 +1,4 @@
-package com.idealizer.review_x.application.profile.game.commands;
+package com.idealizer.review_x.application.games.profile.game.commands;
 
 import com.idealizer.review_x.domain.game.entities.GamePlatform;
 import com.idealizer.review_x.domain.profile.game.PlatformType;
@@ -218,11 +218,11 @@ public class UpsertProfileGameReviewCommand {
         this.reviewReplay = reviewReplay;
     }
 
-    public Instant getreviewStartedAt() {
+    public Instant getReviewStartedAt() {
         return reviewStartedAt;
     }
 
-    public void setreviewStartedAt(Instant reviewStartedAt) {
+    public void setReviewStartedAt(Instant reviewStartedAt) {
         this.reviewStartedAt = reviewStartedAt;
     }
 

@@ -1,9 +1,9 @@
 package com.idealizer.review_x.infra.http.modules.game;
 
-import com.idealizer.review_x.application.game.responses.FindGameResponse;
-import com.idealizer.review_x.application.game.responses.GameResponse;
-import com.idealizer.review_x.application.game.usecases.FindGameByIdUseCase;
-import com.idealizer.review_x.application.game.usecases.FindGameUseCase;
+import com.idealizer.review_x.application.games.game.responses.FindGameResponse;
+import com.idealizer.review_x.application.games.game.responses.GameResponse;
+import com.idealizer.review_x.application.games.game.usecases.FindGameByIdUseCase;
+import com.idealizer.review_x.application.games.game.usecases.FindGameUseCase;
 import com.idealizer.review_x.infra.http.modules.game.dto.FindAllGamesDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;

@@ -2,6 +2,7 @@ package com.idealizer.review_x.infra.http.modules.game.profile;
 
 import com.idealizer.review_x.application.profile.game.commands.UpsertProfileGameReviewCommand;
 import com.idealizer.review_x.application.profile.game.usecases.UpsertProfileGameReviewUseCase;
+import com.idealizer.review_x.domain.profile.game.ProfileGameStatus;
 import com.idealizer.review_x.infra.http.modules.game.profile.dto.UpsertProfileGameDTO;
 import com.idealizer.review_x.infra.http.modules.game.profile.mappers.ProfileGameDTOMapper;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -37,12 +38,9 @@ public class ProfileGameController {
 
         UpsertProfileGameReviewCommand command = profileGameMapper.toCommand(dto);
         command.setGameId(new ObjectId(gameId));
+        command.setStatus( dto.getStatus() != null ? dto.getStatus() : ProfileGameStatus.TO_PLAY);
         upsertProfileGameReviewUseCase.execute(command);
 
-        logger.log(Level.INFO, "Upserting Game Log"
-                + "\nUser: " + user.getUsername()
-                + "\nGame ID: " + gameId
-                + "\nReview: " + dto);
 
 
     }

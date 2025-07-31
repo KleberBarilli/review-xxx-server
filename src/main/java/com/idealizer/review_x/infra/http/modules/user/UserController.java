@@ -5,6 +5,7 @@ import com.idealizer.review_x.application.user.responses.LoginResponse;
 import com.idealizer.review_x.application.user.usecases.*;
 import com.idealizer.review_x.common.LocaleUtil;
 import com.idealizer.review_x.common.MessageUtil;
+import com.idealizer.review_x.common.exceptions.DuplicatedException;
 import com.idealizer.review_x.infra.http.modules.user.dto.LoginRequestDTO;
 import com.idealizer.review_x.infra.http.modules.user.dto.SignupRequestDTO;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -70,10 +71,16 @@ public class UserController {
         Locale locale = LocaleContextHolder.getLocale();
         try {
             signUpUseCase.execute(signupRequestDTO, locale.toString());
-        } catch (Exception e) {
+        }
+        catch (DuplicatedException e){
+            Map<String, Object> map = new HashMap<>();
+            map.put("message", e.getMessage());
+            return new ResponseEntity<Object>(map, HttpStatus.BAD_REQUEST);
+        }
+        catch (Exception e) {
             Map<String, Object> map = new HashMap<>();
             logger.severe("Error during user registration: " + e.getMessage());
-            map.put("message", messageUtil.get("user.signUp.error", null, LocaleUtil.from(locale.toString())));
+            map.put("message", messageUtil.get("signUp.error", null, LocaleUtil.from(locale.toString())));
             return new ResponseEntity<Object>(map, HttpStatus.BAD_REQUEST);
         }
 

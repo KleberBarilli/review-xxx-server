@@ -1,6 +1,7 @@
 package com.idealizer.review_x.infra.http.modules.game.profile.dto;
 
 import com.idealizer.review_x.common.MessageUtil;
+import com.idealizer.review_x.common.validators.ValidUrl;
 import com.idealizer.review_x.domain.game.entities.GamePlatform;
 import com.idealizer.review_x.domain.profile.game.PlatformType;
 import com.idealizer.review_x.domain.profile.game.ProfileGameStatus;
@@ -53,7 +54,9 @@ public class UpsertProfileGameDTO {
     private Integer rating;
 
     @Size(max = 10)
+    @ValidUrl
     private List<String> favoriteScreenshots;
+
 
     private UpsertReviewGameDTO review;
 

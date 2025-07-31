@@ -4,12 +4,14 @@ import org.bson.types.ObjectId;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.mongodb.core.index.CompoundIndex;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.time.Instant;
 
 @Document(collection = "review_games")
+@CompoundIndex(name = "user_game_idx", def = "{'user_id': 1, 'game_id': 1}", unique = true)
 public class ReviewGame {
     @Id
     private ObjectId id;
@@ -40,6 +42,15 @@ public class ReviewGame {
     @Field(value = "updated_at")
     @LastModifiedDate
     private Instant updatedAt;
+
+    //duplicated fields below
+    @Field(value = "game_name")
+    private String gameName;
+    @Field(value = "game_slug")
+    private String gameSlug;
+    @Field(value = "game_cover")
+    private String gameCover;
+
 
     public ObjectId getId() {
         return id;
@@ -151,5 +162,29 @@ public class ReviewGame {
 
     public void setUpdatedAt(Instant updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    public String getGameName() {
+        return gameName;
+    }
+
+    public void setGameName(String gameName) {
+        this.gameName = gameName;
+    }
+
+    public String getGameSlug() {
+        return gameSlug;
+    }
+
+    public void setGameSlug(String gameSlug) {
+        this.gameSlug = gameSlug;
+    }
+
+    public String getGameCover() {
+        return gameCover;
+    }
+
+    public void setGameCover(String gameCover) {
+        this.gameCover = gameCover;
     }
 }

@@ -17,10 +17,7 @@ import java.util.List;
 import java.util.Objects;
 
 @Document(collection = "profile_games")
-@CompoundIndexes({
-        @CompoundIndex(name = "unique_slug_per_user", def = "{'user_id': 1, 'slug': 1}", unique = true),
-        @CompoundIndex(name = "user_game_idx", def = "{'user_id': 1, 'game_id': 1}", unique = true)
-})
+@CompoundIndex(name = "user_game_idx", def = "{'user_id': 1, 'game_id': 1}", unique = true)
 
 public class ProfileGame {
     @Id
@@ -30,10 +27,6 @@ public class ProfileGame {
     @Field(value = "game_id")
     @NotBlank
     private ObjectId gameId;
-
-    @Indexed
-    @Field(value = "matched_game_id")
-    private Long matchedGameId; //(IGDB)
 
     @Indexed
     @Field(value = "user_id")
@@ -46,12 +39,6 @@ public class ProfileGame {
     @Indexed
     @Field(value = "played_on")
     private GamePlatform playedOn;
-
-    @Field(value = "original_name")
-    @NotBlank
-    private String originalName;
-    @NotBlank
-    private String slug;
     private ProfileGameStatus status;
 
     @Indexed
@@ -77,6 +64,14 @@ public class ProfileGame {
     @LastModifiedDate
     private Instant updatedAt;
 
+    //duplicated fields below
+    @Field(value = "game_name")
+    private String gameName;
+    @Field(value = "game_slug")
+    private String gameSlug;
+    @Field(value = "game_cover")
+    private String gameCover;
+
     public ObjectId getId() {
         return id;
     }
@@ -91,14 +86,6 @@ public class ProfileGame {
 
     public void setGameId(ObjectId gameId) {
         this.gameId = gameId;
-    }
-
-    public Long getMatchedGameId() {
-        return matchedGameId;
-    }
-
-    public void setMatchedGameId(Long matchedGameId) {
-        this.matchedGameId = matchedGameId;
     }
 
     public ObjectId getUserId() {
@@ -123,22 +110,6 @@ public class ProfileGame {
 
     public void setPlayedOn(GamePlatform playedOn) {
         this.playedOn = playedOn;
-    }
-
-    public String getOriginalName() {
-        return originalName;
-    }
-
-    public void setOriginalName(String originalName) {
-        this.originalName = originalName;
-    }
-
-    public String getSlug() {
-        return slug;
-    }
-
-    public void setSlug(String slug) {
-        this.slug = slug;
     }
 
     public ProfileGameStatus getStatus() {
@@ -235,19 +206,42 @@ public class ProfileGame {
         this.updatedAt = updatedAt;
     }
 
+    public String getGameName() {
+        return gameName;
+    }
+
+    public void setGameName(String gameName) {
+        this.gameName = gameName;
+    }
+
+    public String getGameSlug() {
+        return gameSlug;
+    }
+
+    public void setGameSlug(String gameSlug) {
+        this.gameSlug = gameSlug;
+    }
+
+    public String getGameCover() {
+        return gameCover;
+    }
+
+    public void setGameCover(String gameCover) {
+        this.gameCover = gameCover;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ProfileGame that = (ProfileGame) o;
         return Objects.equals(userId, that.userId) &&
-                Objects.equals(gameId, that.gameId) &&
-                Objects.equals(slug, that.slug);
+                Objects.equals(gameId, that.gameId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(userId, gameId, slug);
+        return Objects.hash(userId, gameId);
     }
 
 

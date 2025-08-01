@@ -20,7 +20,7 @@ public class UpsertProfileGameReviewCommand {
     private Integer playtimeInMinutes;
     private Integer rating;
     private Boolean playing;
-    private Boolean favorite;
+    private Boolean liked;
     private Boolean owned;
     private Boolean wishlist;
     private Boolean mastered;
@@ -39,7 +39,7 @@ public class UpsertProfileGameReviewCommand {
     public UpsertProfileGameReviewCommand(ObjectId userId, ObjectId gameId, PlatformType sourcePlatform,
             GamePlatform playedOn,
             String originalName, String slug, ProfileGameStatus status, Integer playtimeInMinutes,
-            Integer rating, Boolean playing, Boolean favorite, Boolean owned, Boolean wishlist,
+            Integer rating, Boolean playing, Boolean liked, Boolean owned, Boolean wishlist,
             Boolean mastered, List<String> favoriteScreenshots, String reviewTitle, String reviewContent,
             Boolean reviewSpoiler, Boolean reviewReplay, Instant reviewStartedAt,
             Instant reviewFinishedAt) {
@@ -53,7 +53,7 @@ public class UpsertProfileGameReviewCommand {
         this.playtimeInMinutes = playtimeInMinutes;
         this.rating = rating;
         this.playing = playing;
-        this.favorite = favorite;
+        this.liked = liked;
         this.owned = owned;
         this.wishlist = wishlist;
         this.mastered = mastered;
@@ -146,12 +146,12 @@ public class UpsertProfileGameReviewCommand {
         this.playing = playing;
     }
 
-    public Boolean getFavorite() {
-        return favorite;
+    public Boolean getLiked() {
+        return liked;
     }
 
-    public void setFavorite(Boolean favorite) {
-        this.favorite = favorite;
+    public void setLiked(Boolean liked) {
+        this.liked = liked;
     }
 
     public Boolean getOwned() {

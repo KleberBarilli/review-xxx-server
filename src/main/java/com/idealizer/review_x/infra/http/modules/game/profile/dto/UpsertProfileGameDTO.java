@@ -34,7 +34,7 @@ public class UpsertProfileGameDTO {
     private Boolean playing;
 
     @Schema(defaultValue = "false")
-    private Boolean favorite;
+    private Boolean liked;
 
     @Schema(defaultValue = "true")
     private Boolean owned;
@@ -80,13 +80,17 @@ public class UpsertProfileGameDTO {
     private Instant reviewFinishedAt;
 
 
-    public UpsertProfileGameDTO(GamePlatform playedOn, PlatformType sourcePlatform, ProfileGameStatus status, Integer playtimeInMinutes, Boolean playing, Boolean favorite, Boolean owned, Boolean wishlist, Boolean mastered, Integer rating, List<String> favoriteScreenshots, String reviewTitle, String reviewContent, Boolean reviewSpoiler, Boolean reviewReplay, Instant reviewStartedAt, Instant reviewFinishedAt) {
+    public UpsertProfileGameDTO(GamePlatform playedOn, PlatformType sourcePlatform, ProfileGameStatus status,
+                                Integer playtimeInMinutes, Boolean playing, Boolean liked, Boolean owned,
+                                Boolean wishlist, Boolean mastered, Integer rating, List<String> favoriteScreenshots
+            , String reviewTitle, String reviewContent, Boolean reviewSpoiler, Boolean reviewReplay,
+                                Instant reviewStartedAt, Instant reviewFinishedAt) {
         this.playedOn = playedOn;
         this.sourcePlatform = sourcePlatform;
         this.status = status;
         this.playtimeInMinutes = playtimeInMinutes;
         this.playing = playing;
-        this.favorite = favorite;
+        this.liked = liked;
         this.owned = owned;
         this.wishlist = wishlist;
         this.mastered = mastered;
@@ -120,8 +124,8 @@ public class UpsertProfileGameDTO {
         return playing;
     }
 
-    public Boolean getFavorite() {
-        return favorite;
+    public Boolean getLiked() {
+        return liked;
     }
 
     public Boolean getOwned() {

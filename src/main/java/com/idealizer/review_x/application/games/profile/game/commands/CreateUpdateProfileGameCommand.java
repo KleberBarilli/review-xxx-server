@@ -18,7 +18,7 @@ public class CreateUpdateProfileGameCommand {
     private Integer playtimeInMinutes;
     private Integer rating;
     private Boolean playing;
-    private Boolean favorite;
+    private Boolean liked;
     private Boolean owned;
     private Boolean wishlist;
     private Boolean mastered;
@@ -34,7 +34,7 @@ public class CreateUpdateProfileGameCommand {
     public CreateUpdateProfileGameCommand(ObjectId userId, ObjectId gameId, PlatformType sourcePlatform,
                                           GamePlatform playedOn, Boolean hasReview,
                                           ProfileGameStatus status, Integer playtimeInMinutes, Integer rating,
-                                          Boolean playing, Boolean favorite, Boolean owned, Boolean wishlist,
+                                          Boolean playing, Boolean liked, Boolean owned, Boolean wishlist,
                                           Boolean mastered, List<String> favoriteScreenshots,
                                           String gameName, String gameSlug, String gameCover
                                           ) {
@@ -47,7 +47,7 @@ public class CreateUpdateProfileGameCommand {
         this.playtimeInMinutes = playtimeInMinutes;
         this.rating = rating;
         this.playing = playing;
-        this.favorite = favorite;
+        this.liked = liked;
         this.owned = owned;
         this.wishlist = wishlist;
         this.mastered = mastered;
@@ -129,12 +129,12 @@ public class CreateUpdateProfileGameCommand {
         this.playing = playing;
     }
 
-    public Boolean getFavorite() {
-        return favorite;
+    public Boolean getLiked() {
+        return liked;
     }
 
-    public void setFavorite(Boolean favorite) {
-        this.favorite = favorite;
+    public void setLiked(Boolean liked) {
+        this.liked = liked;
     }
 
     public Boolean getOwned() {

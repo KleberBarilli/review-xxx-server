@@ -60,7 +60,6 @@ public class JwtUtils {
 
     public boolean validateJwtToken(String authToken) {
         try {
-            logger.debug("Validate");
             Jwts.parser().verifyWith((SecretKey) key()).build().parseSignedClaims(authToken);
             return true;
         } catch (MalformedJwtException e) {

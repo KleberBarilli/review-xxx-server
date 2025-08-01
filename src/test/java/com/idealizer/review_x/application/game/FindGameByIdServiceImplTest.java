@@ -1,10 +1,10 @@
 package com.idealizer.review_x.application.game;
 
-import com.idealizer.review_x.application.game.mappers.GameMapper;
-import com.idealizer.review_x.application.game.responses.GameResponse;
-import com.idealizer.review_x.application.game.usecases.FindGameByIdUseCase;
-import com.idealizer.review_x.domain.games.entities.Game;
-import com.idealizer.review_x.domain.games.repositories.GameRepository;
+import com.idealizer.review_x.application.games.game.mappers.GameMapper;
+import com.idealizer.review_x.application.games.game.responses.GameResponse;
+import com.idealizer.review_x.application.games.game.usecases.FindGameByIdUseCase;
+import com.idealizer.review_x.domain.game.entities.Game;
+import com.idealizer.review_x.domain.game.repositories.GameRepository;
 import org.bson.types.ObjectId;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

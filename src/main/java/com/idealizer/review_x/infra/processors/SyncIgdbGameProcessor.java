@@ -2,7 +2,7 @@ package com.idealizer.review_x.infra.processors;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.idealizer.review_x.domain.games.entities.Game;
+import com.idealizer.review_x.domain.game.entities.Game;
 import com.idealizer.review_x.domain.provider.entities.PlatformType;
 import com.idealizer.review_x.domain.provider.entities.Provider;
 import com.idealizer.review_x.infra.libs.twitch.igdb.GameMapper;

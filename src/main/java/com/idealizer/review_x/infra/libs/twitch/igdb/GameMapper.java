@@ -1,9 +1,9 @@
 package com.idealizer.review_x.infra.libs.twitch.igdb;
 
-import com.idealizer.review_x.domain.games.entities.Game;
-import com.idealizer.review_x.domain.games.entities.GameGenre;
-import com.idealizer.review_x.domain.games.entities.GameMode;
-import com.idealizer.review_x.domain.games.entities.GamePlatform;
+import com.idealizer.review_x.domain.game.entities.Game;
+import com.idealizer.review_x.domain.game.entities.GameGenre;
+import com.idealizer.review_x.domain.game.entities.GameMode;
+import com.idealizer.review_x.domain.game.entities.GamePlatform;
 
 import java.time.Instant;
 import java.time.LocalDate;

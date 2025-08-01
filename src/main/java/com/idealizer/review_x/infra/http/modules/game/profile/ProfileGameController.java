@@ -6,6 +6,7 @@ import com.idealizer.review_x.domain.profile.game.ProfileGameStatus;
 import com.idealizer.review_x.infra.http.modules.game.profile.dto.UpsertProfileGameDTO;
 import com.idealizer.review_x.infra.http.modules.game.profile.mappers.ProfileGameDTOMapper;
 import com.idealizer.review_x.security.services.UserDetailsImpl;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.bson.types.ObjectId;
@@ -32,6 +33,7 @@ public class ProfileGameController {
         this.upsertProfileGameReviewUseCase = upsertProfileGameReviewUseCase;
     }
 
+    @Operation(summary = "Create/Update Profile Game + Review")
     @PutMapping("/{gameId}")
     public void upsertProfileGame(@AuthenticationPrincipal UserDetails user,
                                   @RequestParam(defaultValue = "687f03e5c4edbe29b5eef3bb") String gameId,

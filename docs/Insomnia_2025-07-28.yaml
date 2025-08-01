@@ -10,14 +10,22 @@ collection:
     meta:
       id: fld_28a9333853544aa18b42d8c6978a6f58
       created: 1753724270123
-      modified: 1753724987859
+      modified: 1753729850233
       sortKey: -1753724270123
       description: ""
+    children:
+      - name: Webhook
+        meta:
+          id: fld_6eef2f8a084a464a971794b238438c23
+          created: 1753729860877
+          modified: 1753729876435
+          sortKey: -1753729860877
+          description: ""
   - name: LogId
     meta:
       id: fld_821c61efea084386a104763233e545a0
       created: 1753724554172
-      modified: 1753724559835
+      modified: 1754057489358
       sortKey: -1753724554172
       description: ""
     children:
@@ -34,7 +42,7 @@ collection:
             meta:
               id: req_04dbcfb2c0144b76903792df5cd381bb
               created: 1753711324219
-              modified: 1753713492803
+              modified: 1753975833312
               isPrivate: false
               description: ""
               sortKey: -1753711324219
@@ -44,15 +52,22 @@ collection:
               text: |-
                 {
                 	"name": "Skyzz",
-                	"email": "kb1@gmail.com",
+                	"email": "k@gmail.com",
                 	"password": "senha123",
                 	"locale":"pt_BR"
                 }
             headers:
               - name: Content-Type
                 value: application/json
+                id: pair_73403f4f1ad542e6a6f6ff9860f89e89
               - name: User-Agent
                 value: insomnia/11.3.0
+                id: pair_94048415f8f6467db322e71580512d90
+              - id: pair_9c110b4c40f5475ebd3be707b461cf4f
+                name: Accept-Language
+                value: en
+                description: ""
+                disabled: false
             settings:
               renderRequestBody: true
               encodeUrl: true
@@ -66,7 +81,7 @@ collection:
             meta:
               id: req_27c65cf8fa204b028724367c8f604928
               created: 1753711756080
-              modified: 1753724014067
+              modified: 1754055932173
               isPrivate: false
               description: ""
               sortKey: -1753590030316.5
@@ -75,15 +90,125 @@ collection:
               mimeType: application/json
               text: |-
                 {
-                	"username": "Skyzz",
-                	"password": "senha123",
+                	"username": "kleber",
+                	"password": "",
                 	"locale": "pt_BR"
                 }
             headers:
               - name: Content-Type
                 value: application/json
+                id: pair_eb57eec98d9647c2ac8bfee128e178af
               - name: User-Agent
                 value: insomnia/11.3.0
+                id: pair_1f3ed31137de4be8b10de50423aba822
+              - id: pair_8dc30e8454de43ed85e18ec7e0b94b55
+                name: Accept-Language
+                value: pt-br
+                description: ""
+                disabled: false
+            settings:
+              renderRequestBody: true
+              encodeUrl: true
+              followRedirects: global
+              cookies:
+                send: true
+                store: true
+              rebuildPath: true
+          - url: "{{ _.local_url }}/api/users/me"
+            name: Current Logged User
+            meta:
+              id: req_dfa79351fdac471196be37ca024ce2bc
+              created: 1753796365744
+              modified: 1753806786363
+              isPrivate: false
+              description: ""
+              sortKey: -1753796365744
+            method: GET
+            headers:
+              - name: User-Agent
+                value: insomnia/11.3.0
+                id: pair_23ef243e64324ff6a94a0c4c27b513f3
+              - id: pair_f3a29eec828a4c2cae14c878959b5d42
+                name: Accept-Language
+                value: pt-BR
+                description: ""
+                disabled: false
+            authentication:
+              type: bearer
+              token: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzdHJpbmciLCJpYXQiOjE3NTM4MDM4NDksImV4cCI6MTc1MzgwNzQ0OX0.Rygo2Hwq8GPmnVDQEtwwdC3VqQp3vebCPLaRSQds0vg
+            settings:
+              renderRequestBody: true
+              encodeUrl: true
+              followRedirects: global
+              cookies:
+                send: true
+                store: true
+              rebuildPath: true
+          - url: "{{ _.local_url }}/api/users/updateAvatar"
+            name: Update Avatar
+            meta:
+              id: req_5b7b70962e694c978afcf09e77c0f837
+              created: 1753796499810
+              modified: 1753806526490
+              isPrivate: false
+              description: ""
+              sortKey: -1753763175466.5
+            method: PATCH
+            body:
+              mimeType: multipart/form-data
+              params:
+                - id: pair_49b8942a6f3446ad83ccff902e9a574f
+                  name: file
+                  value: ""
+                  description: ""
+                  disabled: false
+                  type: file
+                  fileName: /home/skyyz/Downloads/I_12.png
+            headers:
+              - name: Content-Type
+                value: multipart/form-data
+                id: pair_5a6875beb1644ebd98b55d4d8757600b
+              - name: User-Agent
+                value: insomnia/11.3.0
+                id: pair_f2d5ac8cc632416480effa80411e2426
+              - id: pair_57afdcdc111346da9cba65dfa96d5e2b
+                name: Accept-Language
+                value: en
+                description: ""
+                disabled: false
+            authentication:
+              type: bearer
+              token: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzdHJpbmciLCJpYXQiOjE3NTM4MDM4NDksImV4cCI6MTc1MzgwNzQ0OX0.Rygo2Hwq8GPmnVDQEtwwdC3VqQp3vebCPLaRSQds0vg
+            settings:
+              renderRequestBody: true
+              encodeUrl: true
+              followRedirects: global
+              cookies:
+                send: true
+                store: true
+              rebuildPath: true
+          - url: "{{ _.local_url }}/api/users/removeAvatar"
+            name: Remove Avatar
+            meta:
+              id: req_ace1cf56801949c8bf2cb86904efc783
+              created: 1753803985555
+              modified: 1753806531942
+              isPrivate: false
+              description: ""
+              sortKey: -1753746580327.75
+            method: DELETE
+            headers:
+              - name: User-Agent
+                value: insomnia/11.3.0
+                id: pair_f2d5ac8cc632416480effa80411e2426
+              - id: pair_8d6af8f9809e4b0382f21e52c1ac97a6
+                name: Accept-Language
+                value: en
+                description: ""
+                disabled: false
+            authentication:
+              type: bearer
+              token: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzdHJpbmciLCJpYXQiOjE3NTM4MDM4NDksImV4cCI6MTc1MzgwNzQ0OX0.Rygo2Hwq8GPmnVDQEtwwdC3VqQp3vebCPLaRSQds0vg
             settings:
               renderRequestBody: true
               encodeUrl: true
@@ -96,16 +221,75 @@ collection:
         meta:
           id: fld_c0e5e51941f140fc9e99431ad2342b64
           created: 1753724422646
-          modified: 1753724560328
+          modified: 1754057234254
           sortKey: -1753724560299
           description: ""
         children:
+          - name: Profile
+            meta:
+              id: fld_84de42b7499642f9b218c83f5fea730f
+              created: 1754057239036
+              modified: 1754057239036
+              sortKey: -1754057239036
+              description: ""
+            children:
+              - url: "{{ _.local_url }}/api/profile-games/687f03e5c4edbe29b5eef3bb"
+                name: New Request
+                meta:
+                  id: req_53e90e777d7a407f8a4ba68344833009
+                  created: 1754057251668
+                  modified: 1754057287144
+                  isPrivate: false
+                  description: ""
+                  sortKey: -1754057251668
+                method: PUT
+                body:
+                  mimeType: application/json
+                  text: >-
+                    {
+                    	"playedOn": "PC_MICROSOFT_WINDOWS",
+                    	"sourcePlatform": "STEAM",
+                    	"status": "COMPLETED",
+                    	"playtimeInMinutes": 1000,
+                    	"playing": false,
+                    	"liked": true,
+                    	"owned": true,
+                    	"wishlist": false,
+                    	"mastered": true,
+                    	"rating": 9,
+                    	"reviewTitle": "GOTY 2025",
+                    	"reviewContent": "This is a sample review content. Share your thoughts about the game, what you liked,what could be improved, and your overall experience. Be honest and constructive to help other players make informed decisions!",
+                    	"reviewSpoiler": false,
+                    	"reviewReplay": false,
+                    	"reviewStartedAt": "2025-07-25T12:00:00Z",
+                    	"reviewFinishedAt": "2025-07-30T12:00:00Z"
+                    }
+                parameters:
+                  - name: gameId
+                    value: 687f03e5c4edbe29b5eef3bb
+                    disabled: false
+                headers:
+                  - name: accept
+                    value: "*/*"
+                  - name: Authorization
+                    value: Bearer
+                      eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJrbGViZXIiLCJpYXQiOjE3NTQwNTU5MzAsImV4cCI6MTc1NDE0MjMzMH0.n6y61J2YyB3msFsNI3PVvnk4hmGC-8K2gorVUZ48PGY
+                  - name: Content-Type
+                    value: application/json
+                settings:
+                  renderRequestBody: true
+                  encodeUrl: true
+                  followRedirects: global
+                  cookies:
+                    send: true
+                    store: true
+                  rebuildPath: true
           - url: "{{ _.local_url }}/api/public/games/687f03e5c4edbe29b5eef3c5"
             name: Find by Id
             meta:
               id: req_894e1b6d3c9342468e8749597feda368
               created: 1753724436607
-              modified: 1753724460356
+              modified: 1753806558652
               isPrivate: false
               description: ""
               sortKey: -1753724436607
@@ -113,9 +297,16 @@ collection:
             headers:
               - name: accept
                 value: "*/*"
+                id: pair_32db58838ef846478a1ec5575fd17d3f
               - name: Authorization
                 value: Bearer
                   eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJTa3l6eiIsImlhdCI6MTc1MzcxNzg5MSwiZXhwIjoxNzUzNzIxNDkxfQ.Vb5JmkHMzB3LBvZDJsgOQ1d90Venp-okP4-YU_W5swU
+                id: pair_a4733b01a7d94e3f9ae8b479baf0410f
+              - id: pair_2a7d7038cb874007b0d75e90caff3606
+                name: Accept-Language
+                value: en
+                description: ""
+                disabled: false
             settings:
               renderRequestBody: true
               encodeUrl: true
@@ -129,7 +320,7 @@ collection:
             meta:
               id: req_0928330084dc407a8e4eb03670e65164
               created: 1753724493027
-              modified: 1753724512379
+              modified: 1753806548547
               isPrivate: false
               description: ""
               sortKey: -1753724436707
@@ -150,9 +341,16 @@ collection:
             headers:
               - name: accept
                 value: "*/*"
+                id: pair_2f06ea088dc84593a920785eacdd9281
               - name: Authorization
                 value: Bearer
                   eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJTa3l6eiIsImlhdCI6MTc1MzcxNzg5MSwiZXhwIjoxNzUzNzIxNDkxfQ.Vb5JmkHMzB3LBvZDJsgOQ1d90Venp-okP4-YU_W5swU
+                id: pair_11f89d17ad8143f0a0040e682607b950
+              - id: pair_0631c6e357fa4509948a853f431e7301
+                name: Accept-Language
+                value: en
+                description: ""
+                disabled: false
             settings:
               renderRequestBody: true
               encodeUrl: true
@@ -165,7 +363,7 @@ collection:
         meta:
           id: fld_b40193cd4b434b80bfe5ded316337bf2
           created: 1753724575012
-          modified: 1753724685977
+          modified: 1754057225804
           sortKey: -1753724560599
           description: ""
         children:
@@ -239,27 +437,27 @@ cookieJar:
   meta:
     id: jar_14b13c1f99bfd68750cc979af1fbf4eaa5e3a1c9
     created: 1752614411765
-    modified: 1753717708656
+    modified: 1753806313140
   cookies:
     - key: __cf_bm
-      value: UIUW4DfzXJ2VCUsRah3TOo4Mi8paQrwg4Y7VS2VGNRo-1753452600-1.0.1.1-_CxXaYkt2.B_ZibHYsLlbv3nk9hMHcT.ehdEf6tuBBC4ouC2NwnruH6WyMHdIBLeaO9xshjqahceeNBkbK90mLjxsXL12J5ZPdAnHhE0Cb4
+      value: es7jpSNU3Ajvu9lNri7NTTLiml4VDR.hFuVTmVnze2s-1753729523-1.0.1.1-2AXr9r35L_JzUQsjW10alNiMruzCIh__RskQzZWBZDwMrLG2Bc0WURfeQw2MM.glt1buu7_QtjLeCknKnY3MuRkZCldm_fMum__ra_I4bBo
       domain: igdb.com
       path: /
       secure: true
       httpOnly: true
       hostOnly: false
       creation: 2025-07-15T21:22:02.464Z
-      lastAccessed: 2025-07-25T14:10:00.846Z
-      id: 40d36960-0489-4ca3-a331-1c524eea9a23
+      lastAccessed: 2025-07-28T19:05:23.486Z
+      id: 8984e861-3165-4e1b-bf0f-9d08923d2085
     - key: JSESSIONID
-      value: 50CDB7FB8DD0F01253F800886AB1E76D
+      value: 0682BC3B70F4662F842B7F9A09593B2A
       domain: localhost
       path: /
       httpOnly: true
       hostOnly: true
       creation: 2025-07-24T18:07:33.344Z
-      lastAccessed: 2025-07-28T15:48:28.656Z
-      id: ebe4c4e5-cb56-4b1a-b221-67773ef8fbd6
+      lastAccessed: 2025-07-29T16:25:13.139Z
+      id: 3e6ce834-f466-4587-a56c-85125c4c4e12
     - key: AUTH_SESSION_ID
       value: c36d315b-50fa-4732-a69e-ec852dc502e6
       domain: localhost
@@ -272,7 +470,7 @@ cookieJar:
       creation: 2025-07-24T18:07:33.345Z
       lastAccessed: 2025-07-24T18:30:24.216Z
       sameSite: none
-      id: 213c7ef5-416c-4014-a8a4-cbc62f6b4c90
+      id: f1b82ec2-6697-4cb1-a818-e4d1b1cff955
     - key: AUTH_SESSION_ID_LEGACY
       value: c36d315b-50fa-4732-a69e-ec852dc502e6
       domain: localhost
@@ -283,7 +481,7 @@ cookieJar:
       hostOnly: true
       creation: 2025-07-24T18:07:33.346Z
       lastAccessed: 2025-07-24T18:30:24.217Z
-      id: 664fc3c8-0b6f-447f-ba9b-828f9f246ffc
+      id: 0f1fe23d-2efd-457d-90d2-e9c995cd8864
     - key: KC_RESTART
       value: eyJhbGciOiJIUzUxMiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICIxMTViNDQ5OS1kNTdlLTQ4NTEtOTlmMS0xMGRlMDQ2M2FkZjgifQ.eyJjaWQiOiJyZXZpZXcteCIsInB0eSI6Im9wZW5pZC1jb25uZWN0IiwicnVyaSI6Imh0dHA6Ly9sb2NhbGhvc3Q6OTA5MC9sb2dpbi9vYXV0aDIvY29kZS9rZXljbG9hay1vaWRjIiwiYWN0IjoiQVVUSEVOVElDQVRFIiwibm90ZXMiOnsic2NvcGUiOiJvcGVuaWQgZW1haWwgcHJvZmlsZSIsImlzcyI6Imh0dHA6Ly9sb2NhbGhvc3Q6ODA4MC9yZWFsbXMvcmV2aWV3LXgiLCJyZXNwb25zZV90eXBlIjoiY29kZSIsInJlZGlyZWN0X3VyaSI6Imh0dHA6Ly9sb2NhbGhvc3Q6OTA5MC9sb2dpbi9vYXV0aDIvY29kZS9rZXljbG9hay1vaWRjIiwic3RhdGUiOiJ5dTdndEZ4LUlBVm1YNWxZRlE2VWQ0Y3lNeHdGcWp4QlpPV2l3MUctR2swPSIsIm5vbmNlIjoiTXJzTlMwTTU3OFFzUVhVS3g3YnNydm9lWEZmeWxnT2pEY2M4cllTU0xodyJ9fQ.x2s5kJexYZAcj2X3_87-8gyTofxkgH52eJDjOVWn1GVL9cvyzw0IOIHnE4KJAjfJzC46BcEG1YG_sKkIXXStqw
       domain: localhost
@@ -294,7 +492,7 @@ cookieJar:
       hostOnly: true
       creation: 2025-07-24T18:07:33.346Z
       lastAccessed: 2025-07-24T18:30:24.217Z
-      id: 80c104dd-7ed3-4cf9-bede-af5e9ff84ce2
+      id: fea90e83-ac7b-4504-b77a-2ffc4d25f54e
     - key: XSRF-TOKEN
       value: 6298b4ad-56f6-4976-a31c-ec7ff102a2b1
       domain: localhost
@@ -302,7 +500,7 @@ cookieJar:
       hostOnly: true
       creation: 2025-07-25T18:39:26.819Z
       lastAccessed: 2025-07-25T18:39:26.819Z
-      id: cc4f589b-504f-45f8-a881-1758dc9d7db4
+      id: a47a8d7a-a60e-4e06-a07b-bd267452b093
 environments:
   name: Base Environment
   meta:

@@ -1,8 +1,11 @@
 package com.idealizer.review_x.infra.http.modules.game.profile;
 
 import com.idealizer.review_x.application.games.profile.game.commands.UpsertProfileGameReviewCommand;
+import com.idealizer.review_x.application.games.profile.game.usecases.UpdateFavoriteGamesUseCase;
 import com.idealizer.review_x.application.games.profile.game.usecases.UpsertProfileGameReviewUseCase;
-import com.idealizer.review_x.domain.profile.game.ProfileGameStatus;
+import com.idealizer.review_x.application.games.profile.review.usecases.DeleteReviewUseCase;
+import com.idealizer.review_x.common.dtos.UpdateFavoriteGameDTO;
+import com.idealizer.review_x.common.exceptions.ForbiddenException;
 import com.idealizer.review_x.infra.http.modules.game.profile.dto.UpsertProfileGameDTO;
 import com.idealizer.review_x.infra.http.modules.game.profile.mappers.ProfileGameDTOMapper;
 import com.idealizer.review_x.security.services.UserDetailsImpl;
@@ -10,10 +13,14 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.bson.types.ObjectId;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -26,17 +33,24 @@ public class ProfileGameController {
 
     private final ProfileGameDTOMapper profileGameMapper;
     private final UpsertProfileGameReviewUseCase upsertProfileGameReviewUseCase;
+    private final DeleteReviewUseCase deleteReviewUseCase;
+    private final UpdateFavoriteGamesUseCase updateFavoriteGamesUseCase;
 
     public ProfileGameController(ProfileGameDTOMapper profileGameMapper,
-                                 UpsertProfileGameReviewUseCase upsertProfileGameReviewUseCase) {
+                                 UpsertProfileGameReviewUseCase upsertProfileGameReviewUseCase,
+                                 DeleteReviewUseCase deleteReviewUseCase,
+                                 UpdateFavoriteGamesUseCase updateFavoriteGamesUseCase
+                          ) {
         this.profileGameMapper = profileGameMapper;
         this.upsertProfileGameReviewUseCase = upsertProfileGameReviewUseCase;
+        this.deleteReviewUseCase = deleteReviewUseCase;
+        this.updateFavoriteGamesUseCase = updateFavoriteGamesUseCase;
     }
 
     @Operation(summary = "Create/Update Profile Game + Review")
     @PutMapping("/{gameId}")
     public void upsertProfileGame(@AuthenticationPrincipal UserDetails user,
-                                  @RequestParam(defaultValue = "687f03e5c4edbe29b5eef3bb") String gameId,
+                                  @PathVariable() String gameId,
                                   @Valid @RequestBody UpsertProfileGameDTO dto) {
 
         ObjectId userId = ((UserDetailsImpl) user).getId();
@@ -46,12 +60,36 @@ public class ProfileGameController {
         upsertProfileGameReviewUseCase.execute(command, userId);
 
 
-
     }
 
     @GetMapping
     public String getGameLogs(@AuthenticationPrincipal UserDetails user) {
         logger.log(Level.INFO, "Fetching Game Logs for user: " + user.getUsername());
         return "Game logs fetched successfully for user: " + user.getUsername();
+    }
+
+    @Operation(summary = "Set favorite games (max10)", description = "All favorites must be sent")
+    @PutMapping("/set/favorites")
+    public void setFavorites(@AuthenticationPrincipal UserDetails user, @Valid @RequestBody UpdateFavoriteGameDTO dto){
+        ObjectId userId = ((UserDetailsImpl) user).getId();
+        updateFavoriteGamesUseCase.execute(userId, dto);
+
+    }
+
+    @DeleteMapping("/review/{id}")
+    public ResponseEntity<?> deleteReview(@AuthenticationPrincipal UserDetails user, @PathVariable String id) {
+        ObjectId userId = ((UserDetailsImpl) user).getId();
+        ObjectId reviewId = new ObjectId(id);
+
+        try {
+            deleteReviewUseCase.execute(userId, reviewId);
+            return ResponseEntity.ok().build();
+        }catch (ForbiddenException e){
+            Map<String, Object> map = new HashMap<>();
+            map.put("message", e.getMessage());
+            return new ResponseEntity<Object>(map, HttpStatus.BAD_REQUEST);
+
+        }
+
     }
 }

@@ -23,6 +23,8 @@ public class CreateUpdateProfileGameCommand {
     private Boolean wishlist;
     private Boolean mastered;
     private List<String> favoriteScreenshots;
+    private Boolean favorite;
+    private Integer favoriteOrder;
 
     private String gameName;
     private String gameSlug;
@@ -31,13 +33,7 @@ public class CreateUpdateProfileGameCommand {
     public CreateUpdateProfileGameCommand() {
     }
 
-    public CreateUpdateProfileGameCommand(ObjectId userId, ObjectId gameId, PlatformType sourcePlatform,
-                                          GamePlatform playedOn, Boolean hasReview,
-                                          ProfileGameStatus status, Integer playtimeInMinutes, Integer rating,
-                                          Boolean playing, Boolean liked, Boolean owned, Boolean wishlist,
-                                          Boolean mastered, List<String> favoriteScreenshots,
-                                          String gameName, String gameSlug, String gameCover
-                                          ) {
+    public CreateUpdateProfileGameCommand(ObjectId userId, ObjectId gameId, PlatformType sourcePlatform, GamePlatform playedOn, Boolean hasReview, ProfileGameStatus status, Integer playtimeInMinutes, Integer rating, Boolean playing, Boolean liked, Boolean owned, Boolean wishlist, Boolean mastered, List<String> favoriteScreenshots, Boolean favorite, int favoriteOrder, String gameName, String gameSlug, String gameCover) {
         this.userId = userId;
         this.gameId = gameId;
         this.sourcePlatform = sourcePlatform;
@@ -52,6 +48,8 @@ public class CreateUpdateProfileGameCommand {
         this.wishlist = wishlist;
         this.mastered = mastered;
         this.favoriteScreenshots = favoriteScreenshots;
+        this.favorite = favorite;
+        this.favoriteOrder = favoriteOrder;
         this.gameName = gameName;
         this.gameSlug = gameSlug;
         this.gameCover = gameCover;
@@ -191,5 +189,21 @@ public class CreateUpdateProfileGameCommand {
 
     public void setGameCover(String gameCover) {
         this.gameCover = gameCover;
+    }
+
+    public Boolean getFavorite() {
+        return favorite;
+    }
+
+    public void setFavorite(Boolean favorite) {
+        this.favorite = favorite;
+    }
+
+    public Integer getFavoriteOrder() {
+        return favoriteOrder;
+    }
+
+    public void setFavoriteOrder(Integer favoriteOrder) {
+        this.favoriteOrder = favoriteOrder;
     }
 }

@@ -9,4 +9,7 @@ import java.util.Optional;
 public interface ProfileReviewRepository extends MongoRepository<ReviewGame, ObjectId> {
     boolean existsByProfileGameId(ObjectId entryId);
     Optional<ReviewGame> findByProfileGameId(ObjectId profileGameId);
+
+    long deleteByIdAndUserId(ObjectId reviewId, ObjectId userId);
+
 }

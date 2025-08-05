@@ -49,18 +49,14 @@ public class UpdateFavoriteGamesUseCase {
 
         List<ProfileGame> currentFavorites = profileGameRepository.findByUserIdAndFavoriteIsTrue(userId);
 
-        // Buscar todos os ProfileGames existentes
         List<ProfileGame> existingProfileGames = profileGameRepository.findByUserIdAndGameIdIn(userId, new ArrayList<>(newFavoriteIds));
         Map<ObjectId, ProfileGame> existingMap = existingProfileGames.stream()
                 .collect(Collectors.toMap(ProfileGame::getGameId, Function.identity()));
-
-        // Buscar os games em lote
         Set<ObjectId> missingGameIds = new HashSet<>(newFavoriteIds);
         missingGameIds.removeAll(existingMap.keySet());
         Map<ObjectId, Game> gamesMap = gameRepository.findByIdIn(missingGameIds).stream()
                 .collect(Collectors.toMap(Game::getId, Function.identity()));
 
-        // Atualizar ou criar favoritos
         for (UpdateFavoriteGameDTO.FavoriteGameOrderDTO fav : favoriteDtos) {
             ObjectId gameId = new ObjectId(fav.getGameId());
             int order = fav.getOrder();
@@ -90,7 +86,6 @@ public class UpdateFavoriteGamesUseCase {
             }
         }
 
-        // Atualizar antigos favoritos que não estão mais na nova lista
         List<ProfileGame> toUnfavorite = currentFavorites.stream()
                 .filter(pg -> !newFavoriteIds.contains(pg.getGameId()))
                 .collect(Collectors.toList());

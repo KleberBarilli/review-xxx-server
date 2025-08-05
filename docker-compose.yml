@@ -4,7 +4,7 @@ services:
     build: .
     container_name: review-xxx-server
     ports:
-      - "9090:8080"
+      - "9090:9090"
     environment:
       - MONGODB_URI=${MONGODB_URI}
       - TWITCH_CLIENT_ID=${TWITCH_CLIENT_ID}

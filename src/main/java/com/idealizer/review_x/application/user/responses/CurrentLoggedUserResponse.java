@@ -1,6 +1,9 @@
 package com.idealizer.review_x.application.user.responses;
 
+import com.idealizer.review_x.domain.profile.game.interfaces.SimpleProfileGame;
 import com.idealizer.review_x.domain.user.entities.MobileDeviceType;
+
+import java.util.List;
 
 public class CurrentLoggedUserResponse {
     private String id;
@@ -12,6 +15,8 @@ public class CurrentLoggedUserResponse {
     private String letterboxdUrl;
     private String locale;
     private MobileDeviceType mobileDevice;
+    private List<SimpleProfileGame> favoriteGames;
+
 
     public String getLetterboxdUrl() {
         return letterboxdUrl;
@@ -83,5 +88,13 @@ public class CurrentLoggedUserResponse {
 
     public void setMobileDevice(MobileDeviceType mobileDevice) {
         this.mobileDevice = mobileDevice;
+    }
+
+    public List<SimpleProfileGame> getFavoriteGames() {
+        return favoriteGames;
+    }
+
+    public void setFavoriteGames(List<SimpleProfileGame> favoriteGames) {
+        this.favoriteGames = favoriteGames;
     }
 }

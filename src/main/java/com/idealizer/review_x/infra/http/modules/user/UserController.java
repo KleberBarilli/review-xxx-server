@@ -8,8 +8,10 @@ import com.idealizer.review_x.common.MessageUtil;
 import com.idealizer.review_x.common.exceptions.DuplicatedException;
 import com.idealizer.review_x.infra.http.modules.user.dto.LoginRequestDTO;
 import com.idealizer.review_x.infra.http.modules.user.dto.SignupRequestDTO;
+import com.idealizer.review_x.security.services.UserDetailsImpl;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import org.bson.types.ObjectId;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -90,8 +92,8 @@ public class UserController {
 
     @GetMapping("/me")
     public ResponseEntity<?> getCurrentUser(@AuthenticationPrincipal UserDetails userDetails) {
-        ;
-        CurrentLoggedUserResponse user = findCurrentLoggedUserUseCase.execute(userDetails.getUsername());
+        ObjectId userId = ((UserDetailsImpl) userDetails).getId();
+        CurrentLoggedUserResponse user = findCurrentLoggedUserUseCase.execute(userId);
 
         return ResponseEntity.ok(user);
     }

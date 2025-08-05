@@ -2,12 +2,11 @@ package com.idealizer.review_x.application.user.responses;
 
 import com.idealizer.review_x.application.games.profile.review.responses.LastReviewItemResponse;
 import com.idealizer.review_x.domain.profile.game.interfaces.SimpleProfileGame;
-import com.idealizer.review_x.domain.profile.game.interfaces.SimpleProfileReview;
 import com.idealizer.review_x.domain.user.entities.MobileDeviceType;
 
 import java.util.List;
 
-public class CurrentLoggedUserResponse {
+public class FindUserResponse {
     private String id;
     private String username;
     private String email;

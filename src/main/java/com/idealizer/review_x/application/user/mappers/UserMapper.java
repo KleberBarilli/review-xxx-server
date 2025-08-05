@@ -1,6 +1,6 @@
 package com.idealizer.review_x.application.user.mappers;
 
-import com.idealizer.review_x.application.user.responses.CurrentLoggedUserResponse;
+import com.idealizer.review_x.application.user.responses.FindUserResponse;
 import com.idealizer.review_x.infra.http.modules.user.dto.SignupRequestDTO;
 import org.bson.types.ObjectId;
 import org.mapstruct.Mapper;
@@ -15,7 +15,7 @@ public interface UserMapper {
     SignupRequestDTO toDTO(User user);
 
     @Mapping(target = "username", source = "name")
-    CurrentLoggedUserResponse toCurrentLoggedUser (User user);
+    FindUserResponse toDetailedUser (User user);
 
     default String map(ObjectId value) {
         return value != null ? value.toHexString() : null;

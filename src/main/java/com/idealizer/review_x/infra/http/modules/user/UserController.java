@@ -1,11 +1,11 @@
 package com.idealizer.review_x.infra.http.modules.user;
 
-import com.idealizer.review_x.application.user.responses.CurrentLoggedUserResponse;
+import com.idealizer.review_x.application.user.responses.FindUserResponse;
 import com.idealizer.review_x.application.user.responses.LoginResponse;
 import com.idealizer.review_x.application.user.usecases.*;
 import com.idealizer.review_x.common.LocaleUtil;
 import com.idealizer.review_x.common.MessageUtil;
-import com.idealizer.review_x.common.dtos.CurrentLoggedUserArgsDTO;
+import com.idealizer.review_x.common.dtos.FindUserArgsDTO;
 import com.idealizer.review_x.common.exceptions.DuplicatedException;
 import com.idealizer.review_x.infra.http.modules.user.dto.LoginRequestDTO;
 import com.idealizer.review_x.infra.http.modules.user.dto.SignupRequestDTO;
@@ -38,15 +38,15 @@ public class UserController {
 
     private final SignUpUseCase signUpUseCase;
     private final SignInUseCase signInUseCase;
-    private final FindCurrentLoggedUserUseCase findCurrentLoggedUserUseCase;
+    private final FindUserByNameUseCase findUserByNameUseCase;
     private final UploadAvatarUseCase uploadAvatarUseCase;
     private final RemoveAvatarUseCase removeAvatarUseCase;
     private final MessageUtil messageUtil;
 
-    public UserController(SignUpUseCase signUpUseCase, SignInUseCase signInUseCase, FindCurrentLoggedUserUseCase findCurrentLoggedUserUseCase, UploadAvatarUseCase uploadAvatarUseCase, RemoveAvatarUseCase removeAvatarUseCase, MessageUtil messageUtil) {
+    public UserController(SignUpUseCase signUpUseCase, SignInUseCase signInUseCase, FindUserByNameUseCase findUserByNameUseCase, UploadAvatarUseCase uploadAvatarUseCase, RemoveAvatarUseCase removeAvatarUseCase, MessageUtil messageUtil) {
         this.signUpUseCase = signUpUseCase;
         this.signInUseCase = signInUseCase;
-        this.findCurrentLoggedUserUseCase = findCurrentLoggedUserUseCase;
+        this.findUserByNameUseCase = findUserByNameUseCase;
         this.uploadAvatarUseCase = uploadAvatarUseCase;
         this.removeAvatarUseCase = removeAvatarUseCase;
         this.messageUtil = messageUtil;
@@ -88,8 +88,25 @@ public class UserController {
     @GetMapping("/me")
     public ResponseEntity<?> getCurrentUser(@RequestParam(name = "favorite", defaultValue = "false") boolean favorite, @RequestParam(name = "lastReviews", defaultValue = "false") boolean lastReviews, @RequestParam(name = "lastActivities", defaultValue = "false") boolean lastActivities, @AuthenticationPrincipal UserDetails userDetails) {
         ObjectId userId = ((UserDetailsImpl) userDetails).getId();
-        CurrentLoggedUserArgsDTO args = new CurrentLoggedUserArgsDTO(favorite, lastReviews, lastActivities);
-        CurrentLoggedUserResponse user = findCurrentLoggedUserUseCase.execute(userId, args);
+        FindUserArgsDTO args = new FindUserArgsDTO(favorite, lastReviews, lastActivities);
+        FindUserResponse user = findUserByNameUseCase.execute(userDetails.getUsername(), args);
+
+        return ResponseEntity.ok(user);
+    }
+
+    @GetMapping("/u/{username}")
+    public ResponseEntity<?> findByUsername(
+            @PathVariable String username,
+            @RequestParam(name = "favorite", defaultValue = "false") boolean favorite,
+            @RequestParam(name = "lastReviews", defaultValue = "false") boolean lastReviews,
+            @RequestParam(name = "lastActivities", defaultValue = "false") boolean lastActivities
+    ) {
+        FindUserArgsDTO args = new FindUserArgsDTO(favorite, lastReviews, lastActivities);
+        FindUserResponse user = findUserByNameUseCase.execute(username, args);
+
+        if(user == null) {
+            return ResponseEntity.notFound().build();
+        }
 
         return ResponseEntity.ok(user);
     }

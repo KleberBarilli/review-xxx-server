@@ -3,8 +3,8 @@ package com.idealizer.review_x.application.user.usecases;
 import com.idealizer.review_x.application.games.profile.review.responses.LastReviewItemResponse;
 import com.idealizer.review_x.application.games.profile.review.usecases.FindLastReviewsUseCase;
 import com.idealizer.review_x.application.user.mappers.UserMapper;
-import com.idealizer.review_x.application.user.responses.CurrentLoggedUserResponse;
-import com.idealizer.review_x.common.dtos.CurrentLoggedUserArgsDTO;
+import com.idealizer.review_x.application.user.responses.FindUserResponse;
+import com.idealizer.review_x.common.dtos.FindUserArgsDTO;
 import com.idealizer.review_x.domain.profile.game.interfaces.SimpleProfileGame;
 import com.idealizer.review_x.domain.profile.game.repositories.ProfileGameRepository;
 import com.idealizer.review_x.domain.user.repositories.UserRepository;
@@ -14,14 +14,14 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class FindCurrentLoggedUserUseCase {
+public class FindUserByNameUseCase {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
     private final ProfileGameRepository profileGameRepository;
     private final FindLastReviewsUseCase findLastReviewsUseCase;
 
-    public FindCurrentLoggedUserUseCase(UserRepository userRepository, UserMapper userMapper,
-                                        ProfileGameRepository profileGameRepository, FindLastReviewsUseCase findLastReviewsUseCase) {
+    public FindUserByNameUseCase(UserRepository userRepository, UserMapper userMapper,
+                                 ProfileGameRepository profileGameRepository, FindLastReviewsUseCase findLastReviewsUseCase) {
         this.userRepository = userRepository;
         this.userMapper = userMapper;
         this.profileGameRepository = profileGameRepository;
@@ -29,24 +29,29 @@ public class FindCurrentLoggedUserUseCase {
 
     }
 
-    public CurrentLoggedUserResponse execute(ObjectId userId, CurrentLoggedUserArgsDTO args) {
+    public FindUserResponse execute(String name, FindUserArgsDTO args) {
 
-        CurrentLoggedUserResponse response = userRepository.findById(userId)
-                .map(userMapper::toCurrentLoggedUser)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+        FindUserResponse user = userRepository.findByName(name)
+                .map(userMapper::toDetailedUser)
+                .orElse(null);
+        if (user == null)
+            return null;
+
+
+        ObjectId userId = new ObjectId(user.getId());
 
         if (args.favorite()) {
             List<SimpleProfileGame> favoriteGames =
                     profileGameRepository.findProjectedByUserIdAndFavoriteIsTrue(userId);
-            response.setFavoriteGames(favoriteGames);
+            user.setFavoriteGames(favoriteGames);
         }
 
         if (args.lastReviews()) {
             List<LastReviewItemResponse> lastReviews =
                     findLastReviewsUseCase.execute(userId);
-            response.setLastReviews(lastReviews);
+            user.setLastReviews(lastReviews);
         }
 
-        return response;
+        return user;
     }
 }

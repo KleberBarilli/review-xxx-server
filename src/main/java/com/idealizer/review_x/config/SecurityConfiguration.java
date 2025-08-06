@@ -37,7 +37,11 @@ public class SecurityConfiguration {
         http.authorizeHttpRequests((requests)
                 -> requests
                 .requestMatchers("/api/csrf-token").permitAll()
-                .requestMatchers("/api/public/**").permitAll()
+                .requestMatchers(
+                        "/api/public/**",
+                        "/api/users/public/**",
+                        "api/profile-games/public/**")
+                .permitAll()
                 .requestMatchers("/api/users/signIn").permitAll()
                 .requestMatchers("/api/users/signUp").permitAll()
                 .anyRequest().authenticated());

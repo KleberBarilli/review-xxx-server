@@ -11,6 +11,7 @@ public interface SimpleProfileReview {
     String getGameSlug();
     String getGameCover();
     Boolean getLiked();
+    Boolean getReplay();
     Integer getRating();
     ProfileGameStatus getStatus();
     String getContent();

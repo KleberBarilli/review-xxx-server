@@ -15,5 +15,6 @@ public interface ProfileReviewRepository extends MongoRepository<ReviewGame, Obj
     long deleteByIdAndUserId(ObjectId reviewId, ObjectId userId);
 
     List<SimpleProfileReview> findTop5ByUserIdOrderByCreatedAtDesc(ObjectId userId);
+    Optional<SimpleProfileReview> findProjectedByProfileGameId(ObjectId profileGameId);
 
 }

@@ -9,9 +9,12 @@ import java.util.List;
 import java.util.Optional;
 
 public interface ProfileGameRepository extends MongoRepository<ProfileGame, ObjectId> {
+
+
     Optional<ProfileGame> findByGameId(ObjectId gameId);
 
    List<SimpleProfileGame> findProjectedByUserIdAndFavoriteIsTrue(ObjectId userId);
+   Optional<SimpleProfileGame> findProjectedByUsernameAndGameSlug(String username, String gameSlug);
    List<ProfileGame> findByUserIdAndFavoriteIsTrue(ObjectId userId);
    Optional<ProfileGame> findByUserIdAndGameId(ObjectId userId, ObjectId gameId);
    List<ProfileGame> findByUserIdAndGameIdIn(ObjectId userId,  List<ObjectId> gameIds);

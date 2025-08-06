@@ -9,6 +9,7 @@ import java.util.List;
 
 public class CreateUpdateProfileGameCommand {
     private ObjectId userId;
+    private String username;
     private ObjectId gameId;
 
     private PlatformType sourcePlatform;
@@ -33,8 +34,9 @@ public class CreateUpdateProfileGameCommand {
     public CreateUpdateProfileGameCommand() {
     }
 
-    public CreateUpdateProfileGameCommand(ObjectId userId, ObjectId gameId, PlatformType sourcePlatform, GamePlatform playedOn, Boolean hasReview, ProfileGameStatus status, Integer playtimeInMinutes, Integer rating, Boolean playing, Boolean liked, Boolean owned, Boolean wishlist, Boolean mastered, List<String> favoriteScreenshots, Boolean favorite, int favoriteOrder, String gameName, String gameSlug, String gameCover) {
+    public CreateUpdateProfileGameCommand(ObjectId userId, String username, ObjectId gameId, PlatformType sourcePlatform, GamePlatform playedOn, Boolean hasReview, ProfileGameStatus status, Integer playtimeInMinutes, Integer rating, Boolean playing, Boolean liked, Boolean owned, Boolean wishlist, Boolean mastered, List<String> favoriteScreenshots, Boolean favorite, int favoriteOrder, String gameName, String gameSlug, String gameCover) {
         this.userId = userId;
+        this.username = username;
         this.gameId = gameId;
         this.sourcePlatform = sourcePlatform;
         this.playedOn = playedOn;
@@ -62,7 +64,12 @@ public class CreateUpdateProfileGameCommand {
     public void setUserId(ObjectId userId) {
         this.userId = userId;
     }
-
+    public String getUsername() {
+        return username;
+    }
+    public void setUsername(String username) {
+        this.username = username;
+    }
     public ObjectId getGameId() {
         return gameId;
     }

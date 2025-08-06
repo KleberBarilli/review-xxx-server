@@ -2,6 +2,8 @@ package com.idealizer.review_x.domain.profile.game.interfaces;
 
 import com.idealizer.review_x.domain.profile.game.ProfileGameStatus;
 
+import java.time.Instant;
+
 public interface SimpleProfileGame {
 
     String getId();
@@ -14,4 +16,5 @@ public interface SimpleProfileGame {
     Integer getRating();
     ProfileGameStatus getStatus();
     Integer getFavoriteOrder();
+    Instant getCreatedAt();
 }

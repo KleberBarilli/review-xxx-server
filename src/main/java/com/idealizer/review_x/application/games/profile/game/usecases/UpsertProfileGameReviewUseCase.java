@@ -52,7 +52,7 @@ public class UpsertProfileGameReviewUseCase {
         this.updateReviewUseCase = updateReviewUseCase;
     }
 
-    public void execute(UpsertProfileGameReviewCommand command, ObjectId userId) {
+    public void execute(UpsertProfileGameReviewCommand command, ObjectId userId, String username) {
         boolean hasReviewInRequest =
                 command.getReviewTitle() != null ||
                         command.getReviewContent() != null ||
@@ -102,6 +102,7 @@ public class UpsertProfileGameReviewUseCase {
             CreateUpdateProfileGameCommand profileGameCommand =
                     profileGameMapper.toCreateUpdateCommand(command);
             profileGameCommand.setUserId(userId);
+            profileGameCommand.setUsername(username);
             profileGameCommand.setGameName(game.get().getName());
             profileGameCommand.setGameSlug(game.get().getSlug());
             profileGameCommand.setGameCover(game.get().getCover());

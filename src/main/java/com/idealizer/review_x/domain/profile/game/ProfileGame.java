@@ -17,6 +17,7 @@ import java.util.Objects;
 
 @Document(collection = "profile_games")
 @CompoundIndex(name = "user_game_idx", def = "{'user_id': 1, 'game_id': 1}", unique = true)
+@CompoundIndex(name = "user_game_slug", def = "{'username': 1, 'game_slug': 1}", unique = true)
 
 public class ProfileGame {
     @Id
@@ -31,6 +32,9 @@ public class ProfileGame {
     @Field(value = "user_id")
     @NotBlank
     private ObjectId userId;
+
+    @Indexed
+    private String username;
 
     @Indexed
     @Field(value = "source_platform")
@@ -92,6 +96,12 @@ public class ProfileGame {
 
     public ObjectId getUserId() {
         return userId;
+    }
+    public String getUsername() {
+        return username;
+    }
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public void setUserId(ObjectId userId) {

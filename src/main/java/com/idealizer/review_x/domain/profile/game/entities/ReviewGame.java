@@ -1,4 +1,4 @@
-package com.idealizer.review_x.domain.profile.game.review;
+package com.idealizer.review_x.domain.profile.game.entities;
 
 import jakarta.validation.constraints.PastOrPresent;
 import org.bson.types.ObjectId;

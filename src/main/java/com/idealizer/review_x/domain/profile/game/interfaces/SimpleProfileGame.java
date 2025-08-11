@@ -1,6 +1,6 @@
 package com.idealizer.review_x.domain.profile.game.interfaces;
 
-import com.idealizer.review_x.domain.profile.game.ProfileGameStatus;
+import com.idealizer.review_x.domain.profile.game.entities.ProfileGameStatus;
 
 import java.time.Instant;
 

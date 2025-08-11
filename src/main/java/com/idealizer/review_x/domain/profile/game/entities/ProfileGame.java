@@ -1,4 +1,4 @@
-package com.idealizer.review_x.domain.profile.game;
+package com.idealizer.review_x.domain.profile.game.entities;
 
 import com.idealizer.review_x.domain.game.entities.GamePlatform;
 import jakarta.validation.constraints.NotBlank;

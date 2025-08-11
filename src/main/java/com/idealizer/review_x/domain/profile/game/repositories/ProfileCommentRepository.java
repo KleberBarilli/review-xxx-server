@@ -1,6 +1,6 @@
 package com.idealizer.review_x.domain.profile.game.repositories;
 
-import com.idealizer.review_x.domain.profile.game.review.ReviewComment;
+import com.idealizer.review_x.domain.profile.game.entities.ReviewComment;
 import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.repository.MongoRepository;
 

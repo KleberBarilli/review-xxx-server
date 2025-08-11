@@ -1,6 +1,6 @@
 package com.idealizer.review_x.domain.profile.game.repositories;
 
-import com.idealizer.review_x.domain.profile.game.ProfileGame;
+import com.idealizer.review_x.domain.profile.game.entities.ProfileGame;
 import com.idealizer.review_x.domain.profile.game.interfaces.SimpleProfileGame;
 import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.repository.MongoRepository;

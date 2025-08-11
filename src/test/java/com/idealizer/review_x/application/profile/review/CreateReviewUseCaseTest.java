@@ -4,7 +4,7 @@ import com.idealizer.review_x.application.games.profile.review.commands.CreateUp
 import com.idealizer.review_x.application.games.profile.review.mappers.ReviewMapper;
 import com.idealizer.review_x.application.games.profile.review.usecases.CreateReviewUseCase;
 import com.idealizer.review_x.domain.profile.game.repositories.ProfileReviewRepository;
-import com.idealizer.review_x.domain.profile.game.review.ReviewGame;
+import com.idealizer.review_x.domain.profile.game.entities.ReviewGame;
 import org.bson.types.ObjectId;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

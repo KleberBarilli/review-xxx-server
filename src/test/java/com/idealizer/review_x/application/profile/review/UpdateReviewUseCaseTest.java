@@ -2,7 +2,7 @@ package com.idealizer.review_x.application.profile.review;
 
 import com.idealizer.review_x.application.games.profile.review.usecases.UpdateReviewUseCase;
 import com.idealizer.review_x.domain.profile.game.repositories.ProfileReviewRepository;
-import com.idealizer.review_x.domain.profile.game.review.ReviewGame;
+import com.idealizer.review_x.domain.profile.game.entities.ReviewGame;
 import org.bson.types.ObjectId;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

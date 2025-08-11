@@ -23,25 +23,54 @@ public class FindGameUseCase {
         this.gameMapper = gameMapper;
     }
 
-    public FindGameResponse execute(int limit, int pageNumber, String sort, String order) {
+    public FindGameResponse execute(int limit, int pageNumber, String sort, String order, String slug) {
 
-        Sort sortOrder = order.equalsIgnoreCase(Sort.Direction.ASC.name())
-                ? Sort.by(sort).ascending()
-                : Sort.by(sort).descending();
+        // sanitize paging
+        int size = (limit <= 0) ? 20 : limit;
+        int page = (pageNumber < 0) ? 0 : pageNumber;
 
-        Pageable pageable = PageRequest.of(pageNumber, limit, sortOrder);
-        Page<Game> games = gameRepository.findAll(pageable);
+        // 1) If no slug -> keep your old pageable flow (honors sort/order)
+        if (slug == null || slug.isBlank()) {
+            Sort sortOrder = order != null && order.equalsIgnoreCase(Sort.Direction.ASC.name())
+                    ? Sort.by(sort).ascending()
+                    : Sort.by(sort).descending();
 
-        List<SimpleGameResponse> data = gameMapper.toSimpleDomainList(games.getContent());
+            Pageable pageable = PageRequest.of(page, size, sortOrder);
+            Page<Game> games = gameRepository.findAll(pageable);
+
+            return toResponse(games.getContent(), games.getTotalElements(), page, size);
+        }
+
+        // 2) With slug -> use Atlas Search autocomplete (popularity desc + relevance)
+        String q = slug.trim();
+        int skip = page * size;
+
+        // results page
+        List<Game> items = gameRepository.autocompleteSlug(q, skip, size);
+
+        // total hits (for pagination)
+        long total = gameRepository.autocompleteSlugCount(q)
+                .stream()
+                .findFirst()
+                .map(GameRepository.TotalOnly::getTotal)
+                .orElse(0L);
+
+        return toResponse(items, total, page, size);
+    }
+
+    private FindGameResponse toResponse(List<Game> games, long total, int page, int size) {
+        List<SimpleGameResponse> data = gameMapper.toSimpleDomainList(games);
+
+        int totalPages = (int) Math.ceil(total / (double) size);
+        boolean isLast = page >= Math.max(0, totalPages - 1);
 
         FindGameResponse response = new FindGameResponse();
-        response.setpageNumber(pageNumber);
-        response.setLimit(games.getSize());
-        response.setTotalElements(games.getTotalElements());
-        response.setTotalPages(games.getTotalPages());
-        response.setLast(games.isLast());
+        response.setpageNumber(page);
+        response.setLimit(size);
+        response.setTotalElements(total);
+        response.setTotalPages(totalPages);
+        response.setLast(isLast);
         response.setData(data);
-
         return response;
     }
 }

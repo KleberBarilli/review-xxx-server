@@ -34,7 +34,7 @@ public class GameController {
     public  ResponseEntity<FindGameResponse> findAll(
             @Valid FindAllGamesDTO dto) {
         logger.info("Fetching all games");
-        FindGameResponse response = findGameUseCase.execute( dto.limit(), dto.pageNumber(), dto.sort(), dto.order());
+        FindGameResponse response = findGameUseCase.execute( dto.limit(), dto.pageNumber(), dto.sort(), dto.order(), dto.slug());
         return ResponseEntity.ok(response);
 
     }

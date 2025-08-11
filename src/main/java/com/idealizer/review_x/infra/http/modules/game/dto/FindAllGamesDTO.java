@@ -22,6 +22,9 @@ public record FindAllGamesDTO(
         String sort,
 
         @Schema(description = "Order, asc/desc", example = "asc")
-        String order
+        String order,
+
+        @Schema(description = "Game slug for autocomplete", example = "the-legend-of-zelda-breath-of-the-wild")
+        String slug
 ) {
 }

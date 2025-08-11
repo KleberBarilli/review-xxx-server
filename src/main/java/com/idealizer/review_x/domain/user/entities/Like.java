@@ -1,5 +1,6 @@
-package com.idealizer.review_x.domain.profile.game.entities;
+package com.idealizer.review_x.domain.user.entities;
 
+import com.idealizer.review_x.domain.profile.game.entities.LikeType;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
@@ -10,12 +11,12 @@ import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.time.Instant;
 
-@Document(collection = "like_reviews")
+@Document(collection = "likeS")
 @CompoundIndexes({
         @CompoundIndex(name = "unique_user_review_like", def = "{'user_id': 1, 'review_id': 1}", unique = true, sparse = true),
         @CompoundIndex(name = "unique_user_comment_like", def = "{'user_id': 1, 'comment_id': 1}", unique = true, sparse = true)
 })
-public class ReviewLike {
+public class Like {
     @Id
     private ObjectId id;
 
@@ -28,6 +29,12 @@ public class ReviewLike {
 
     private LikeType type;
 
+    public Like(ObjectId userId, ObjectId reviewId, ObjectId commentId, LikeType type) {
+        this.userId = userId;
+        this.reviewId = reviewId;
+        this.commentId = commentId;
+        this.type = type;
+    }
 
     @Field(value = "created_at")
     @CreatedDate

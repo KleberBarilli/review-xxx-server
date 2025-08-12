@@ -1,8 +1,9 @@
 package com.idealizer.review_x.application.games.game.responses;
 
-import com.idealizer.review_x.domain.game.entities.enums.GameGenre;
-import com.idealizer.review_x.domain.game.entities.enums.GameMode;
-import com.idealizer.review_x.domain.game.entities.enums.GamePlatform;
+import com.idealizer.review_x.domain.game.entities.enums.*;
+import com.idealizer.review_x.domain.game.entities.records.AlternativeName;
+import com.idealizer.review_x.domain.game.entities.records.GameTimeToBeat;
+import com.idealizer.review_x.domain.game.entities.records.GameWebsite;
 
 import java.time.Instant;
 import java.time.LocalDate;
@@ -14,6 +15,11 @@ public class GameResponse {
     private List<Long> dlcsIds;
     private List<Long> similarGamesIds;
     private String name;
+    private List<AlternativeName> alternativeNames;
+    private String slug;
+    private GameCategory category;
+    private GameStatus status;
+
     private LocalDate firstReleaseDate;
     private List<GameGenre> genres;
     private List<GameMode> modes;
@@ -21,6 +27,8 @@ public class GameResponse {
     private List<String> engines;
     private String developer;
     private String trailerUrl;
+    private List<GameWebsite> websites;
+    private GameTimeToBeat timeToBeat;
 
     private String storyline;
     private String summary;
@@ -70,6 +78,38 @@ public class GameResponse {
         this.name = name;
     }
 
+    public List<AlternativeName> getAlternativeNames() {
+        return alternativeNames;
+    }
+
+    public void setAlternativeNames(List<AlternativeName> alternativeNames) {
+        this.alternativeNames = alternativeNames;
+    }
+
+    public String getSlug() {
+        return slug;
+    }
+
+    public void setSlug(String slug) {
+        this.slug = slug;
+    }
+
+    public GameCategory getCategory() {
+        return category;
+    }
+
+    public void setCategory(GameCategory category) {
+        this.category = category;
+    }
+
+    public GameStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(GameStatus status) {
+        this.status = status;
+    }
+
     public LocalDate getFirstReleaseDate() {
         return firstReleaseDate;
     }
@@ -100,6 +140,46 @@ public class GameResponse {
 
     public void setPlatforms(List<GamePlatform> platforms) {
         this.platforms = platforms;
+    }
+
+    public List<String> getEngines() {
+        return engines;
+    }
+
+    public void setEngines(List<String> engines) {
+        this.engines = engines;
+    }
+
+    public String getDeveloper() {
+        return developer;
+    }
+
+    public void setDeveloper(String developer) {
+        this.developer = developer;
+    }
+
+    public String getTrailerUrl() {
+        return trailerUrl;
+    }
+
+    public void setTrailerUrl(String trailerUrl) {
+        this.trailerUrl = trailerUrl;
+    }
+
+    public List<GameWebsite> getWebsites() {
+        return websites;
+    }
+
+    public void setWebsites(List<GameWebsite> websites) {
+        this.websites = websites;
+    }
+
+    public GameTimeToBeat getTimeToBeat() {
+        return timeToBeat;
+    }
+
+    public void setTimeToBeat(GameTimeToBeat timeToBeat) {
+        this.timeToBeat = timeToBeat;
     }
 
     public String getStoryline() {
@@ -138,44 +218,12 @@ public class GameResponse {
         return totalRating;
     }
 
-    public void setRating(Double totalRating) {
+    public void setTotalRating(Double totalRating) {
         this.totalRating = totalRating;
     }
 
     public Integer getTotalRatingCount() {
         return totalRatingCount;
-    }
-
-    public void setRatingCount(Integer totalRatingCount) {
-        this.totalRatingCount = totalRatingCount;
-    }
-
-    public List<String> getEngines() {
-        return engines;
-    }
-
-    public void setEngines(List<String> engines) {
-        this.engines = engines;
-    }
-
-    public String getDeveloper() {
-        return developer;
-    }
-
-    public void setDeveloper(String developer) {
-        this.developer = developer;
-    }
-
-    public String getTrailerUrl() {
-        return trailerUrl;
-    }
-
-    public void setTrailerUrl(String trailerUrl) {
-        this.trailerUrl = trailerUrl;
-    }
-
-    public void setTotalRating(Double totalRating) {
-        this.totalRating = totalRating;
     }
 
     public void setTotalRatingCount(Integer totalRatingCount) {
@@ -185,7 +233,6 @@ public class GameResponse {
     public Instant getUpdatedAt() {
         return updatedAt;
     }
-
 
     public void setUpdatedAt(Instant updatedAt) {
         this.updatedAt = updatedAt;

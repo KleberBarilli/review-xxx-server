@@ -27,8 +27,6 @@ public interface GameMapper {
 
     @Mapping(target = "id", source = "id")
     @Mapping(target = "externalId", source = "igdbId")
-    @Mapping(target = "rating", source = "totalRating")
-    @Mapping(target = "ratingCount", source = "totalRatingCount")
     SimpleGameResponse toSimpleDomain(Game game);
     List<SimpleGameResponse> toSimpleDomainList(List<Game> games);
 

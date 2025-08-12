@@ -45,7 +45,9 @@ public class FindGameUseCase {
         Pageable pageable = PageRequest.of(page, size, sortOrder);
 
         logger.info("Searching for games with slug pattern: " + pattern);
-        Page<Game> pageResult = gameRepository.findBySlugRegex(pattern, pageable);
+       // Page<Game> pageResult = gameRepository.findBySlugRegex(pattern, pageable);
+        Page<Game> pageResult = gameRepository.findBySlugPrefix(
+                q, q + "\uffff", pageable);
         return toResponse(pageResult.getContent(), pageResult.getTotalElements(), page, size);
     }
 

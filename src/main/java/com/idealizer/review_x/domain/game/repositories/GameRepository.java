@@ -20,6 +20,9 @@ public interface GameRepository extends MongoRepository<Game, ObjectId> {
     @Query(value = "{ 'slug': { $regex: ?0 } }")
     Page<Game> findBySlugRegex(String anchoredRegex, Pageable pageable);
 
+    @Query(value = "{ 'slug': { $gte: ?0, $lt: ?1 } }")
+    Page<Game> findBySlugPrefix(String lo, String hi, Pageable pageable);
+
     interface TotalOnly { long getTotal(); }
 
 }

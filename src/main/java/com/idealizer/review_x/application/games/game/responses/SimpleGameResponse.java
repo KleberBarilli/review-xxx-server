@@ -1,8 +1,6 @@
 package com.idealizer.review_x.application.games.game.responses;
 
-import com.idealizer.review_x.domain.game.entities.enums.GameGenre;
-import com.idealizer.review_x.domain.game.entities.enums.GameMode;
-import com.idealizer.review_x.domain.game.entities.enums.GamePlatform;
+import com.idealizer.review_x.domain.game.entities.enums.*;
 
 import java.time.Instant;
 import java.time.LocalDate;
@@ -13,6 +11,8 @@ public class SimpleGameResponse {
     private Long externalId;
     private String slug;
     private String name;
+    private GameType type;
+    private String developer;
     private LocalDate firstReleaseDate;
     private List<GameGenre> genres;
     private List<GameMode> modes;
@@ -112,6 +112,22 @@ public class SimpleGameResponse {
 
     public void setRatingCount(Integer totalRatingCount) {
         this.totalRatingCount = totalRatingCount;
+    }
+
+    public GameType getType() {
+        return type;
+    }
+
+    public void setType(GameType type) {
+        this.type = type;
+    }
+
+    public String getDeveloper() {
+        return developer;
+    }
+
+    public void setDeveloper(String developer) {
+        this.developer = developer;
     }
 
     public Instant getUpdatedAt() {

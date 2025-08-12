@@ -17,7 +17,7 @@ public class GameResponse {
     private String name;
     private List<AlternativeName> alternativeNames;
     private String slug;
-    private GameCategory category;
+    private GameType type;
     private GameStatus status;
 
     private LocalDate firstReleaseDate;
@@ -94,12 +94,12 @@ public class GameResponse {
         this.slug = slug;
     }
 
-    public GameCategory getCategory() {
-        return category;
+    public GameType getType() {
+        return type;
     }
 
-    public void setCategory(GameCategory category) {
-        this.category = category;
+    public void setType(GameType type) {
+        this.type = type;
     }
 
     public GameStatus getStatus() {

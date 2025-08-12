@@ -37,7 +37,7 @@ public class Game {
     @Field(value = "alternative_names")
     @Indexed
     private List<AlternativeName> alternativeNames;
-    private GameCategory category;
+    private GameType type;
     private String summary;
     private String storyline;
     @Field(value = "first_release_date")
@@ -239,12 +239,12 @@ public class Game {
         this.alternativeNames = alternativeNames;
     }
 
-    public GameCategory getCategory() {
-        return category;
+    public GameType getType() {
+        return type;
     }
 
-    public void setCategory(GameCategory category) {
-        this.category = category;
+    public void setType(GameType type) {
+        this.type = type;
     }
 
     public GameStatus getStatus() {

@@ -28,9 +28,9 @@ public class GameMapper {
                 .map(GameStatus::fromIgdbStatus)
                 .ifPresent(game::setStatus);
 
-        Optional.ofNullable(dto.category())
-                .map(GameCategory::fromIgdbCategory)
-                .ifPresent(game::setCategory);
+        Optional.ofNullable(dto.gameType())
+                .map(GameType::fromId)
+                .ifPresent(game::setType);
         game.setSummary(dto.summary());
         game.setStoryline(dto.storyline());
         game.setFirstReleaseDate(

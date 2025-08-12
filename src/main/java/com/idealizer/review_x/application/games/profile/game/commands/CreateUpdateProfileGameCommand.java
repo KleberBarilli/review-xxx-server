@@ -1,6 +1,6 @@
 package com.idealizer.review_x.application.games.profile.game.commands;
 
-import com.idealizer.review_x.domain.game.entities.GamePlatform;
+import com.idealizer.review_x.domain.game.entities.enums.GamePlatform;
 import com.idealizer.review_x.domain.profile.game.PlatformType;
 import com.idealizer.review_x.domain.profile.game.ProfileGameStatus;
 import org.bson.types.ObjectId;

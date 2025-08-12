@@ -1,4 +1,4 @@
-package com.idealizer.review_x.domain.game.entities;
+package com.idealizer.review_x.domain.game.entities.enums;
 
 import java.util.Map;
 import java.util.Optional;

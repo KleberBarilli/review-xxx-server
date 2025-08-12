@@ -80,11 +80,11 @@ public class SyncIgdbGameProcessor {
 
         while (true) {
             String igdbQuery = String.format("""
-                    fields id,name,slug,summary,storyline,first_release_date,total_rating,total_rating_count,genres,
+                   fields id,name,slug,summary,storyline,first_release_date,total_rating,total_rating_count,genres,
                 game_modes,cover.image_id,screenshots.image_id,platforms,expansions,similar_games,updated_at,
                 involved_companies.developer,involved_companies.company.name,game_engines.name,websites.url,websites.type,
-                videos.name,videos.video_id;
-                    where updated_at > %d & version_parent = null & category = 0;
+                videos.name,videos.video_id,game_status,category;
+                    where updated_at > %d & version_parent = null & category = (0,8,9);
                     sort id asc;
                     limit %d;
                     offset %d;
@@ -131,6 +131,8 @@ public class SyncIgdbGameProcessor {
                         Update update = new Update()
                                 .set("similarGamesIgdbIds", game.getSimilarGamesIgdbIds())
                                 .set("name", game.getName())
+                                .set("category", game.getCategory())
+                                .set("status", game.getStatus())
                                 .set("summary", game.getSummary())
                                 .set("storyline", game.getStoryline())
                                 .set("firstReleaseDate", game.getFirstReleaseDate())

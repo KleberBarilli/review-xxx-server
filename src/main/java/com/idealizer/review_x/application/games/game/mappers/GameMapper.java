@@ -16,8 +16,6 @@ public interface GameMapper {
     @Mapping(target = "igdbId", source = "externalId")
     @Mapping(target = "dlcsIgdbIds", source = "dlcsIds")
     @Mapping(target = "similarGamesIgdbIds", source = "similarGamesIds")
-    @Mapping(target = "totalRating", source = "rating")
-    @Mapping(target = "totalRatingCount", source = "ratingCount")
     Game toEntity(GameResponse dto);
 
 
@@ -25,8 +23,6 @@ public interface GameMapper {
     @Mapping(target = "externalId", source = "igdbId")
     @Mapping(target = "dlcsIds", source = "dlcsIgdbIds")
     @Mapping(target = "similarGamesIds", source = "similarGamesIgdbIds")
-    @Mapping(target = "rating", source = "totalRating")
-    @Mapping(target = "ratingCount", source = "totalRatingCount")
     GameResponse toDetailedDomain(Game game);
 
     @Mapping(target = "id", source = "id")

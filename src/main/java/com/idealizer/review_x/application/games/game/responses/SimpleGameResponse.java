@@ -1,8 +1,8 @@
 package com.idealizer.review_x.application.games.game.responses;
 
-import com.idealizer.review_x.domain.game.entities.GameGenre;
-import com.idealizer.review_x.domain.game.entities.GameMode;
-import com.idealizer.review_x.domain.game.entities.GamePlatform;
+import com.idealizer.review_x.domain.game.entities.enums.GameGenre;
+import com.idealizer.review_x.domain.game.entities.enums.GameMode;
+import com.idealizer.review_x.domain.game.entities.enums.GamePlatform;
 
 import java.time.Instant;
 import java.time.LocalDate;

@@ -1,15 +1,15 @@
 package com.idealizer.review_x.infra.libs.twitch.igdb;
 
 import com.idealizer.review_x.domain.game.entities.*;
+import com.idealizer.review_x.domain.game.entities.enums.*;
+import com.idealizer.review_x.domain.game.entities.records.GameWebsite;
 import com.idealizer.review_x.infra.processors.utils.NormalizeSlugs;
 import com.idealizer.review_x.infra.processors.utils.TrailerPicker;
 
-import java.text.Normalizer;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneOffset;
 import java.util.*;
-import java.util.regex.Pattern;
 
 public class GameMapper {
 
@@ -24,6 +24,13 @@ public class GameMapper {
                 (incomingSlug == null || incomingSlug.isBlank()) ? dto.name() : incomingSlug
         );
         game.setSlug(safeSlug);
+        Optional.ofNullable(dto.gameStatus())
+                .map(GameStatus::fromIgdbStatus)
+                .ifPresent(game::setStatus);
+
+        Optional.ofNullable(dto.category())
+                .map(GameCategory::fromIgdbCategory)
+                .ifPresent(game::setCategory);
         game.setSummary(dto.summary());
         game.setStoryline(dto.storyline());
         game.setFirstReleaseDate(

@@ -61,7 +61,7 @@ public class InsertIgbdGameProcessor {
         return provider.getAccessToken();
     }
 
-    @Scheduled(cron = "0 13 00 * * *", zone = "America/Sao_Paulo")
+    @Scheduled(cron = "0 46 12 * * *", zone = "America/Sao_Paulo")
 
     public void importGames() {
 
@@ -82,8 +82,8 @@ public class InsertIgbdGameProcessor {
                 fields id,name,slug,summary,storyline,first_release_date,total_rating,total_rating_count,genres,
                 game_modes,cover.image_id,screenshots.image_id,platforms,expansions,similar_games,updated_at,
                 involved_companies.developer,involved_companies.company.name,game_engines.name,websites.url,websites.type,
-                videos.name,videos.video_id;
-                where version_parent = null & category = 0 & id > %d;
+                videos.name,videos.video_id,game_status,category;
+                where version_parent = null & category = (0,8,9) & id > %d;
                 sort id asc;
                 limit %d;
                 offset %d;

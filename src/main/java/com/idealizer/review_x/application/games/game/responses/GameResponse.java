@@ -1,8 +1,8 @@
 package com.idealizer.review_x.application.games.game.responses;
 
-import com.idealizer.review_x.domain.game.entities.GameGenre;
-import com.idealizer.review_x.domain.game.entities.GameMode;
-import com.idealizer.review_x.domain.game.entities.GamePlatform;
+import com.idealizer.review_x.domain.game.entities.enums.GameGenre;
+import com.idealizer.review_x.domain.game.entities.enums.GameMode;
+import com.idealizer.review_x.domain.game.entities.enums.GamePlatform;
 
 import java.time.Instant;
 import java.time.LocalDate;
@@ -18,12 +18,16 @@ public class GameResponse {
     private List<GameGenre> genres;
     private List<GameMode> modes;
     private List<GamePlatform> platforms;
+    private List<String> engines;
+    private String developer;
+    private String trailerUrl;
+
     private String storyline;
     private String summary;
     private String cover;
     private List<String> screenshots;
-    private Double rating;
-    private Integer ratingCount;
+    private Double totalRating;
+    private Integer totalRatingCount;
     private Instant updatedAt;
 
     public String getId() {
@@ -130,25 +134,58 @@ public class GameResponse {
         this.screenshots = screenshots;
     }
 
-    public Double getRating() {
-        return rating;
+    public Double getTotalRating() {
+        return totalRating;
     }
 
-    public void setRating(Double rating) {
-        this.rating = rating;
+    public void setRating(Double totalRating) {
+        this.totalRating = totalRating;
     }
 
-    public Integer getRatingCount() {
-        return ratingCount;
+    public Integer getTotalRatingCount() {
+        return totalRatingCount;
     }
 
-    public void setRatingCount(Integer ratingCount) {
-        this.ratingCount = ratingCount;
+    public void setRatingCount(Integer totalRatingCount) {
+        this.totalRatingCount = totalRatingCount;
+    }
+
+    public List<String> getEngines() {
+        return engines;
+    }
+
+    public void setEngines(List<String> engines) {
+        this.engines = engines;
+    }
+
+    public String getDeveloper() {
+        return developer;
+    }
+
+    public void setDeveloper(String developer) {
+        this.developer = developer;
+    }
+
+    public String getTrailerUrl() {
+        return trailerUrl;
+    }
+
+    public void setTrailerUrl(String trailerUrl) {
+        this.trailerUrl = trailerUrl;
+    }
+
+    public void setTotalRating(Double totalRating) {
+        this.totalRating = totalRating;
+    }
+
+    public void setTotalRatingCount(Integer totalRatingCount) {
+        this.totalRatingCount = totalRatingCount;
     }
 
     public Instant getUpdatedAt() {
         return updatedAt;
     }
+
 
     public void setUpdatedAt(Instant updatedAt) {
         this.updatedAt = updatedAt;

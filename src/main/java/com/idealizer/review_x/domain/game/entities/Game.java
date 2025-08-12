@@ -1,5 +1,9 @@
 package com.idealizer.review_x.domain.game.entities;
 
+import com.idealizer.review_x.domain.game.entities.enums.*;
+import com.idealizer.review_x.domain.game.entities.records.AlternativeName;
+import com.idealizer.review_x.domain.game.entities.records.GameTimeToBeat;
+import com.idealizer.review_x.domain.game.entities.records.GameWebsite;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
@@ -9,6 +13,9 @@ import org.springframework.data.mongodb.core.mapping.Field;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.util.List;
+
+
+
 
 @Document(collection = "games")
 public class Game {
@@ -25,8 +32,12 @@ public class Game {
     @Field(value = "similar_games_igdb_ids")
     private List<Long> similarGamesIgdbIds;
     private String name;
-    @Indexed
+    @Indexed(unique = true)
     private String slug;
+    @Field(value = "alternative_names")
+    @Indexed
+    private List<AlternativeName> alternativeNames;
+    private GameCategory category;
     private String summary;
     private String storyline;
     @Field(value = "first_release_date")
@@ -39,8 +50,14 @@ public class Game {
     private List<GameGenre> genres;
     private List<GamePlatform> platforms;
     private List<GameMode> modes;
+    private GameStatus status;
     private String cover;
     private List<String> screenshots;
+    private String developer;
+    private List<GameWebsite> websites;
+    private String trailerUrl;
+    private List<String> engines;
+    private GameTimeToBeat timeToBeat;
     @Field(value = "created_at")
     private Instant createdAt;
     @Field(value = "updated_at")
@@ -180,6 +197,69 @@ public class Game {
 
     public void setScreenshots(List<String> screenshots) {
         this.screenshots = screenshots;
+    }
+
+    public String getDeveloper() {
+        return developer;
+    }
+    public void setDeveloper(String developer) {
+        this.developer = developer;
+    }
+
+    public List<GameWebsite> getWebsites() {
+        return websites;
+    }
+
+    public void setWebsites(List<GameWebsite> websites) {
+        this.websites = websites;
+    }
+
+    public String getTrailerUrl() {
+        return trailerUrl;
+    }
+
+    public void setTrailerUrl(String trailerUrl) {
+        this.trailerUrl = trailerUrl;
+    }
+
+    public List<String> getEngines() {
+        return engines;
+    }
+
+    public void setEngines(List<String> engines) {
+        this.engines = engines;
+    }
+
+    public List<AlternativeName> getAlternativeNames() {
+        return alternativeNames;
+    }
+
+    public void setAlternativeNames(List<AlternativeName> alternativeNames) {
+        this.alternativeNames = alternativeNames;
+    }
+
+    public GameCategory getCategory() {
+        return category;
+    }
+
+    public void setCategory(GameCategory category) {
+        this.category = category;
+    }
+
+    public GameStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(GameStatus status) {
+        this.status = status;
+    }
+
+    public GameTimeToBeat getTimeToBeat() {
+        return timeToBeat;
+    }
+
+    public void setTimeToBeat(GameTimeToBeat timeToBeat) {
+        this.timeToBeat = timeToBeat;
     }
 
     public Instant getCreatedAt() {

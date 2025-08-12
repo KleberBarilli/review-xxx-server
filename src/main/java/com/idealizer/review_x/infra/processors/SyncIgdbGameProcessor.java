@@ -7,6 +7,8 @@ import com.idealizer.review_x.domain.provider.entities.PlatformType;
 import com.idealizer.review_x.domain.provider.entities.Provider;
 import com.idealizer.review_x.infra.libs.twitch.igdb.GameMapper;
 import com.idealizer.review_x.infra.libs.twitch.igdb.IgdbGameDTO;
+import com.idealizer.review_x.infra.processors.utils.NormalizeSlugs;
+import com.idealizer.review_x.infra.processors.utils.Updates;
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.mongodb.core.BulkOperations;
@@ -62,7 +64,7 @@ public class SyncIgdbGameProcessor {
         return provider.getAccessToken();
     }
 
-    @Scheduled(cron = "0 37 14 * * *", zone = "America/Sao_Paulo")
+    @Scheduled(cron = "0 34 00 * * *", zone = "America/Sao_Paulo")
     public void syncGames() {
         logger.info("Starting game synchronization from IGDB...");
         String accessToken = getAccessToken();
@@ -78,9 +80,11 @@ public class SyncIgdbGameProcessor {
 
         while (true) {
             String igdbQuery = String.format("""
-                    fields id,name,slug,summary,storyline,first_release_date,total_rating,total_rating_count,genres,
-                    game_modes,cover.image_id,screenshots.image_id,platforms,expansions,similar_games,updated_at;
-                    where updated_at > %d & version_parent = null & category = 0;
+                   fields id,name,slug,summary,storyline,first_release_date,total_rating,total_rating_count,genres,
+                game_modes,cover.image_id,screenshots.image_id,platforms,expansions,similar_games,updated_at,
+                involved_companies.developer,involved_companies.company.name,game_engines.name,websites.url,websites.type,
+                videos.name,videos.video_id,game_status,category;
+                    where updated_at > %d & version_parent = null & category = (0,8,9);
                     sort id asc;
                     limit %d;
                     offset %d;
@@ -118,11 +122,17 @@ public class SyncIgdbGameProcessor {
                     ));
                     boolean exists = mongoTemplate.exists(query, Game.class);
 
+
+
                     if (exists) {
+
+                        Game mapped = GameMapper.toEntity(dto);
+
                         Update update = new Update()
                                 .set("similarGamesIgdbIds", game.getSimilarGamesIgdbIds())
                                 .set("name", game.getName())
-                                .set("slug", game.getSlug())
+                                .set("category", game.getCategory())
+                                .set("status", game.getStatus())
                                 .set("summary", game.getSummary())
                                 .set("storyline", game.getStoryline())
                                 .set("firstReleaseDate", game.getFirstReleaseDate())
@@ -134,6 +144,18 @@ public class SyncIgdbGameProcessor {
                                 .set("cover", game.getCover())
                                 .set("screenshots", game.getScreenshots())
                                 .set("updatedAt", now);
+
+                        Updates.setIfNotNull(update, "summary", mapped.getSummary());
+                        Updates.setIfNotNull(update, "storyline", mapped.getStoryline());
+                        Updates.setIfNotNull(update, "genres", mapped.getGenres());
+                        Updates.setIfNotNull(update, "platforms", mapped.getPlatforms());
+                        Updates.setIfNotNull(update, "modes", mapped.getModes());
+                        Updates.setIfNotNull(update, "screenshots", mapped.getScreenshots());
+
+                        Updates.setIfNotNull(update, "developer", mapped.getDeveloper());
+                        Updates.setIfNotNull(update, "trailerUrl", mapped.getTrailerUrl());
+                        Updates.setIfNotNull(update, "websites", mapped.getWebsites());
+                        Updates.setIfNotNull(update, "engines", mapped.getEngines());
 
                         bulkOps.updateOne(query, update);
                         hasUpdates = true;

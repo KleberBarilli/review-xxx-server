@@ -57,6 +57,7 @@ public class Game {
     private List<GameWebsite> websites;
     private String trailerUrl;
     private List<String> engines;
+    @Field(value = "time_to_beat")
     private GameTimeToBeat timeToBeat;
     @Field(value = "created_at")
     private Instant createdAt;

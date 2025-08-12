@@ -9,13 +9,12 @@ import com.idealizer.review_x.domain.game.repositories.GameRepository;
 import org.bson.types.ObjectId;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
+import org.mockito.ArgumentCaptor;
+import org.springframework.data.domain.*;
 
 import java.time.Instant;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -26,22 +25,20 @@ public class FindGameUseCaseTest {
 
     private GameRepository gameRepository;
     private GameMapper gameMapper;
-    private FindGameUseCase findGameUseCase;
+    private FindGameUseCase useCase;
 
     @BeforeEach
     void setUp() {
         gameRepository = mock(GameRepository.class);
         gameMapper = mock(GameMapper.class);
-        findGameUseCase = new FindGameUseCase(gameRepository, gameMapper);
+        useCase = new FindGameUseCase(gameRepository, gameMapper);
     }
 
     @Test
     void shouldReturnPaginatedGames_whenNoSlug() {
-        int limit = 10;
-        int page = 0;
-        String sort = "name";
-        String order = "asc";
-        String slug = null; // no slug path
+        int limit = 10, page = 0;
+        String sort = "name", order = "asc";
+        String slug = null;
 
         Game game = new Game();
         game.setId(new ObjectId());
@@ -57,7 +54,7 @@ public class FindGameUseCaseTest {
         when(gameRepository.findAll(any(Pageable.class))).thenReturn(gamePage);
         when(gameMapper.toSimpleDomainList(List.of(game))).thenReturn(List.of(simple));
 
-        FindGameResponse result = findGameUseCase.execute(limit, page, sort, order, slug);
+        FindGameResponse result = useCase.execute(limit, page, sort, order, slug);
 
         assertNotNull(result);
         assertEquals(1, result.getData().size());
@@ -69,58 +66,97 @@ public class FindGameUseCaseTest {
         assertTrue(result.isLast());
 
         verify(gameRepository, times(1)).findAll(any(Pageable.class));
-        verify(gameRepository, never()).autocompleteSlug(anyString(), anyInt(), anyInt());
-        verify(gameRepository, never()).autocompleteSlugCount(anyString());
+        verify(gameRepository, never()).findBySlugRegex(anyString(), any(Pageable.class));
         verify(gameMapper, times(1)).toSimpleDomainList(List.of(game));
     }
 
     @Test
-    void shouldReturnPaginatedGames_whenSlugProvided() {
-        int limit = 10;
-        int page = 0;
-        String sort = "name";
-        String order = "asc";
-        String slug = "witcher"; // triggers Atlas Search path
+    void shouldQueryWithAnchoredPrefixRegex_whenSlugProvided() {
+        int limit = 10, page = 0;
+        String sort = "total_rating_count", order = "desc";
+        String slug = "grand-theft-auto"; // deve trazer todos os GTA (exato e com sufixos)
 
-        Game game1 = new Game();
-        game1.setId(new ObjectId());
-        game1.setName("The Witcher");
+        Game gtaV = new Game();
+        gtaV.setId(new ObjectId());
+        gtaV.setName("Grand Theft Auto V");
+        gtaV.setSlug("grand-theft-auto-v");
 
-        Game game2 = new Game();
-        game2.setId(new ObjectId());
-        game2.setName("The Witcher 2: Assassins of Kings");
+        Game gtaIV = new Game();
+        gtaIV.setId(new ObjectId());
+        gtaIV.setName("Grand Theft Auto IV");
+        gtaIV.setSlug("grand-theft-auto-iv");
 
-        List<Game> searchHits = List.of(game1, game2);
+        Page<Game> regexPage = new PageImpl<>(List.of(gtaV, gtaIV), PageRequest.of(page, limit), 2);
 
-        SimpleGameResponse s1 = new SimpleGameResponse();
-        s1.setId(game1.getId().toHexString());
-        s1.setName(game1.getName());
-        s1.setUpdatedAt(Instant.now());
+        String expectedRegex = "^" + java.util.regex.Pattern.quote(slug) + "(?:-|$)";
+        when(gameRepository.findBySlugRegex(eq(expectedRegex), any(Pageable.class))).thenReturn(regexPage);
 
-        SimpleGameResponse s2 = new SimpleGameResponse();
-        s2.setId(game2.getId().toHexString());
-        s2.setName(game2.getName());
-        s2.setUpdatedAt(Instant.now());
+        SimpleGameResponse d1 = new SimpleGameResponse();
+        d1.setId(gtaV.getId().toHexString());
+        d1.setName(gtaV.getName());
+        d1.setUpdatedAt(Instant.now());
 
-        // total from $searchMeta
-        GameRepository.TotalOnly totalOnly = () -> 124L;
+        SimpleGameResponse d2 = new SimpleGameResponse();
+        d2.setId(gtaIV.getId().toHexString());
+        d2.setName(gtaIV.getName());
+        d2.setUpdatedAt(Instant.now());
 
-        when(gameRepository.autocompleteSlug(eq(slug), eq(page * limit), eq(limit))).thenReturn(searchHits);
-        when(gameRepository.autocompleteSlugCount(eq(slug))).thenReturn(List.of(totalOnly));
-        when(gameMapper.toSimpleDomainList(searchHits)).thenReturn(List.of(s1, s2));
+        when(gameMapper.toSimpleDomainList(List.of(gtaV, gtaIV))).thenReturn(List.of(d1, d2));
 
-        FindGameResponse result = findGameUseCase.execute(limit, page, sort, order, slug);
+        FindGameResponse result = useCase.execute(limit, page, sort, order, slug);
 
         assertNotNull(result);
         assertEquals(2, result.getData().size());
-        assertEquals(124L, result.getTotalElements());
-        assertEquals((int) Math.ceil(124.0 / limit), result.getTotalPages());
+        assertEquals(2, result.getTotalElements());
+        assertEquals(1, result.getTotalPages());
         assertEquals(page, result.getpageNumber());
-        assertFalse(result.isLast()); // since total >> page
+        assertTrue(result.isLast());
 
-        verify(gameRepository, times(1)).autocompleteSlug(eq(slug), eq(0), eq(limit));
-        verify(gameRepository, times(1)).autocompleteSlugCount(eq(slug));
+        // Verifica regex e sort aplicado
+        ArgumentCaptor<Pageable> pageableCaptor = ArgumentCaptor.forClass(Pageable.class);
+        verify(gameRepository, times(1)).findBySlugRegex(eq(expectedRegex), pageableCaptor.capture());
+        Pageable usedPageable = pageableCaptor.getValue();
+        Sort sortUsed = usedPageable.getSort();
+        assertEquals(Sort.Direction.DESC, sortUsed.getOrderFor("total_rating_count").getDirection());
+        assertNotNull(sortUsed.getOrderFor("_id")); // sort estável inclui _id
+
         verify(gameRepository, never()).findAll(any(Pageable.class));
-        verify(gameMapper, times(1)).toSimpleDomainList(searchHits);
+        verify(gameMapper, times(1)).toSimpleDomainList(List.of(gtaV, gtaIV));
+    }
+
+    @Test
+    void shouldNormalizeAndUseRegex_whenSlugHasSpacesAndUppercase() {
+        int limit = 10, page = 0;
+        String sort = "updatedAt", order = "asc";
+        String rawSlug = "Grand Theft Auto";        // será normalizado para "grand-theft-auto"
+        String normalized = "grand-theft-auto";
+        String expectedRegex = "^" + java.util.regex.Pattern.quote(normalized) + "(?:-|$)";
+
+        Game gtaSA = new Game();
+        gtaSA.setId(new ObjectId());
+        gtaSA.setName("Grand Theft Auto: San Andreas");
+        gtaSA.setSlug("grand-theft-auto-san-andreas");
+
+        Page<Game> regexPage = new PageImpl<>(List.of(gtaSA), PageRequest.of(page, limit), 1);
+        when(gameRepository.findBySlugRegex(eq(expectedRegex), any(Pageable.class))).thenReturn(regexPage);
+
+        SimpleGameResponse dto = new SimpleGameResponse();
+        dto.setId(gtaSA.getId().toHexString());
+        dto.setName(gtaSA.getName());
+        dto.setUpdatedAt(Instant.now());
+        when(gameMapper.toSimpleDomainList(List.of(gtaSA))).thenReturn(List.of(dto));
+
+        FindGameResponse result = useCase.execute(limit, page, sort, order, rawSlug);
+
+        assertNotNull(result);
+        assertEquals(1, result.getData().size());
+        assertEquals(1, result.getTotalElements());
+        assertEquals(1, result.getTotalPages());
+        assertEquals(page, result.getpageNumber());
+        assertTrue(result.isLast());
+
+        verify(gameRepository, times(1)).findBySlugRegex(eq(expectedRegex), any(Pageable.class));
+        verify(gameRepository, never()).findAll(any(Pageable.class));
+        verify(gameMapper, times(1)).toSimpleDomainList(List.of(gtaSA));
     }
 }

@@ -2,7 +2,9 @@ package com.idealizer.review_x.infra.libs.twitch.igdb;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import io.swagger.v3.core.util.Json;
 
 
 public record IgdbGameDTO(
@@ -27,7 +29,13 @@ public record IgdbGameDTO(
         IgdbImageDTO cover,
         List<IgdbImageDTO> screenshots,
         @JsonProperty("updated_at")
-        Long updatedAt
+        Long updatedAt,
+        @JsonProperty("involved_companies")
+        List<IgdbInvolvedCompanyDTO> involvedCompanies,
+        List<IgdbWebsiteDTO> websites,
+        List<IgdbVideoDTO>videos,
+        @JsonProperty("game_engines")
+        List<IgdbGameEngine> gameEngines
 ) {}
 
 record IgdbImageDTO(
@@ -35,3 +43,14 @@ record IgdbImageDTO(
         @JsonProperty("image_id")
         String imageId
 ) {}
+
+@JsonIgnoreProperties(ignoreUnknown = true)
+record IgdbCompanyDTO(Long id, String name) {}
+@JsonIgnoreProperties(ignoreUnknown = true)
+record IgdbInvolvedCompanyDTO(Boolean developer, IgdbCompanyDTO company) {}
+@JsonIgnoreProperties(ignoreUnknown = true)
+record IgdbWebsiteDTO(String id, String url, Integer type) {}
+@JsonIgnoreProperties(ignoreUnknown = true)
+record IgdbVideoDTO(String id, String name, String video_id) {}
+@JsonIgnoreProperties(ignoreUnknown = true)
+record IgdbGameEngine(Integer id, String name){}

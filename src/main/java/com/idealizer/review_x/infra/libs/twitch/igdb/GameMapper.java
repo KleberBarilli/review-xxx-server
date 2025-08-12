@@ -1,22 +1,29 @@
 package com.idealizer.review_x.infra.libs.twitch.igdb;
 
-import com.idealizer.review_x.domain.game.entities.Game;
-import com.idealizer.review_x.domain.game.entities.GameGenre;
-import com.idealizer.review_x.domain.game.entities.GameMode;
-import com.idealizer.review_x.domain.game.entities.GamePlatform;
+import com.idealizer.review_x.domain.game.entities.*;
+import com.idealizer.review_x.infra.processors.utils.NormalizeSlugs;
+import com.idealizer.review_x.infra.processors.utils.TrailerPicker;
 
+import java.text.Normalizer;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneOffset;
 import java.util.*;
+import java.util.regex.Pattern;
 
 public class GameMapper {
+
+
 
     public static Game toEntity(IgdbGameDTO dto) {
         Game game = new Game();
         game.setIgdbId(dto.id());
         game.setName(dto.name());
-        game.setSlug(dto.slug());
+        String incomingSlug = dto.slug();
+        String safeSlug = NormalizeSlugs.normalize(
+                (incomingSlug == null || incomingSlug.isBlank()) ? dto.name() : incomingSlug
+        );
+        game.setSlug(safeSlug);
         game.setSummary(dto.summary());
         game.setStoryline(dto.storyline());
         game.setFirstReleaseDate(
@@ -51,17 +58,48 @@ public class GameMapper {
                         .map(Integer::parseInt)
                         .map(GameMode::fromIgdbId)
                         .toList());
+        String mainDev = Optional.ofNullable(dto.involvedCompanies())
+                .orElse(List.of())
+                .stream()
+                .filter(ic -> Boolean.TRUE.equals(ic.developer()))
+                .map(ic -> ic.company() != null ? ic.company().name() : null)
+                .filter(Objects::nonNull)
+                .findFirst()
+                .orElse(null);
+        game.setDeveloper(mainDev);
+        String url = TrailerPicker.pickBestTrailerUrl(
+                dto.videos(),
+                IgdbVideoDTO::name,
+                IgdbVideoDTO::video_id
+        );
+        game.setTrailerUrl(url);
+        List<GameWebsite> sites = Optional.ofNullable(dto.websites())
+                .orElse(List.of())
+                .stream()
+                .filter(Objects::nonNull)
+                .filter(w -> w.url() != null && !w.url().isBlank() && w.type() != null)
+                .map(w -> new GameWebsite(
+                        GameWebsiteType.fromId(w.type()),
+                      (w.url())
+                ))
+                .distinct()
+                .toList();
+
+        game.setWebsites(sites);
+        List<String> engines = Optional.ofNullable(dto.gameEngines())
+                .orElse(List.of())
+                .stream()
+                .filter(Objects::nonNull)
+                .map(IgdbGameEngine::name)
+                .filter(Objects::nonNull)
+                .toList();
+        game.setEngines(engines);
         game.setUpdatedAt(dto.updatedAt() != null ? Instant.ofEpochSecond(dto.updatedAt()) : null);
         game.setSimilarGamesIgdbIds(dto.similarGames());
 
         return game;
     }
 
-    public static List<Game> toEntityList(List<IgdbGameDTO> dtos) {
-        return dtos.stream()
-                .map(GameMapper::toEntity)
-                .toList();
-    }
 
     private static LocalDate toLocalDate(Long timestamp) {
         if (timestamp == null)

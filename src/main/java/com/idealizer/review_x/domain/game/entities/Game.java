@@ -25,7 +25,7 @@ public class Game {
     @Field(value = "similar_games_igdb_ids")
     private List<Long> similarGamesIgdbIds;
     private String name;
-    @Indexed
+    @Indexed(unique = true)
     private String slug;
     private String summary;
     private String storyline;
@@ -41,6 +41,10 @@ public class Game {
     private List<GameMode> modes;
     private String cover;
     private List<String> screenshots;
+    private String developer;
+    private List<GameWebsite> websites;
+    private String trailerUrl;
+    private List<String> engines;
     @Field(value = "created_at")
     private Instant createdAt;
     @Field(value = "updated_at")
@@ -180,6 +184,37 @@ public class Game {
 
     public void setScreenshots(List<String> screenshots) {
         this.screenshots = screenshots;
+    }
+
+    public String getDeveloper() {
+        return developer;
+    }
+    public void setDeveloper(String developer) {
+        this.developer = developer;
+    }
+
+    public List<GameWebsite> getWebsites() {
+        return websites;
+    }
+
+    public void setWebsites(List<GameWebsite> websites) {
+        this.websites = websites;
+    }
+
+    public String getTrailerUrl() {
+        return trailerUrl;
+    }
+
+    public void setTrailerUrl(String trailerUrl) {
+        this.trailerUrl = trailerUrl;
+    }
+
+    public List<String> getEngines() {
+        return engines;
+    }
+
+    public void setEngines(List<String> engines) {
+        this.engines = engines;
     }
 
     public Instant getCreatedAt() {

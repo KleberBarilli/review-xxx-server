@@ -2,8 +2,8 @@ package  com.idealizer.review_x.infra.http;
 
 import com.idealizer.review_x.common.exceptions.BadRequestException;
 import com.idealizer.review_x.common.exceptions.DuplicatedException;
-import com.idealizer.review_x.infra.http.dto.FieldError;
-import com.idealizer.review_x.infra.http.dto.ResponseError;
+import com.idealizer.review_x.common.dtos.FieldError;
+import com.idealizer.review_x.common.dtos.ResponseError;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;

@@ -7,7 +7,7 @@ import com.idealizer.review_x.common.MessageUtil;
 import com.idealizer.review_x.common.exceptions.DuplicatedException;
 import com.idealizer.review_x.domain.user.entities.User;
 import com.idealizer.review_x.domain.user.repositories.UserRepository;
-import com.idealizer.review_x.infra.http.modules.user.dto.SignupRequestDTO;
+import com.idealizer.review_x.infra.http.controllers.user.dto.SignupRequestDTO;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 

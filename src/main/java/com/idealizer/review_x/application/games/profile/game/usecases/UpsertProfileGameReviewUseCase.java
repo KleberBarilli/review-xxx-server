@@ -9,10 +9,10 @@ import com.idealizer.review_x.application.games.profile.review.usecases.CreateRe
 import com.idealizer.review_x.application.games.profile.review.usecases.UpdateReviewUseCase;
 import com.idealizer.review_x.domain.game.entities.Game;
 import com.idealizer.review_x.domain.game.repositories.GameRepository;
-import com.idealizer.review_x.domain.profile.game.ProfileGame;
+import com.idealizer.review_x.domain.profile.game.entities.ProfileGame;
 import com.idealizer.review_x.domain.profile.game.repositories.ProfileGameRepository;
 import com.idealizer.review_x.domain.profile.game.repositories.ProfileReviewRepository;
-import com.idealizer.review_x.domain.profile.game.review.ReviewGame;
+import com.idealizer.review_x.domain.profile.game.entities.ReviewGame;
 import org.bson.types.ObjectId;
 import org.springframework.stereotype.Service;
 

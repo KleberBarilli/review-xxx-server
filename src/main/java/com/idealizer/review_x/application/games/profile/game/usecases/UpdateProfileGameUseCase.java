@@ -1,6 +1,6 @@
 package com.idealizer.review_x.application.games.profile.game.usecases;
 
-import com.idealizer.review_x.domain.profile.game.ProfileGame;
+import com.idealizer.review_x.domain.profile.game.entities.ProfileGame;
 import com.idealizer.review_x.domain.profile.game.repositories.ProfileGameRepository;
 import org.springframework.stereotype.Service;
 

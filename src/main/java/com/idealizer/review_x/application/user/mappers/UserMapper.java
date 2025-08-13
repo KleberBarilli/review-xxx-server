@@ -1,7 +1,7 @@
 package com.idealizer.review_x.application.user.mappers;
 
 import com.idealizer.review_x.application.user.responses.FindUserResponse;
-import com.idealizer.review_x.infra.http.modules.user.dto.SignupRequestDTO;
+import com.idealizer.review_x.infra.http.controllers.user.dto.SignupRequestDTO;
 import org.bson.types.ObjectId;
 import org.mapstruct.Mapper;
 

@@ -1,10 +1,12 @@
 package com.idealizer.review_x.domain.profile.game.interfaces;
 
-import com.idealizer.review_x.domain.profile.game.ProfileGameStatus;
+import com.idealizer.review_x.domain.profile.game.entities.ProfileGameStatus;
+import org.bson.types.ObjectId;
 
 import java.time.Instant;
 
 public interface SimpleProfileReview {
+    String getId();
     String getGameId();
     String getProfileGameId();
     String getGameName();
@@ -16,6 +18,6 @@ public interface SimpleProfileReview {
     ProfileGameStatus getStatus();
     String getContent();
     Boolean getSpoiler();
-    Integer getLikes();
+    Integer getLikeCount();
     Instant getCreatedAt();
 }

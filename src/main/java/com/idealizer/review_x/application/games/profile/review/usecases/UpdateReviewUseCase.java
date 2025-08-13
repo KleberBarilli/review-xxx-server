@@ -1,8 +1,7 @@
 package com.idealizer.review_x.application.games.profile.review.usecases;
 
-import com.idealizer.review_x.application.games.profile.review.commands.CreateUpdateReviewCommand;
 import com.idealizer.review_x.domain.profile.game.repositories.ProfileReviewRepository;
-import com.idealizer.review_x.domain.profile.game.review.ReviewGame;
+import com.idealizer.review_x.domain.profile.game.entities.ReviewGame;
 import org.springframework.stereotype.Service;
 
 import java.util.logging.Logger;

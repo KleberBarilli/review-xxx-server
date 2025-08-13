@@ -5,7 +5,6 @@ import com.idealizer.review_x.domain.profile.game.interfaces.SimpleProfileGame;
 import com.idealizer.review_x.domain.profile.game.interfaces.SimpleProfileReview;
 import com.idealizer.review_x.domain.profile.game.repositories.ProfileGameRepository;
 import com.idealizer.review_x.domain.profile.game.repositories.ProfileReviewRepository;
-import com.idealizer.review_x.domain.profile.game.review.ReviewGame;
 import org.bson.types.ObjectId;
 import org.springframework.stereotype.Service;
 
@@ -62,7 +61,7 @@ public class FindLastReviewsUseCase {
                     pg != null ? pg.getStatus() : null,
                     r.getContent(),
                     r.getSpoiler(),
-                    r.getLikes(),
+                    r.getLikeCount(),
                     r.getCreatedAt()
             );
         }).toList();

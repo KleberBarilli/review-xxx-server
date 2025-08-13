@@ -39,50 +39,45 @@ public class FindGameUseCase {
 
         Query q = new Query();
 
-        // slug prefix (opcional)
         if (dto.slug() != null && !dto.slug().isBlank()) {
             String s = normalizeSlugQuery(dto.slug());
             q.addCriteria(Criteria.where("slug").gte(s).lt(s + "\uffff"));
         }
 
-        // developer (igualdade case-insensitive)
         if (dto.developer() != null && !dto.developer().isBlank()) {
             String dev = java.util.regex.Pattern.quote(dto.developer().trim());
             q.addCriteria(Criteria.where("developer").regex("^" + dev + "$", "i"));
         }
 
-        // genres / modes / platforms / types (qualquer um dos itens)
         if (dto.genres() != null && !dto.genres().isEmpty()) {
             q.addCriteria(Criteria.where("genres").in(dto.genres()));
         }
         if (dto.modes() != null && !dto.modes().isEmpty()) {
             q.addCriteria(Criteria.where("modes").in(dto.modes()));
         }
+        if (dto.status() != null && !dto.status().isEmpty()) {
+            q.addCriteria(Criteria.where("status").is(dto.status()));
+        }
         if (dto.platforms() != null && !dto.platforms().isEmpty()) {
             q.addCriteria(Criteria.where("platforms").in(dto.platforms()));
         }
         if (dto.types() != null && !dto.types().isEmpty()) {
-            q.addCriteria(Criteria.where("type").in(dto.types())); // renomeado de category -> type
+            q.addCriteria(Criteria.where("type").in(dto.types()));
         }
 
-        // engines (qualquer um dos itens)
         if (dto.engines() != null && !dto.engines().isEmpty()) {
             q.addCriteria(Criteria.where("engines").in(dto.engines()));
         }
 
-        // firstReleaseDate (>= data informada)
         if (dto.firstReleaseDate() != null) {
             q.addCriteria(Criteria.where("firstReleaseDate").gte(dto.firstReleaseDate()));
         }
 
-        // paginação + sort
         q.with(pageable);
 
-        // busca e total
         List<Game> items = mongoTemplate.find(q, Game.class, "games");
         long total = mongoTemplate.count(Query.of(q).limit(-1).skip(-1).with(Sort.unsorted()), Game.class, "games");
 
-        // resposta
         List<SimpleGameResponse> data = gameMapper.toSimpleDomainList(items);
         int totalPages = (int) Math.ceil(total / (double) size);
         boolean isLast = page >= Math.max(0, totalPages - 1);

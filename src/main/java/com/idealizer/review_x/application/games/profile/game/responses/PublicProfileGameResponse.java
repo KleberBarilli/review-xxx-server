@@ -21,7 +21,7 @@ public record PublicProfileGameResponse(
         List<Comment> comments
 ) {
     public record Review(
-            ObjectId id,
+            String id,
             String content,
             Boolean spoiler,
             Boolean replay,

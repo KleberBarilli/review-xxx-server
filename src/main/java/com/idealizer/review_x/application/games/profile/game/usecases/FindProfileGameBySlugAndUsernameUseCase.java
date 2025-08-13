@@ -46,7 +46,7 @@ public class FindProfileGameBySlugAndUsernameUseCase {
 
         PublicProfileGameResponse.Review reviewDto = profileReviewRepository
                 .findProjectedByProfileGameId(profileGameId)
-                .map(r -> new PublicProfileGameResponse.Review(new ObjectId(r.getId()),
+                .map(r -> new PublicProfileGameResponse.Review((r.getId()),
                         r.getContent(),
                         r.getSpoiler(),
                         r.getReplay(),
@@ -57,7 +57,8 @@ public class FindProfileGameBySlugAndUsernameUseCase {
 
         List<PublicProfileGameResponse.Comment> comments = List.of();
         if (includeComments) {
-            var list = commentRepository.findAllByTargetIdAndTargetTypeAndDeletedAtIsNull(reviewDto.id(),CommentType.REVIEW);
+            var list = commentRepository.findAllByTargetIdAndTargetTypeAndDeletedAtIsNull(
+                    new ObjectId(reviewDto.id()),CommentType.REVIEW);
             comments = list.stream().map(
                     c -> new PublicProfileGameResponse.Comment(
                             "c.getUsername() TO DO",

@@ -1,8 +1,8 @@
 package com.idealizer.review_x.application.games.profile.game.commands;
 
-import com.idealizer.review_x.domain.game.entities.GamePlatform;
-import com.idealizer.review_x.domain.profile.game.entities.PlatformType;
-import com.idealizer.review_x.domain.profile.game.entities.ProfileGameStatus;
+import com.idealizer.review_x.domain.game.entities.enums.GamePlatform;
+import com.idealizer.review_x.domain.profile.game.PlatformType;
+import com.idealizer.review_x.domain.profile.game.ProfileGameStatus;
 import org.bson.types.ObjectId;
 
 import java.util.List;
@@ -34,7 +34,11 @@ public class CreateUpdateProfileGameCommand {
     public CreateUpdateProfileGameCommand() {
     }
 
-    public CreateUpdateProfileGameCommand(ObjectId userId, String username, ObjectId gameId, PlatformType sourcePlatform, GamePlatform playedOn, Boolean hasReview, ProfileGameStatus status, Integer playtimeInMinutes, Integer rating, Boolean playing, Boolean liked, Boolean owned, Boolean wishlist, Boolean mastered, List<String> favoriteScreenshots, Boolean favorite, int favoriteOrder, String gameName, String gameSlug, String gameCover) {
+    public CreateUpdateProfileGameCommand(ObjectId userId, String username, ObjectId gameId,
+            PlatformType sourcePlatform, GamePlatform playedOn, Boolean hasReview, ProfileGameStatus status,
+            Integer playtimeInMinutes, Integer rating, Boolean playing, Boolean liked, Boolean owned, Boolean wishlist,
+            Boolean mastered, List<String> favoriteScreenshots, Boolean favorite, int favoriteOrder, String gameName,
+            String gameSlug, String gameCover) {
         this.userId = userId;
         this.username = username;
         this.gameId = gameId;
@@ -64,12 +68,15 @@ public class CreateUpdateProfileGameCommand {
     public void setUserId(ObjectId userId) {
         this.userId = userId;
     }
+
     public String getUsername() {
         return username;
     }
+
     public void setUsername(String username) {
         this.username = username;
     }
+
     public ObjectId getGameId() {
         return gameId;
     }

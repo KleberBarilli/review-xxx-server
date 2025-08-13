@@ -1,8 +1,6 @@
 package com.idealizer.review_x.application.games.game.responses;
 
-import com.idealizer.review_x.domain.game.entities.GameGenre;
-import com.idealizer.review_x.domain.game.entities.GameMode;
-import com.idealizer.review_x.domain.game.entities.GamePlatform;
+import com.idealizer.review_x.domain.game.entities.enums.*;
 
 import java.time.Instant;
 import java.time.LocalDate;
@@ -11,14 +9,17 @@ import java.util.List;
 public class SimpleGameResponse {
     private String id;
     private Long externalId;
+    private String slug;
     private String name;
+    private GameType type;
+    private String developer;
     private LocalDate firstReleaseDate;
     private List<GameGenre> genres;
     private List<GameMode> modes;
     private List<GamePlatform> platforms;
     private String cover;
-    private Double rating;
-    private Integer ratingCount;
+    private Double totalRating;
+    private Integer totalRatingCount;
     private Instant updatedAt;
 
     public String getId() {
@@ -43,6 +44,18 @@ public class SimpleGameResponse {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getSlug() {
+        return slug;
+    }
+
+    public void setSlug(String slug) {
+        this.slug = slug;
+    }
+
+    public void setTotalRatingCount(Integer totalRatingCount) {
+        this.totalRatingCount = totalRatingCount;
     }
 
     public LocalDate getFirstReleaseDate() {
@@ -85,20 +98,36 @@ public class SimpleGameResponse {
         this.cover = cover;
     }
 
-    public Double getRating() {
-        return rating;
+    public Double getTotalRating() {
+        return totalRating;
     }
 
-    public void setRating(Double rating) {
-        this.rating = rating;
+    public void setTotalRating(Double totalRating) {
+        this.totalRating = totalRating;
     }
 
-    public Integer getRatingCount() {
-        return ratingCount;
+    public Integer getTotalRatingCount() {
+        return totalRatingCount;
     }
 
-    public void setRatingCount(Integer ratingCount) {
-        this.ratingCount = ratingCount;
+    public void setRatingCount(Integer totalRatingCount) {
+        this.totalRatingCount = totalRatingCount;
+    }
+
+    public GameType getType() {
+        return type;
+    }
+
+    public void setType(GameType type) {
+        this.type = type;
+    }
+
+    public String getDeveloper() {
+        return developer;
+    }
+
+    public void setDeveloper(String developer) {
+        this.developer = developer;
     }
 
     public Instant getUpdatedAt() {

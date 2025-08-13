@@ -1,6 +1,6 @@
 package com.idealizer.review_x.domain.profile.game.entities;
 
-import com.idealizer.review_x.domain.game.entities.GamePlatform;
+import com.idealizer.review_x.domain.game.entities.enums.GamePlatform;
 import jakarta.validation.constraints.NotBlank;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.CreatedDate;

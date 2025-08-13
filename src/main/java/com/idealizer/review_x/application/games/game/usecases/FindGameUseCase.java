@@ -12,9 +12,12 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.logging.Logger;
 
 @Service
 public class FindGameUseCase {
+    private final Logger logger = Logger.getLogger(FindGameUseCase.class.getName());
     private final GameRepository gameRepository;
     private final GameMapper gameMapper;
 
@@ -24,43 +27,55 @@ public class FindGameUseCase {
     }
 
     public FindGameResponse execute(int limit, int pageNumber, String sort, String order, String slug) {
-
-        // sanitize paging
         int size = (limit <= 0) ? 20 : limit;
         int page = (pageNumber < 0) ? 0 : pageNumber;
 
-        // 1) If no slug -> keep your old pageable flow (honors sort/order)
         if (slug == null || slug.isBlank()) {
-            Sort sortOrder = order != null && order.equalsIgnoreCase(Sort.Direction.ASC.name())
-                    ? Sort.by(sort).ascending()
-                    : Sort.by(sort).descending();
-
+            Sort sortOrder = resolveSort(sort, order);
             Pageable pageable = PageRequest.of(page, size, sortOrder);
             Page<Game> games = gameRepository.findAll(pageable);
-
             return toResponse(games.getContent(), games.getTotalElements(), page, size);
         }
 
-        // 2) With slug -> use Atlas Search autocomplete (popularity desc + relevance)
-        String q = slug.trim();
-        int skip = page * size;
+        String q = normalizeSlugQuery(slug);
 
-        // results page
-        List<Game> items = gameRepository.autocompleteSlug(q, skip, size);
+        String pattern = "^" + escapeRegex(q) + "(?:-|$)";
 
-        // total hits (for pagination)
-        long total = gameRepository.autocompleteSlugCount(q)
-                .stream()
-                .findFirst()
-                .map(GameRepository.TotalOnly::getTotal)
-                .orElse(0L);
+        Sort sortOrder = resolveSort(sort, order);
+        Pageable pageable = PageRequest.of(page, size, sortOrder);
 
-        return toResponse(items, total, page, size);
+        logger.info("Searching for games with slug pattern: " + pattern);
+       // Page<Game> pageResult = gameRepository.findBySlugRegex(pattern, pageable);
+        Page<Game> pageResult = gameRepository.findBySlugPrefix(
+                q, q + "\uffff", pageable);
+        return toResponse(pageResult.getContent(), pageResult.getTotalElements(), page, size);
+    }
+
+
+    private Sort resolveSort(String sort, String order) {
+
+        String sortField = (sort == null || sort.isBlank()) ? "total_rating_count" : sort;
+        boolean asc = order != null && order.equalsIgnoreCase(Sort.Direction.ASC.name());
+        Sort s = asc ? Sort.by(sortField).ascending() : Sort.by(sortField).descending();
+        return s.and(Sort.by("_id").descending());
+    }
+
+    private static String normalizeSlugQuery(String raw) {
+        String q = raw.trim().toLowerCase();
+        q = q.replaceAll("\\s+", "-");
+        q = q.replaceAll("[^a-z0-9-]", "-");
+        q = q.replaceAll("-{2,}", "-");
+        if (q.startsWith("-")) q = q.substring(1);
+        if (q.endsWith("-")) q = q.substring(0, q.length()-1);
+        return q;
+    }
+
+    private static String escapeRegex(String s) {
+        return s.replaceAll("([.^$|()\\[\\]{}*+?\\\\])", "\\\\$1");
     }
 
     private FindGameResponse toResponse(List<Game> games, long total, int page, int size) {
         List<SimpleGameResponse> data = gameMapper.toSimpleDomainList(games);
-
         int totalPages = (int) Math.ceil(total / (double) size);
         boolean isLast = page >= Math.max(0, totalPages - 1);
 

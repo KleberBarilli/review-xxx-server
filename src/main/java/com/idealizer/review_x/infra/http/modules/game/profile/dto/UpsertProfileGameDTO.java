@@ -4,6 +4,9 @@ import com.idealizer.review_x.common.validators.ValidUrl;
 import com.idealizer.review_x.domain.game.entities.GamePlatform;
 import com.idealizer.review_x.domain.profile.game.entities.PlatformType;
 import com.idealizer.review_x.domain.profile.game.entities.ProfileGameStatus;
+import com.idealizer.review_x.domain.game.entities.enums.GamePlatform;
+import com.idealizer.review_x.domain.profile.game.PlatformType;
+import com.idealizer.review_x.domain.profile.game.ProfileGameStatus;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
@@ -14,7 +17,6 @@ import java.time.Instant;
 import java.util.List;
 
 public class UpsertProfileGameDTO {
-
 
     @Schema(defaultValue = "PC_MICROSOFT_WINDOWS")
     private GamePlatform playedOn;
@@ -54,7 +56,6 @@ public class UpsertProfileGameDTO {
     @ValidUrl
     private List<String> favoriteScreenshots;
 
-
     @Schema(defaultValue = "GOTY 2025")
     @Size(min = 3, max = 50, message = "The title must be between 3 and 50 characters")
     private String reviewTitle;
@@ -79,12 +80,11 @@ public class UpsertProfileGameDTO {
     @PastOrPresent(message = "The finish date cannot be in the future")
     private Instant reviewFinishedAt;
 
-
     public UpsertProfileGameDTO(GamePlatform playedOn, PlatformType sourcePlatform, ProfileGameStatus status,
-                                Integer playtimeInMinutes, Boolean playing, Boolean liked, Boolean owned,
-                                Boolean wishlist, Boolean mastered, Integer rating, List<String> favoriteScreenshots
-            , String reviewTitle, String reviewContent, Boolean reviewSpoiler, Boolean reviewReplay,
-                                Instant reviewStartedAt, Instant reviewFinishedAt) {
+            Integer playtimeInMinutes, Boolean playing, Boolean liked, Boolean owned,
+            Boolean wishlist, Boolean mastered, Integer rating, List<String> favoriteScreenshots, String reviewTitle,
+            String reviewContent, Boolean reviewSpoiler, Boolean reviewReplay,
+            Instant reviewStartedAt, Instant reviewFinishedAt) {
         this.playedOn = playedOn;
         this.sourcePlatform = sourcePlatform;
         this.status = status;

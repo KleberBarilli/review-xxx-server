@@ -2,34 +2,26 @@ package com.idealizer.review_x.domain.game.repositories;
 
 import com.idealizer.review_x.domain.game.entities.Game;
 import org.bson.types.ObjectId;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.repository.Aggregation;
 import org.springframework.data.mongodb.repository.MongoRepository;
+import org.springframework.data.mongodb.repository.Query;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 
 public interface GameRepository extends MongoRepository<Game, ObjectId> {
     List<Game> findByIdIn(Set<ObjectId> ids);
 
 
-    @Aggregation(pipeline = {
-            "{ $search: { index: 'autocomplete_idx', autocomplete: { query: ?0, path: 'slug', tokenOrder: 'sequential', fuzzy: { maxEdits: 1, prefixLength: 2 } } } }",
-            "{ $addFields: { score: { $meta: 'searchScore' } } }",
-            "{ $sort: { total_rating_count: -1, score: -1 } }",
-            "{ $skip: ?1 }",
-            "{ $limit: ?2 }",
-            "{ $project: { score: 0 } }"   // remove only the temp field; everything else stays
-    })
-    List<Game> autocompleteSlug(String query, int skip, int limit);
+    @Query(value = "{ 'slug': { $regex: ?0 } }")
+    Page<Game> findBySlugRegex(String anchoredRegex, Pageable pageable);
 
-    // Total hits for the same filter (needed for pagination)
-    @Aggregation(pipeline = {
-            "{ $searchMeta: { index: 'autocomplete_idx', autocomplete: { query: ?0, path: 'slug'," +
-                    " tokenOrder: 'sequential', fuzzy: { maxEdits: 1, prefixLength: 2 } }, count: { type: 'total' } } }",
-            "{ $project: { total: '$count.total' } }"
-    })
-    List<TotalOnly> autocompleteSlugCount(String query);
+    @Query(value = "{ 'slug': { $gte: ?0, $lt: ?1 } }")
+    Page<Game> findBySlugPrefix(String lo, String hi, Pageable pageable);
 
     interface TotalOnly { long getTotal(); }
 

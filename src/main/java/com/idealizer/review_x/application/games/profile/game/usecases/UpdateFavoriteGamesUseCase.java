@@ -1,7 +1,7 @@
 package com.idealizer.review_x.application.games.profile.game.usecases;
 
 import com.idealizer.review_x.application.games.profile.game.commands.CreateUpdateProfileGameCommand;
-import com.idealizer.review_x.common.dtos.UpdateFavoriteGameDTO;
+import com.idealizer.review_x.common.dtos.profile.game.UpdateFavoriteGameDTO;
 import com.idealizer.review_x.domain.game.entities.Game;
 import com.idealizer.review_x.domain.game.repositories.GameRepository;
 import com.idealizer.review_x.domain.profile.game.entities.ProfileGame;

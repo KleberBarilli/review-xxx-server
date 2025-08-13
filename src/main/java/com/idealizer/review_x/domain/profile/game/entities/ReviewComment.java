@@ -20,7 +20,8 @@ public class ReviewComment {
     private ObjectId reviewId;
     private String content;
 
-    private Integer likes;
+    @Field(value = "like_count")
+    private Integer likeCount = 0;
 
     @Field(value = "created_at")
     @CreatedDate
@@ -61,12 +62,12 @@ public class ReviewComment {
         this.content = content;
     }
 
-    public Integer getLikes() {
-        return likes;
+    public Integer getLikeCount() {
+        return likeCount;
     }
 
-    public void setLikes(Integer likes) {
-        this.likes = likes;
+    public void setLikes(Integer likeCount) {
+        this.likeCount = likeCount;
     }
 
     public Instant getCreatedAt() {

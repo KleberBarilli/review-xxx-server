@@ -30,7 +30,8 @@ public class ReviewGame {
     private Boolean spoiler;
     private Boolean replay;
 
-    private Integer likes;
+    @Field(value = "like_count")
+    private Integer likeCount = 0;
     private Integer comments;
 
     @Field(value = "started_at")
@@ -119,12 +120,12 @@ public class ReviewGame {
         this.replay = replay;
     }
 
-    public Integer getLikes() {
-        return likes;
+    public Integer getLikeCount() {
+        return likeCount;
     }
 
-    public void setLikes(Integer likes) {
-        this.likes = likes;
+    public void setLikes(Integer likeCount) {
+        this.likeCount = likeCount;
     }
 
     public Integer getComments() {

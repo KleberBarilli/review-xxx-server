@@ -64,7 +64,7 @@ public class SyncIgdbGameProcessor {
         return provider.getAccessToken();
     }
 
-    @Scheduled(cron = "0 34 00 * * *", zone = "America/Sao_Paulo")
+    @Scheduled(cron = "0 01 04 * * *", zone = "America/Sao_Paulo")
     public void syncGames() {
         logger.info("Starting game synchronization from IGDB...");
         String accessToken = getAccessToken();
@@ -80,11 +80,11 @@ public class SyncIgdbGameProcessor {
 
         while (true) {
             String igdbQuery = String.format("""
-                   fields id,name,slug,summary,storyline,first_release_date,total_rating,total_rating_count,genres,
+                 fields id,name,slug,summary,storyline,first_release_date,total_rating,total_rating_count,genres,
                 game_modes,cover.image_id,screenshots.image_id,platforms,expansions,similar_games,updated_at,
                 involved_companies.developer,involved_companies.company.name,game_engines.name,websites.url,websites.type,
-                videos.name,videos.video_id,game_status,type;
-                    where updated_at > %d & version_parent = null & type = (0,8,9);
+                videos.name,videos.video_id,game_status,game_type, parent_game;
+                    where updated_at > %d & version_parent = null & game_type = (0,2,8,9);
                     sort id asc;
                     limit %d;
                     offset %d;
@@ -114,46 +114,43 @@ public class SyncIgdbGameProcessor {
                 boolean hasUpdates = false;
 
                 for (IgdbGameDTO dto : games) {
-                    Game game = GameMapper.toEntity(dto);
+                    // 1) mapear UMA vez
+                    Game mapped = GameMapper.toEntity(dto);
 
-                    Query query = new Query(new Criteria().andOperator(
-                            Criteria.where("igdbId").is(game.getIgdbId()),
-                            Criteria.where("updatedAt").lt(oneDayAgo)
-                    ));
-                    boolean exists = mongoTemplate.exists(query, Game.class);
+                    // 2) critério de update: mesmo igdbId E updatedAt < 1 dia (ou ausente)
+                    Criteria crit = new Criteria().andOperator(
+                            Criteria.where("igdbId").is(mapped.getIgdbId()),
+                            new Criteria().orOperator(
+                                    Criteria.where("updatedAt").lt(oneDayAgo),
+                                    Criteria.where("updatedAt").exists(false)
+                            )
+                    );
+                    Query q = new Query(crit);
 
+                    Update update = new Update()
+                            .set("name", mapped.getName())
+                            .set("type", mapped.getType())
+                            .set("status", mapped.getStatus())
+                            .set("totalRating", mapped.getTotalRating())
+                            .set("totalRatingCount", mapped.getTotalRatingCount())
+                            .set("cover", mapped.getCover())
+                            .set("similarGamesIgdbIds", mapped.getSimilarGamesIgdbIds())
+                            .set("updatedAt", now);
 
+                    Updates.setIfNotNull(update, "summary",     mapped.getSummary());
+                    Updates.setIfNotNull(update, "storyline",   mapped.getStoryline());
+                    Updates.setIfNotNull(update, "genres",      mapped.getGenres());
+                    Updates.setIfNotNull(update, "platforms",   mapped.getPlatforms());
+                    Updates.setIfNotNull(update, "modes",       mapped.getModes());
+                    Updates.setIfNotNull(update, "screenshots", mapped.getScreenshots());
 
-                    if (exists) {
+                    Updates.setIfNotNull(update, "developer",   mapped.getDeveloper());
+                    Updates.setIfNotNull(update, "trailerUrl",  mapped.getTrailerUrl());
+                    Updates.setIfNotNull(update, "websites",    mapped.getWebsites());
+                    Updates.setIfNotNull(update, "engines",     mapped.getEngines());
 
-                        Game mapped = GameMapper.toEntity(dto);
-
-                        Update update = new Update()
-                                .set("similarGamesIgdbIds", game.getSimilarGamesIgdbIds())
-                                .set("name", game.getName())
-                                .set("type", game.getType())
-                                .set("status", game.getStatus())
-                                .set("firstReleaseDate", game.getFirstReleaseDate())
-                                .set("totalRating", game.getTotalRating())
-                                .set("totalRatingCount", game.getTotalRatingCount())
-                                .set("cover", game.getCover())
-                                .set("updatedAt", now);
-
-                        Updates.setIfNotNull(update, "summary", mapped.getSummary());
-                        Updates.setIfNotNull(update, "storyline", mapped.getStoryline());
-                        Updates.setIfNotNull(update, "genres", mapped.getGenres());
-                        Updates.setIfNotNull(update, "platforms", mapped.getPlatforms());
-                        Updates.setIfNotNull(update, "modes", mapped.getModes());
-                        Updates.setIfNotNull(update, "screenshots", mapped.getScreenshots());
-
-                        Updates.setIfNotNull(update, "developer", mapped.getDeveloper());
-                        Updates.setIfNotNull(update, "trailerUrl", mapped.getTrailerUrl());
-                        Updates.setIfNotNull(update, "websites", mapped.getWebsites());
-                        Updates.setIfNotNull(update, "engines", mapped.getEngines());
-
-                        bulkOps.updateOne(query, update);
-                        hasUpdates = true;
-                    }
+                    bulkOps.updateOne(q, update);
+                    hasUpdates = true;
                 }
 
                 if (hasUpdates) {

@@ -4,7 +4,7 @@ import com.idealizer.review_x.application.games.game.responses.FindGameResponse;
 import com.idealizer.review_x.application.games.game.responses.GameResponse;
 import com.idealizer.review_x.application.games.game.usecases.FindGameByIdOrSlugOrExternalUseCase;
 import com.idealizer.review_x.application.games.game.usecases.FindGameUseCase;
-import com.idealizer.review_x.infra.http.modules.game.dto.FindAllGamesDTO;
+import com.idealizer.review_x.common.dtos.FindAllGamesDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -35,7 +35,7 @@ public class GameController {
     public  ResponseEntity<FindGameResponse> findAll(
             @Valid FindAllGamesDTO dto) {
         logger.info("Fetching all games");
-        FindGameResponse response = findGameUseCase.execute( dto.limit(), dto.pageNumber(), dto.sort(), dto.order(), dto.slug());
+        FindGameResponse response = findGameUseCase.execute(dto);
         return ResponseEntity.ok(response);
 
     }

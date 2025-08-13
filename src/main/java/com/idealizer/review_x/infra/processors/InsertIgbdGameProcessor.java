@@ -61,7 +61,7 @@ public class InsertIgbdGameProcessor {
         return provider.getAccessToken();
     }
 
-    @Scheduled(cron = "0 10 13 * * *", zone = "America/Sao_Paulo")
+    @Scheduled(cron = "0 59 02 * * *", zone = "America/Sao_Paulo")
 
     public void importGames() {
 
@@ -77,18 +77,17 @@ public class InsertIgbdGameProcessor {
         int offset = 0;
         int page = 1;
 
-        // where game_type = (0,8,9) & id > %d;
         while (true) {
             String igdbQuery = String.format("""
                 fields id,name,slug,summary,storyline,first_release_date,total_rating,total_rating_count,genres,
                 game_modes,cover.image_id,screenshots.image_id,platforms,expansions,similar_games,updated_at,
                 involved_companies.developer,involved_companies.company.name,game_engines.name,websites.url,websites.type,
-                videos.name,videos.video_id,game_status,game_type;
-                where game_type = (2);
+                videos.name,videos.video_id,game_status,game_type, parent_game;
+               where game_type = (0,8,9) & id > %d;
                 sort id asc;
                 limit %d;
                 offset %d;
-                """, PAGE_SIZE, offset);
+                """, lastGameId, PAGE_SIZE, offset);
 
             HttpRequest request = HttpRequest.newBuilder()
                     .uri(URI.create(IGDB_BASE_URL + "/games"))

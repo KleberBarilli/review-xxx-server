@@ -13,6 +13,8 @@ public record IgdbGameDTO(
         String slug,
         String summary,
         String storyline,
+        @JsonProperty("parent_game")
+        Long parentIgdbId,
         @JsonProperty("first_release_date")
         Long firstReleaseDate,
         @JsonProperty("total_rating")

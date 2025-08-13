@@ -2,9 +2,9 @@ package com.idealizer.review_x.infra.http.modules.game;
 
 import com.idealizer.review_x.application.games.game.responses.FindGameResponse;
 import com.idealizer.review_x.application.games.game.responses.GameResponse;
-import com.idealizer.review_x.application.games.game.usecases.FindGameByIdUseCase;
+import com.idealizer.review_x.application.games.game.usecases.FindGameByIdOrSlugOrExternalUseCase;
 import com.idealizer.review_x.application.games.game.usecases.FindGameUseCase;
-import com.idealizer.review_x.infra.http.modules.game.dto.FindAllGamesDTO;
+import com.idealizer.review_x.common.dtos.FindAllGamesDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -22,11 +22,12 @@ public class GameController {
     private static final Logger logger = Logger.getLogger(GameController.class.getName());
 
     private final FindGameUseCase findGameUseCase;
-    private final FindGameByIdUseCase findGameByIdUseCase;
+    private final FindGameByIdOrSlugOrExternalUseCase findGameByIdOrSlugOrExternalUseCase;
 
-    public GameController(FindGameUseCase findGameUseCase, FindGameByIdUseCase findGameByIdUseCase) {
+    public GameController(FindGameUseCase findGameUseCase, FindGameByIdOrSlugOrExternalUseCase findGameByIdOrSlugOrExternalUseCase
+                       ) {
         this.findGameUseCase = findGameUseCase;
-        this.findGameByIdUseCase = findGameByIdUseCase;
+        this.findGameByIdOrSlugOrExternalUseCase = findGameByIdOrSlugOrExternalUseCase;
     }
 
     @GetMapping
@@ -34,7 +35,7 @@ public class GameController {
     public  ResponseEntity<FindGameResponse> findAll(
             @Valid FindAllGamesDTO dto) {
         logger.info("Fetching all games");
-        FindGameResponse response = findGameUseCase.execute( dto.limit(), dto.pageNumber(), dto.sort(), dto.order(), dto.slug());
+        FindGameResponse response = findGameUseCase.execute(dto);
         return ResponseEntity.ok(response);
 
     }
@@ -44,8 +45,27 @@ public class GameController {
     public ResponseEntity<GameResponse> findById (@PathVariable(name = "id") String id){
         ObjectId gameId = new ObjectId(id);
 
-        return findGameByIdUseCase
-                .execute(gameId)
+        return findGameByIdOrSlugOrExternalUseCase
+                .execute(gameId, null, null)
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
+    }
+    @GetMapping("/slug/{slug}")
+    @Operation(summary = "Find game by Slug", description = "Returns a game by its Slug")
+    public ResponseEntity<GameResponse> findBySlug (@PathVariable(name = "slug") String slug){
+
+        return findGameByIdOrSlugOrExternalUseCase
+                .execute(null,slug, null)
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+    @GetMapping("/externalId/{externalId}")
+    @Operation(summary = "Find game by external ID", description = "Returns a game by its external ID")
+    public ResponseEntity<GameResponse> findByExternalId (@PathVariable(name = "externalId") Integer externalId){
+
+        return findGameByIdOrSlugOrExternalUseCase
+                .execute(null, null, externalId)
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }

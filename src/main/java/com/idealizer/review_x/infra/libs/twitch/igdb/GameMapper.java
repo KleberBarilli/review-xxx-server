@@ -18,6 +18,7 @@ public class GameMapper {
     public static Game toEntity(IgdbGameDTO dto) {
         Game game = new Game();
         game.setIgdbId(dto.id());
+        game.setParentIgdbId(dto.parentIgdbId());
         game.setName(dto.name());
         String incomingSlug = dto.slug();
         String safeSlug = NormalizeSlugs.normalize(
@@ -73,7 +74,7 @@ public class GameMapper {
                 .filter(Objects::nonNull)
                 .findFirst()
                 .orElse(null);
-        game.setDeveloper(mainDev);
+        game.setDeveloper(mainDev != null ?  NormalizeSlugs.normalize(mainDev.toLowerCase()) : null);
         String url = TrailerPicker.pickBestTrailerUrl(
                 dto.videos(),
                 IgdbVideoDTO::name,

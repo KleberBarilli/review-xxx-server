@@ -37,6 +37,7 @@ public class Game {
     @Field(value = "alternative_names")
     @Indexed
     private List<AlternativeName> alternativeNames;
+    @Indexed
     private GameType type;
     private String summary;
     private String storyline;
@@ -47,12 +48,17 @@ public class Game {
     @Field(value = "total_rating_count")
     private Integer totalRatingCount;
 
+    @Indexed
     private List<GameGenre> genres;
+    @Indexed
     private List<GamePlatform> platforms;
+    @Indexed
     private List<GameMode> modes;
+    @Indexed
     private GameStatus status;
     private String cover;
     private List<String> screenshots;
+    @Indexed
     private String developer;
     private List<GameWebsite> websites;
     private String trailerUrl;

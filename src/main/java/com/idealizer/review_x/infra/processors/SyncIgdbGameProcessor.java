@@ -84,7 +84,7 @@ public class SyncIgdbGameProcessor {
                 game_modes,cover.image_id,screenshots.image_id,platforms,expansions,similar_games,updated_at,
                 involved_companies.developer,involved_companies.company.name,game_engines.name,websites.url,websites.type,
                 videos.name,videos.video_id,game_status,game_type, parent_game;
-                    where updated_at > %d & version_parent = null & game_type = (0,2,8,9);
+                    where updated_at > %d & game_type = (0,2,8,9);
                     sort id asc;
                     limit %d;
                     offset %d;

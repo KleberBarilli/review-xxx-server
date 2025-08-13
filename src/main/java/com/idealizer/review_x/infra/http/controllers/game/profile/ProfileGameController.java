@@ -77,7 +77,7 @@ public class ProfileGameController {
     @GetMapping("/public/{username}/{gameSlug}")
     public ResponseEntity<Optional<PublicProfileGameResponse>> getPublicGameInfoFromUser(@PathVariable String username, @PathVariable String gameSlug) {
 
-        Optional<PublicProfileGameResponse> response = findProfileGameBySlugAndUsernameUseCase.execute(gameSlug, username);
+        Optional<PublicProfileGameResponse> response = findProfileGameBySlugAndUsernameUseCase.execute(gameSlug, username, true);
         return ResponseEntity.ok(response);
     }
 

@@ -61,7 +61,7 @@ public class FindLastReviewsUseCase {
                     pg != null ? pg.getStatus() : null,
                     r.getContent(),
                     r.getSpoiler(),
-                    r.getLikes(),
+                    r.getLikeCount(),
                     r.getCreatedAt()
             );
         }).toList();

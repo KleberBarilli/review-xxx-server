@@ -33,7 +33,7 @@ public class Comment {
     private Boolean spoiler;
 
     @Field(value = "like_count")
-    private Integer likeCount = 0;
+    private long likeCount = 0L;
 
 
     @Field(value = "created_at")
@@ -109,11 +109,11 @@ public class Comment {
         this.spoiler = spoiler;
     }
 
-    public Integer getLikeCount() {
+    public long getLikeCount() {
         return likeCount;
     }
 
-    public void setLikeCount(Integer likeCount) {
+    public void setLikeCount(long likeCount) {
         this.likeCount = likeCount;
     }
 

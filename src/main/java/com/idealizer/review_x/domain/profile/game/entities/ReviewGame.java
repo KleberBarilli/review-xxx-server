@@ -31,8 +31,7 @@ public class ReviewGame {
     private Boolean replay;
 
     @Field(value = "like_count")
-    private Integer likeCount = 0;
-    private Integer comments;
+    private long likeCount = 0L;
 
     @Field(value = "started_at")
     @PastOrPresent
@@ -120,20 +119,12 @@ public class ReviewGame {
         this.replay = replay;
     }
 
-    public Integer getLikeCount() {
+    public long getLikeCount() {
         return likeCount;
     }
 
-    public void setLikes(Integer likeCount) {
+    public void setLikes(long likeCount) {
         this.likeCount = likeCount;
-    }
-
-    public Integer getComments() {
-        return comments;
-    }
-
-    public void setComments(Integer comments) {
-        this.comments = comments;
     }
 
     public Instant getStartedAt() {

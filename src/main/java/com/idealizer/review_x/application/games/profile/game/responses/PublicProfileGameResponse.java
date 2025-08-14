@@ -25,7 +25,7 @@ public record PublicProfileGameResponse(
             String content,
             Boolean spoiler,
             Boolean replay,
-            Integer likeCount,
+            long likeCount,
             Instant createdAt
     ) {}
 
@@ -33,7 +33,7 @@ public record PublicProfileGameResponse(
             String username,
             String content,
             Boolean spoiler,
-            Integer likeCount,
+            long likeCount,
             Instant createdAt,
             Instant editedAt
     ){}

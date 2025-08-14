@@ -23,6 +23,8 @@ public class User {
     @Indexed(unique = true)
     private String email;
     private String password;
+    @Field(value = "full_name")
+    private String fullName;
     private String bio;
     @Field(value = "avatar_url")
     private String avatarUrl;
@@ -33,6 +35,11 @@ public class User {
     private String locale;
     @Field(value = "mobile_device")
     private MobileDeviceType mobileDevice;
+
+    @Field(value = "follower_count")
+    private long followerCount = 0L;
+    @Field(value = "following_count")
+    private long followingCount = 0L;
 
     @Field(value = "created_at")
     @CreatedDate
@@ -136,6 +143,30 @@ public class User {
 
     public void setUpdatedAt(Instant updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    public String getFullName() {
+        return fullName;
+    }
+
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
+    }
+
+    public long getFollowerCount() {
+        return followerCount;
+    }
+
+    public void setFollowerCount(long followerCount) {
+        this.followerCount = followerCount;
+    }
+
+    public long getFollowingCount() {
+        return followingCount;
+    }
+
+    public void setFollowingCount(long followingCount) {
+        this.followingCount = followingCount;
     }
 
     @Override

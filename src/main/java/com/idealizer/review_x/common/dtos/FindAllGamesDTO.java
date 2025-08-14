@@ -15,7 +15,7 @@ public record FindAllGamesDTO(
 
         @Schema(description = "Max 50", example = "10")
         @Min(1)
-        @Max(50)
+        //@Max(50)
         int limit,
 
         @Schema(example = "0")

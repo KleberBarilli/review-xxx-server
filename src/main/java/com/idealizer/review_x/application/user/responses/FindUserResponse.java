@@ -10,11 +10,14 @@ public class FindUserResponse {
     private String id;
     private String username;
     private String email;
+    private String fullName;
     private String bio;
     private String avatarUrl;
     private String steamUrl;
     private String letterboxdUrl;
     private String locale;
+    private long followingCount;
+    private long followerCount;
     private MobileDeviceType mobileDevice;
     private List<SimpleProfileGame> favoriteGames;
     private List<LastReviewItemResponse> lastReviews;
@@ -104,5 +107,29 @@ public class FindUserResponse {
     }
     public void setLastReviews(List<LastReviewItemResponse> lastReviews) {
         this.lastReviews = lastReviews;
+    }
+
+    public String getFullName() {
+        return fullName;
+    }
+
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
+    }
+
+    public long getFollowingCount() {
+        return followingCount;
+    }
+
+    public void setFollowingCount(long followingCount) {
+        this.followingCount = followingCount;
+    }
+
+    public long getFollowerCount() {
+        return followerCount;
+    }
+
+    public void setFollowerCount(long followerCount) {
+        this.followerCount = followerCount;
     }
 }

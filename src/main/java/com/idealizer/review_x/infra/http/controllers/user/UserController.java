@@ -84,7 +84,11 @@ public class UserController {
     }
 
     @GetMapping("/me")
-    public ResponseEntity<?> getCurrentUser(@RequestParam(name = "favorite", defaultValue = "false") boolean favorite, @RequestParam(name = "lastReviews", defaultValue = "false") boolean lastReviews, @RequestParam(name = "lastActivities", defaultValue = "false") boolean lastActivities, @AuthenticationPrincipal UserDetails userDetails) {
+    public ResponseEntity<?> getCurrentUser(
+            @RequestParam(name = "favorite", defaultValue = "false") boolean favorite,
+            @RequestParam(name = "lastReviews", defaultValue = "false") boolean lastReviews,
+            @RequestParam(name = "lastActivities", defaultValue = "false") boolean lastActivities,
+            @AuthenticationPrincipal UserDetails userDetails) {
         FindUserArgsDTO args = new FindUserArgsDTO(favorite, lastReviews, lastActivities);
         FindUserResponse user = findUserByNameUseCase.execute(userDetails.getUsername(), args);
 

@@ -35,8 +35,9 @@ public class Game {
     @Indexed(unique = true)
     private String slug;
     @Field(value = "alternative_names")
-    @Indexed
     private List<AlternativeName> alternativeNames;
+    @Indexed
+    private List<String> aliases;
     @Indexed
     private GameType type;
     private String summary;
@@ -120,6 +121,14 @@ public class Game {
 
     public String getSlug() {
         return slug;
+    }
+
+    public List<String> getAliases() {
+        return aliases;
+    }
+
+    public void setAliases(List<String> aliases) {
+        this.aliases = aliases;
     }
 
     public void setSlug(String slug) {

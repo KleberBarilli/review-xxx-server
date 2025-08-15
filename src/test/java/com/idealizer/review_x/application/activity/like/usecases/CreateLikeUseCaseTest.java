@@ -33,8 +33,6 @@ class CreateLikeUseCaseTest {
     void shouldInsertLikeAndIncCounterOnSuccess() {
         var userId = new ObjectId();
         var targetId = new ObjectId();
-
-        // Simula insert ok
         when(likeRepository.insert(ArgumentMatchers.any(Like.class)))
                 .thenReturn(null);
 

@@ -1,4 +1,4 @@
-package com.idealizer.review_x.infra.processors.utils;
+package com.idealizer.review_x.common.helpers;
 
 public final class NormalizeSlugs {
     private NormalizeSlugs() {}

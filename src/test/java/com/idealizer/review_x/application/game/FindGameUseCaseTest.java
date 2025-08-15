@@ -38,18 +38,16 @@ public class FindGameUseCaseTest {
     @Test
     void shouldReturnPagedResult_withoutFilters_usesDefaultsAndStableSort() {
         int limit = 10, page = 1;
-        String sort = null;
-        String order = null;
 
         FindAllGamesDTO dto = new FindAllGamesDTO(
-                limit, page, sort, order,
+                limit, page, null, null,
                 null,
                 null,
                 null,
                 null,
                 null,
                 null,
-                null  , null, null
+                null, null, null
         );
 
         Game g1 = new Game(); g1.setId(new ObjectId()); g1.setName("A");
@@ -65,7 +63,6 @@ public class FindGameUseCaseTest {
         SimpleGameResponse s1 = new SimpleGameResponse(); s1.setId(g1.getId().toHexString()); s1.setName("A");
         SimpleGameResponse s2 = new SimpleGameResponse(); s2.setId(g2.getId().toHexString()); s2.setName("B");
         when(gameMapper.toSimpleDomainList(found)).thenReturn(List.of(s1, s2));
-
 
         FindGameResponse resp = useCase.execute(dto);
 
@@ -92,16 +89,16 @@ public class FindGameUseCaseTest {
     }
 
     @Test
-    void shouldApplySlugPrefixAndDeveloperAndTypeAndEngines_andRespectCustomSortAsc() {
+    void shouldApplyAliasPrefixOnSlugAndAliases_andOtherFilters_andRespectCustomSortAsc() {
         int limit = 5, page = 0;
         String sort = "updatedAt", order = "asc";
 
-        String rawSlug = "Grand  Theft!! Auto";
-        String normalized = "grand-theft-auto";
+        String rawAlias = "Grand  Theft!! Auto";
+        String normalized = "grand-theft-auto"; // candidato ASCII/Unicode esperado
 
         FindAllGamesDTO dto = new FindAllGamesDTO(
                 limit, page, sort, order,
-                rawSlug,
+                rawAlias,
                 "Blizzard Entertainment",
                 List.of(GameStatus.BETA),
                 List.of(GameGenre.RACING),
@@ -110,7 +107,6 @@ public class FindGameUseCaseTest {
                 LocalDate.of(2015,1,1),
                 List.of(GameType.REMAKE, GameType.MAIN_GAME),
                 List.of("Unity", "Unreal")
-
         );
 
         Game g1 = new Game(); g1.setId(new ObjectId()); g1.setName("GTA V");
@@ -139,11 +135,32 @@ public class FindGameUseCaseTest {
 
         Document qo = q.getQueryObject();
 
-        assertTrue(qo.containsKey("slug"), "slug prefix criterion missing");
-        Document slugDoc = (Document) qo.get("slug");
-        assertEquals(normalized, slugDoc.getString("$gte"));
-        assertEquals(normalized + "\uffff", slugDoc.getString("$lt"));
+        assertTrue(qo.containsKey("$or"), "$or criterion missing for alias search");
+        @SuppressWarnings("unchecked")
+        List<Document> orList = (List<Document>) qo.get("$or");
+        assertNotNull(orList);
+        assertEquals(2, orList.size(), "Expected two OR branches: slug + aliases");
 
+        boolean foundSlug = false, foundAliases = false;
+        for (Document d : orList) {
+            if (d.containsKey("slug")) {
+                Document slugDoc = (Document) d.get("slug");
+                assertEquals(normalized, slugDoc.getString("$gte"));
+                assertEquals(normalized + "\uffff", slugDoc.getString("$lt"));
+                foundSlug = true;
+            } else if (d.containsKey("aliases")) {
+                Document aliasesDoc = (Document) d.get("aliases");
+                assertTrue(aliasesDoc.containsKey("$elemMatch"));
+                Document em = (Document) aliasesDoc.get("$elemMatch");
+                assertEquals(normalized, em.getString("$gte"));
+                assertEquals(normalized + "\uffff", em.getString("$lt"));
+                foundAliases = true;
+            }
+        }
+        assertTrue(foundSlug, "slug prefix criterion missing inside $or");
+        assertTrue(foundAliases, "aliases elemMatch prefix criterion missing inside $or");
+
+        // Demais filtros continuam válidos
         assertTrue(qo.containsKey("developer"), "developer criterion missing");
         assertTrue(qo.containsKey("status"), "status criterion missing");
 
@@ -173,7 +190,7 @@ public class FindGameUseCaseTest {
     void shouldNotBreak_whenAllFiltersNullOrEmpty_andUseCapOnLimit() {
         FindAllGamesDTO dto = new FindAllGamesDTO(
                 0, -1, null, "desc",
-                null, null, List.of(),List.of(), List.of(), List.of(),
+                null, null, List.of(), List.of(), List.of(), List.of(),
                 null, List.of(), List.of()
         );
 

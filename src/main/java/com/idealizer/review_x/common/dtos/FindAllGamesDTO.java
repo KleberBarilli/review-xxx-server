@@ -15,7 +15,7 @@ public record FindAllGamesDTO(
 
         @Schema(description = "Max 50", example = "10")
         @Min(1)
-        //@Max(50)
+        @Max(50)
         int limit,
 
         @Schema(example = "0")
@@ -28,8 +28,8 @@ public record FindAllGamesDTO(
         @Schema(description = "Order, asc/desc", example = "asc")
         String order,
 
-        @Schema(description = "Game slug for autocomplete", example = "grand-theft-auto")
-        String slug,
+        @Schema(description = "Game alias for autocomplete", example = "gtav")
+        String alias,
 
         @Schema(description = "Developer name for filtering", example = "blizzard-entertainment")
         String developer,

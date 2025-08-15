@@ -5,8 +5,7 @@ import com.idealizer.review_x.application.games.game.responses.FindGameResponse;
 import com.idealizer.review_x.application.games.game.responses.SimpleGameResponse;
 import com.idealizer.review_x.common.dtos.FindAllGamesDTO;
 import com.idealizer.review_x.domain.game.entities.Game;
-import com.idealizer.review_x.domain.game.repositories.GameRepository;
-import org.springframework.data.domain.Page;
+import com.idealizer.review_x.common.helpers.NormalizeAliases;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -16,8 +15,6 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
-import java.util.logging.Logger;
 
 @Service
 public class FindGameUseCase {
@@ -39,9 +36,20 @@ public class FindGameUseCase {
 
         Query q = new Query();
 
-        if (dto.slug() != null && !dto.slug().isBlank()) {
-            String s = normalizeSlugQuery(dto.slug());
-            q.addCriteria(Criteria.where("slug").gte(s).lt(s + "\uffff"));
+        if (dto.alias() != null && !dto.alias().isBlank()) {
+            List<String> cands = normalizeSlugQueryCandidates(dto.alias());
+
+            List<Criteria> ors = new java.util.ArrayList<>();
+
+            for (String c : cands) {
+                ors.add(Criteria.where("slug").gte(c).lt(c + "\uffff"));
+
+                ors.add(
+                        Criteria.where("aliases")
+                                .elemMatch(new Criteria().gte(c).lt(c + "\uffff"))
+                );
+            }
+            q.addCriteria(new Criteria().orOperator(ors.toArray(new Criteria[0])));
         }
 
         if (dto.developer() != null && !dto.developer().isBlank()) {
@@ -96,16 +104,12 @@ public class FindGameUseCase {
         String sortField = (sort == null || sort.isBlank()) ? "total_rating_count" : sort;
         boolean asc = order != null && order.equalsIgnoreCase(Sort.Direction.ASC.name());
         Sort s = asc ? Sort.by(sortField).ascending() : Sort.by(sortField).descending();
-        return s.and(Sort.by("_id").descending()); // sort estável
+        return s.and(Sort.by("_id").descending());
     }
 
-    private static String normalizeSlugQuery(String raw) {
-        String q = raw.trim().toLowerCase();
-        q = q.replaceAll("\\s+", "-");
-        q = q.replaceAll("[^a-z0-9-]", "-");
-        q = q.replaceAll("-{2,}", "-");
-        if (q.startsWith("-")) q = q.substring(1);
-        if (q.endsWith("-")) q = q.substring(0, q.length()-1);
-        return q;
+    private static List<String> normalizeSlugQueryCandidates(String raw) {
+        if (raw == null) return List.of();
+        return NormalizeAliases.slugCandidates(raw.trim());
     }
+
 }

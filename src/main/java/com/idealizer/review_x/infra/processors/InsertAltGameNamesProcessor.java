@@ -7,7 +7,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.idealizer.review_x.domain.game.entities.Game;
 import com.idealizer.review_x.domain.provider.entities.PlatformType;
 import com.idealizer.review_x.domain.provider.entities.Provider;
-import com.idealizer.review_x.infra.processors.utils.NormalizeAliases;
+import com.idealizer.review_x.common.helpers.NormalizeAliases;
 import jakarta.annotation.PostConstruct;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Value;
@@ -132,8 +132,7 @@ public class InsertAltGameNamesProcessor {
                                         a -> a.game,
                                         Collectors.collectingAndThen(
                                                 Collectors.toList(),
-                                                list -> {
-                                                    // Dedupe por (name, comment), case-insensitive, preservando ordem
+                                                list -> {                                      
                                                     Map<String, Map<String, Object>> uniq = new LinkedHashMap<>();
                                                     for (IgdbAltNames a : list) {
                                                         String name = a.name.trim();
@@ -169,33 +168,25 @@ public class InsertAltGameNamesProcessor {
 
                         List<Map<String, Object>> items = altByGame.getOrDefault(gid, Collections.emptyList());
                         LinkedHashSet<String> aliasesSet = new LinkedHashSet<>();
-
-// slug já é válido para URL; mantenha como está
                         try {
                             String slug = g.getSlug();
                             if (slug != null && !slug.isBlank()) aliasesSet.add(slug);
                         } catch (Exception ignored) {}
 
-// nome principal
                         try { addAliases(aliasesSet, g.getName()); } catch (Exception ignored) {}
-
-// nomes alternativos
                         for (Map<String, Object> it : items) {
                             Object n = it.get("name");
                             if (n instanceof String ns) addAliases(aliasesSet, ns);
                         }
 
-// compacta/lista final
                         List<String> aliases = new ArrayList<>(aliasesSet);
                         if (aliases.size() > MAX_ALIASES) aliases = aliases.subList(0, MAX_ALIASES);
 
                         Update up = new Update();
                         if (!items.isEmpty()) {
-                            // Grava como array de objetos {name, comment?}
                             up.set("alternative_names", items);
                             up.set("aliases", aliases);
                         } else {
-                            // Sem itens: remove o campo para facilitar filtros exists:false
                             up.unset("alternative_names");
                             up.unset("aliases");
                         }
@@ -301,10 +292,7 @@ public class InsertAltGameNamesProcessor {
         public RateLimitException(long retryAfterMs) { this.retryAfterMs = retryAfterMs; }
         public long retryAfterMs() { return retryAfterMs; }
     }
-    // (opcional) limitar qte p/ não inflar doc
     private static final int MAX_ALIASES = 64;
-
-    // --- helper: adiciona candidatos (ascii+unicode) deduplicando e preservando ordem
     private static void addAliases(LinkedHashSet<String> acc, String s) {
         if (s == null || s.isBlank()) return;
         for (String cand : NormalizeAliases.slugCandidates(s)) {

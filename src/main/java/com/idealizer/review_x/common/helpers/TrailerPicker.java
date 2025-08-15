@@ -1,4 +1,4 @@
-package com.idealizer.review_x.infra.processors.utils;
+package com.idealizer.review_x.common.helpers;
 
 import java.util.Comparator;
 import java.util.List;

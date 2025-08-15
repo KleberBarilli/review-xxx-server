@@ -7,7 +7,6 @@ import com.idealizer.review_x.domain.provider.entities.PlatformType;
 import com.idealizer.review_x.domain.provider.entities.Provider;
 import com.idealizer.review_x.infra.libs.twitch.igdb.GameMapper;
 import com.idealizer.review_x.infra.libs.twitch.igdb.IgdbGameDTO;
-import com.idealizer.review_x.infra.processors.utils.NormalizeSlugs;
 import com.idealizer.review_x.infra.processors.utils.Updates;
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Value;
@@ -114,10 +113,7 @@ public class SyncIgdbGameProcessor {
                 boolean hasUpdates = false;
 
                 for (IgdbGameDTO dto : games) {
-                    // 1) mapear UMA vez
                     Game mapped = GameMapper.toEntity(dto);
-
-                    // 2) critério de update: mesmo igdbId E updatedAt < 1 dia (ou ausente)
                     Criteria crit = new Criteria().andOperator(
                             Criteria.where("igdbId").is(mapped.getIgdbId()),
                             new Criteria().orOperator(

@@ -3,8 +3,8 @@ package com.idealizer.review_x.infra.libs.twitch.igdb;
 import com.idealizer.review_x.domain.game.entities.*;
 import com.idealizer.review_x.domain.game.entities.enums.*;
 import com.idealizer.review_x.domain.game.entities.records.GameWebsite;
-import com.idealizer.review_x.infra.processors.utils.NormalizeSlugs;
-import com.idealizer.review_x.infra.processors.utils.TrailerPicker;
+import com.idealizer.review_x.common.helpers.NormalizeSlugs;
+import com.idealizer.review_x.common.helpers.TrailerPicker;
 
 import java.time.Instant;
 import java.time.LocalDate;

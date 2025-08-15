@@ -34,10 +34,10 @@ public class UpsertGameTimeToBeatProcessor {
     private static final Logger logger = Logger.getLogger(UpsertGameTimeToBeatProcessor.class.getName());
 
     private static final String IGDB_BASE_URL = "https://api.igdb.com/v4";
-    private static final int BATCH_LIMIT = 500; // IGDB permite até 500 por requisição
+    private static final int BATCH_LIMIT = 500;
     private static final Duration HTTP_TIMEOUT = Duration.ofSeconds(20);
 
-    int REFRESH_AFTER_DAYS = 30; // ajuste como quiser (ou 0 para nunca reprocessar)
+    int REFRESH_AFTER_DAYS = 30;
     Date refreshThreshold = Date.from(java.time.Instant.now().minus(java.time.Duration.ofDays(REFRESH_AFTER_DAYS)));
 
     private final MongoTemplate mongoTemplate;

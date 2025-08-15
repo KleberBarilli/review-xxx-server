@@ -160,7 +160,6 @@ public class FindGameUseCaseTest {
         assertTrue(foundSlug, "slug prefix criterion missing inside $or");
         assertTrue(foundAliases, "aliases elemMatch prefix criterion missing inside $or");
 
-        // Demais filtros continuam válidos
         assertTrue(qo.containsKey("developer"), "developer criterion missing");
         assertTrue(qo.containsKey("status"), "status criterion missing");
 

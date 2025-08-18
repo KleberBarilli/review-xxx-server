@@ -7,6 +7,7 @@ import java.time.Instant;
 public interface SimpleProfileGame {
 
     String getId();
+    String getUserId();
     String getGameId();
     String getGameName();
     String getGameSlug();

@@ -5,6 +5,7 @@ import org.bson.types.ObjectId;
 
 import java.time.Instant;
 import java.util.List;
+import java.util.Optional;
 
 public record PublicProfileGameResponse(
         String gameId,
@@ -18,7 +19,8 @@ public record PublicProfileGameResponse(
         Integer favoriteOrder,
         Instant createdAt,
         Review review,
-        List<Comment> comments
+        List<Comment> comments,
+        List<Log> logs
 ) {
     public record Review(
             String id,
@@ -31,11 +33,19 @@ public record PublicProfileGameResponse(
 
     public record Comment(
             String username,
+            String fullName,
             String content,
             Boolean spoiler,
             long likeCount,
             Instant createdAt,
             Instant editedAt
+    ){}
+    public record Log(
+            int year,
+            int month,
+            int day,
+            int minutesPlayed,
+            String note
     ){}
 }
 

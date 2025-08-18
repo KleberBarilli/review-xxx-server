@@ -1,7 +1,6 @@
 package com.idealizer.review_x.domain.activity.comment.entities;
 
 
-import com.idealizer.review_x.domain.activity.like.entities.LikeType;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
@@ -25,6 +24,9 @@ public class Comment {
     private ObjectId id;
     @Field(value = "user_id")
     private ObjectId userId;
+    @Field(value = "full_name")
+    private String fullName;
+    private String username;
     @Field(value = "target_id")
     private ObjectId targetId;
     @Field(value = "target_type")
@@ -48,9 +50,11 @@ public class Comment {
 
     }
 
-    public Comment(ObjectId id, ObjectId userId, ObjectId targetId, CommentType targetType, String content, Boolean spoiler, Integer likeCount, Instant createdAt, Instant editedAt, Instant deletedAt) {
+    public Comment(ObjectId id, ObjectId userId, String username, String fullName, ObjectId targetId, CommentType targetType, String content, Boolean spoiler, Integer likeCount, Instant createdAt, Instant editedAt, Instant deletedAt) {
         this.id = id;
         this.userId = userId;
+        this.username = username;
+        this.fullName = fullName;
         this.targetId = targetId;
         this.targetType = targetType;
         this.content = content;
@@ -75,6 +79,22 @@ public class Comment {
 
     public void setUserId(ObjectId userId) {
         this.userId = userId;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getFullName() {
+        return fullName;
+    }
+
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
     }
 
     public ObjectId getTargetId() {

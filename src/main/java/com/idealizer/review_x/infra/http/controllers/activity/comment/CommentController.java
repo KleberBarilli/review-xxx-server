@@ -36,6 +36,8 @@ public class CommentController {
 
         ObjectId userId = ((UserDetailsImpl) userDetails).getId();
         createCommentUseCase.execute(userId,
+                userDetails.getUsername(),
+                ((UserDetailsImpl) userDetails).getFullName(),
                 new ObjectId(dto.targetId()),
                 dto.targetType(),
                 dto.content(),
@@ -52,6 +54,8 @@ public class CommentController {
         updateCommentUseCase.execute(
                 new ObjectId(id),
                 userId,
+                userDetails.getUsername(),
+                ((UserDetailsImpl) userDetails).getFullName(),
                 dto.content(),
                 dto.spoiler());
     }

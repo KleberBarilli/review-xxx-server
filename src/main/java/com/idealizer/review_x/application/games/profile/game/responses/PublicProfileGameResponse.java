@@ -33,6 +33,7 @@ public record PublicProfileGameResponse(
 
     public record Comment(
             String username,
+            String fullName,
             String content,
             Boolean spoiler,
             long likeCount,

@@ -16,10 +16,12 @@ public class UpdateCommentUseCase {
         this.commentRepository = commentRepository;
     }
 
-    public void execute(ObjectId id, ObjectId userId, String content, Boolean spoiler) {
+    public void execute(ObjectId id, ObjectId userId, String username, String fullName, String content, Boolean spoiler) {
         Comment c = commentRepository.findByIdAndUserIdAndDeletedAtIsNull(id, userId)
                 .orElseThrow(() -> new NotFoundException("Comment not found"));
         c.setContent(content);
+        c.setUsername(username);
+        c.setFullName(fullName);
         c.setSpoiler(spoiler);
         c.setEditedAt(Instant.now());
         commentRepository.save(c);

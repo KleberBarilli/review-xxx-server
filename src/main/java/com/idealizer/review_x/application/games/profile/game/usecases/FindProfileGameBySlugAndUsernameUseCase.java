@@ -67,7 +67,8 @@ public class FindProfileGameBySlugAndUsernameUseCase {
                     new ObjectId(reviewDto.id()), CommentType.REVIEW);
             comments = list.stream().map(
                     c -> new PublicProfileGameResponse.Comment(
-                            "c.getUsername() TO DO",
+                            c.getUsername(),
+                            c.getFullName(),
                             c.getContent(),
                             c.getSpoiler(),
                             c.getLikeCount(),

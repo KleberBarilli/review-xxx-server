@@ -7,6 +7,7 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.mongodb.core.index.CompoundIndex;
+import org.springframework.data.mongodb.core.index.CompoundIndexes;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
@@ -16,8 +17,22 @@ import java.util.List;
 import java.util.Objects;
 
 @Document(collection = "profile_games")
-@CompoundIndex(name = "user_game_idx", def = "{'user_id': 1, 'game_id': 1}", unique = true)
-@CompoundIndex(name = "user_game_slug", def = "{'username': 1, 'game_slug': 1}", unique = true)
+@CompoundIndexes({
+    @CompoundIndex(
+            name = "user_game_idx",
+            def  = "{'user_id': 1, 'game_id': 1}",
+            unique = true
+    ),
+    @CompoundIndex(
+            name = "user_game_slug",
+            def  = "{'username': 1, 'game_slug': 1}",
+            unique = true
+    ),
+    @CompoundIndex(
+            name = "pg_user_status_updated_idx",
+            def  = "{'user_id': 1, 'status': 1, 'updated_at': -1, '_id': -1}"
+    )
+})
 
 public class ProfileGame {
     @Id

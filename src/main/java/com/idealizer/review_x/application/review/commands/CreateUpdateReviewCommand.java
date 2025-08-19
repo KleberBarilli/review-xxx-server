@@ -1,5 +1,6 @@
-package com.idealizer.review_x.application.games.profile.review.commands;
+package com.idealizer.review_x.application.review.commands;
 
+import com.idealizer.review_x.domain.LogID;
 import org.bson.types.ObjectId;
 
 import java.time.Instant;
@@ -7,38 +8,40 @@ import java.time.Instant;
 public class CreateUpdateReviewCommand {
 
     private ObjectId userId;
-    private ObjectId gameId;
-    private ObjectId profileGameId;
+    private ObjectId targetId;
+    private ObjectId profileTargetId;
     private String title;
+    private LogID targetType;
     private String content;
     private Boolean spoiler;
     private Boolean replay;
     private Instant startedAt;
     private Instant finishedAt;
 
-    private String gameName;
-    private String gameSlug;
-    private String gameCover;
+    private String targetName;
+    private String targetSlug;
+    private String targetCover;
 
     public CreateUpdateReviewCommand() {
     }
 
-    public CreateUpdateReviewCommand(ObjectId userId, ObjectId gameId, ObjectId profileGameId, String title, String content,
+    public CreateUpdateReviewCommand(ObjectId userId, ObjectId targetId, ObjectId targetProfileId, LogID targetType, String title, String content,
                                      Boolean spoiler, Boolean replay, Instant startedAt, Instant finishedAt,
-                                     String gameName, String gameSlug, String gameCover
+                                     String targetName, String targetSlug, String targetCover
     ) {
         this.userId = userId;
-        this.gameId = gameId;
-        this.profileGameId = profileGameId;
+        this.targetId = targetId;
+        this.profileTargetId = targetProfileId;
+        this.targetType = targetType;
         this.title = title;
         this.content = content;
         this.spoiler = spoiler;
         this.replay = replay;
         this.startedAt = startedAt;
         this.finishedAt = finishedAt;
-        this.gameName = gameName;
-        this.gameSlug = gameSlug;
-        this.gameCover = gameCover;
+        this.targetName = targetName;
+        this.targetSlug = targetSlug;
+        this.targetCover = targetCover;
     }
 
     public ObjectId getUserId() {
@@ -49,20 +52,52 @@ public class CreateUpdateReviewCommand {
         this.userId = userId;
     }
 
-    public ObjectId getGameId() {
-        return gameId;
+    public ObjectId getTargetId() {
+        return targetId;
     }
 
-    public void setGameId(ObjectId gameId) {
-        this.gameId = gameId;
+    public void setTargetId(ObjectId targetId) {
+        this.targetId = targetId;
     }
 
-    public ObjectId getProfileGameId() {
-        return profileGameId;
+    public ObjectId getProfileTargetId() {
+        return profileTargetId;
     }
 
-    public void setProfileGameId(ObjectId profileGameId) {
-        this.profileGameId = profileGameId;
+    public void setProfileTargetId(ObjectId profileTargetId) {
+        this.profileTargetId = profileTargetId;
+    }
+
+    public LogID getTargetType() {
+        return targetType;
+    }
+
+    public void setType(LogID targetType) {
+        this.targetType = targetType;
+    }
+
+    public String getTargetName() {
+        return targetName;
+    }
+
+    public void setTargetName(String targetName) {
+        this.targetName = targetName;
+    }
+
+    public String getTargetSlug() {
+        return targetSlug;
+    }
+
+    public void setTargetSlug(String targetSlug) {
+        this.targetSlug = targetSlug;
+    }
+
+    public String getTargetCover() {
+        return targetCover;
+    }
+
+    public void setTargetCover(String targetCover) {
+        this.targetCover = targetCover;
     }
 
     public String getTitle() {
@@ -113,27 +148,4 @@ public class CreateUpdateReviewCommand {
         this.finishedAt = finishedAt;
     }
 
-    public String getGameName() {
-        return gameName;
-    }
-
-    public void setGameName(String gameName) {
-        this.gameName = gameName;
-    }
-
-    public String getGameSlug() {
-        return gameSlug;
-    }
-
-    public void setGameSlug(String gameSlug) {
-        this.gameSlug = gameSlug;
-    }
-
-    public String getGameCover() {
-        return gameCover;
-    }
-
-    public void setGameCover(String gameCover) {
-        this.gameCover = gameCover;
-    }
 }

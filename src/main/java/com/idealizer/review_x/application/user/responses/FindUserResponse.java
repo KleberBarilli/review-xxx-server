@@ -1,6 +1,6 @@
 package com.idealizer.review_x.application.user.responses;
 
-import com.idealizer.review_x.application.games.profile.review.responses.LastReviewItemResponse;
+import com.idealizer.review_x.application.review.responses.LastReviewItemResponse;
 import com.idealizer.review_x.domain.profile.game.interfaces.SimpleProfileGame;
 import com.idealizer.review_x.domain.user.entities.MobileDeviceType;
 

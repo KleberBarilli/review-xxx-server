@@ -1,8 +1,8 @@
 package com.idealizer.review_x.application.profile.review;
 
-import com.idealizer.review_x.application.games.profile.review.usecases.UpdateReviewUseCase;
-import com.idealizer.review_x.domain.profile.game.repositories.ProfileReviewRepository;
-import com.idealizer.review_x.domain.profile.game.entities.ReviewGame;
+import com.idealizer.review_x.application.review.usecases.UpdateReviewUseCase;
+import com.idealizer.review_x.domain.review.repositories.ReviewRepository;
+import com.idealizer.review_x.domain.review.entities.Review;
 import org.bson.types.ObjectId;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -10,23 +10,23 @@ import org.junit.jupiter.api.Test;
 import static org.mockito.Mockito.*;
 public class UpdateReviewUseCaseTest {
 
-    private ProfileReviewRepository profileReviewRepository;
+    private ReviewRepository reviewRepository;
     private UpdateReviewUseCase updateReviewUseCase;
 
     @BeforeEach
     void setUp() {
-        profileReviewRepository = mock(ProfileReviewRepository.class);
-        updateReviewUseCase = new UpdateReviewUseCase(profileReviewRepository);
+        reviewRepository = mock(ReviewRepository.class);
+        updateReviewUseCase = new UpdateReviewUseCase(reviewRepository);
     }
 
     @Test
     void shouldUpdateReview() {
-        ReviewGame review = new ReviewGame();
+        Review review = new Review();
         review.setContent("Updated content");
-        review.setProfileGameId(new ObjectId());
+        review.setProfileTargetId(new ObjectId());
 
         updateReviewUseCase.execute(review);
 
-        verify(profileReviewRepository, times(1)).save(review);
+        verify(reviewRepository, times(1)).save(review);
     }
 }

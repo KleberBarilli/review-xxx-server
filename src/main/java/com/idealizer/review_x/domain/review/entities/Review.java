@@ -1,29 +1,33 @@
-package com.idealizer.review_x.domain.profile.game.entities;
+package com.idealizer.review_x.domain.review.entities;
 
+import com.idealizer.review_x.domain.LogID;
 import jakarta.validation.constraints.PastOrPresent;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.mongodb.core.index.CompoundIndex;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.time.Instant;
 
-@Document(collection = "review_games")
-@CompoundIndex(name = "user_game_idx", def = "{'user_id': 1, 'game_id': 1}", unique = true)
-public class ReviewGame {
+@Document(collection = "reviews")
+@CompoundIndex(name = "user_target_idx", def = "{'user_id': 1, 'target_id': 1, 'target_type'> 1}", unique = true)
+public class Review {
     @Id
     private ObjectId id;
 
     @Field(value = "user_id")
     private ObjectId userId;
-    @Field(value = "profile_game_id")
-    private ObjectId profileGameId;
-    @Field(value = "game_id")
-    private ObjectId gameId;
+    @Field(value = "profile_target_id")
+    private ObjectId profileTargetId;
+    @Field(value = "target_id")
+    private ObjectId targetId;
 
+    @Field("target_type")
+    private LogID targetType;
 
     private String title;
     private String content;
@@ -47,12 +51,12 @@ public class ReviewGame {
     private Instant updatedAt;
 
     //duplicated fields below
-    @Field(value = "game_name")
-    private String gameName;
-    @Field(value = "game_slug")
-    private String gameSlug;
-    @Field(value = "game_cover")
-    private String gameCover;
+    @Field(value = "target_name")
+    private String targetName;
+    @Field(value = "target_slug")
+    private String targetSlug;
+    @Field(value = "target_cover")
+    private String targetCover;
 
 
     public ObjectId getId() {
@@ -71,21 +75,6 @@ public class ReviewGame {
         this.userId = userId;
     }
 
-    public ObjectId getProfileGameId() {
-        return profileGameId;
-    }
-
-    public void setProfileGameId(ObjectId profileGameId) {
-        this.profileGameId = profileGameId;
-    }
-
-    public ObjectId getGameId() {
-        return gameId;
-    }
-
-    public void setGameId(ObjectId gameId) {
-        this.gameId = gameId;
-    }
 
     public String getTitle() {
         return title;
@@ -159,27 +148,55 @@ public class ReviewGame {
         this.updatedAt = updatedAt;
     }
 
-    public String getGameName() {
-        return gameName;
+    public ObjectId getProfileTargetId() {
+        return profileTargetId;
     }
 
-    public void setGameName(String gameName) {
-        this.gameName = gameName;
+    public void setProfileTargetId(ObjectId profileTargetId) {
+        this.profileTargetId = profileTargetId;
     }
 
-    public String getGameSlug() {
-        return gameSlug;
+    public ObjectId getTargetId() {
+        return targetId;
     }
 
-    public void setGameSlug(String gameSlug) {
-        this.gameSlug = gameSlug;
+    public void setTargetId(ObjectId targetId) {
+        this.targetId = targetId;
     }
 
-    public String getGameCover() {
-        return gameCover;
+    public LogID getTargetType() {
+        return targetType;
     }
 
-    public void setGameCover(String gameCover) {
-        this.gameCover = gameCover;
+    public void setTargetType(LogID targetType) {
+        this.targetType = targetType;
+    }
+
+    public void setLikeCount(long likeCount) {
+        this.likeCount = likeCount;
+    }
+
+    public String getTargetName() {
+        return targetName;
+    }
+
+    public void setTargetName(String targetName) {
+        this.targetName = targetName;
+    }
+
+    public String getTargetSlug() {
+        return targetSlug;
+    }
+
+    public void setTargetSlug(String targetSlug) {
+        this.targetSlug = targetSlug;
+    }
+
+    public String getTargetCover() {
+        return targetCover;
+    }
+
+    public void setTargetCover(String targetCover) {
+        this.targetCover = targetCover;
     }
 }

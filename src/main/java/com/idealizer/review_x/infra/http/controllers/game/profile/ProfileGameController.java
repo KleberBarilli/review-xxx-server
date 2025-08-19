@@ -9,12 +9,13 @@ import com.idealizer.review_x.application.games.profile.game.usecases.FindProfil
 import com.idealizer.review_x.application.games.profile.game.usecases.FindProfileGameByUsernameUseCase;
 import com.idealizer.review_x.application.games.profile.game.usecases.UpdateFavoriteGamesUseCase;
 import com.idealizer.review_x.application.games.profile.game.usecases.UpsertProfileGameReviewUseCase;
-import com.idealizer.review_x.application.games.profile.review.usecases.DeleteReviewUseCase;
+import com.idealizer.review_x.application.review.usecases.DeleteReviewUseCase;
 import com.idealizer.review_x.common.dtos.PageResponse;
 import com.idealizer.review_x.common.dtos.profile.game.FindProfileGamesDTO;
 import com.idealizer.review_x.common.dtos.profile.game.UpdateFavoriteGameDTO;
 import com.idealizer.review_x.common.dtos.profile.game.UpsertProfileGameLogDTO;
 import com.idealizer.review_x.common.exceptions.ForbiddenException;
+import com.idealizer.review_x.domain.LogID;
 import com.idealizer.review_x.domain.profile.game.entities.ProfileGameStatus;
 import com.idealizer.review_x.domain.profile.game.interfaces.BaseProfileGame;
 import com.idealizer.review_x.infra.http.controllers.game.profile.dto.UpsertProfileGameDTO;
@@ -31,7 +32,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 @RestController
@@ -81,7 +81,8 @@ public class ProfileGameController {
         ObjectId userId = ((UserDetailsImpl) user).getId();
 
         UpsertProfileGameReviewCommand command = profileGameMapper.toCommand(dto);
-        command.setGameId(new ObjectId(gameId));
+        command.setTargetId(new ObjectId(gameId));
+        command.setReviewType(LogID.GAMES);
         upsertProfileGameReviewUseCase.execute(command, userId, user.getUsername());
 
 

@@ -1,12 +1,13 @@
 package com.idealizer.review_x.application.games.profile.game.usecases;
 
 import com.idealizer.review_x.application.games.profile.game.responses.PublicProfileGameDetailedResponse;
+import com.idealizer.review_x.domain.LogID;
 import com.idealizer.review_x.domain.activity.comment.entities.CommentType;
 import com.idealizer.review_x.domain.activity.comment.repositories.CommentRepository;
 import com.idealizer.review_x.domain.profile.game.interfaces.SimpleProfileGame;
 import com.idealizer.review_x.domain.profile.game.repositories.ProfileGameLogRepository;
 import com.idealizer.review_x.domain.profile.game.repositories.ProfileGameRepository;
-import com.idealizer.review_x.domain.profile.game.repositories.ProfileReviewRepository;
+import com.idealizer.review_x.domain.review.repositories.ReviewRepository;
 import org.bson.types.ObjectId;
 import org.springframework.stereotype.Service;
 
@@ -21,17 +22,17 @@ public class FindProfileGameBySlugAndUsernameUseCase {
     private final Logger logger = Logger.getLogger(FindProfileGameBySlugAndUsernameUseCase.class.getName());
     //todocache
     private final ProfileGameRepository profileGameRepository;
-    private final ProfileReviewRepository profileReviewRepository;
+    private final ReviewRepository reviewRepository;
     private final CommentRepository commentRepository;
     private final ProfileGameLogRepository profileGameLogRepository;
 
     public FindProfileGameBySlugAndUsernameUseCase(ProfileGameRepository profileGameRepository,
-                                                   ProfileReviewRepository profileReviewRepository,
+                                                   ReviewRepository reviewRepository,
                                                    CommentRepository commentRepository,
                                                    ProfileGameLogRepository profileGameLogRepository
     ) {
         this.profileGameRepository = profileGameRepository;
-        this.profileReviewRepository = profileReviewRepository;
+        this.reviewRepository = reviewRepository;
         this.commentRepository = commentRepository;
         this.profileGameLogRepository = profileGameLogRepository;
     }
@@ -49,8 +50,8 @@ public class FindProfileGameBySlugAndUsernameUseCase {
 
         ObjectId profileGameId = new ObjectId(pg.getId());
 
-        PublicProfileGameDetailedResponse.Review reviewDto = profileReviewRepository
-                .findProjectedByProfileGameId(profileGameId)
+        PublicProfileGameDetailedResponse.Review reviewDto = reviewRepository
+                .findProjectedByProfileTargetIdAndTargetType(profileGameId, LogID.GAMES)
                 .map(r -> new PublicProfileGameDetailedResponse.Review((r.getId()),
                         r.getContent(),
                         r.getSpoiler(),

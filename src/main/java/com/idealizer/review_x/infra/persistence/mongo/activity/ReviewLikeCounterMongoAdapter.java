@@ -2,7 +2,7 @@ package com.idealizer.review_x.infra.persistence.mongo.activity;
 
 import com.idealizer.review_x.application.activity.like.ports.LikeCounterPort;
 import com.idealizer.review_x.domain.activity.like.entities.LikeType;
-import com.idealizer.review_x.domain.profile.game.entities.ReviewGame;
+import com.idealizer.review_x.domain.review.entities.Review;
 import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -29,7 +29,7 @@ public class ReviewLikeCounterMongoAdapter implements LikeCounterPort {
     public void inc(ObjectId targetId, int delta) {
         Query q = Query.query(Criteria.where("_id").is(targetId));
         Update u = new Update().inc("likeCount", delta);
-        mongo.updateFirst(q, u, ReviewGame.class);
+        mongo.updateFirst(q, u, Review.class);
     }
 }
 

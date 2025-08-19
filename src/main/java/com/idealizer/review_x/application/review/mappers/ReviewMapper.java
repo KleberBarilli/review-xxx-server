@@ -1,13 +1,13 @@
-package com.idealizer.review_x.application.games.profile.review.mappers;
+package com.idealizer.review_x.application.review.mappers;
 
 import com.idealizer.review_x.application.games.profile.game.commands.UpsertProfileGameReviewCommand;
-import com.idealizer.review_x.application.games.profile.review.commands.CreateUpdateReviewCommand;
-import com.idealizer.review_x.domain.profile.game.entities.ReviewGame;
+import com.idealizer.review_x.application.review.commands.CreateUpdateReviewCommand;
+import com.idealizer.review_x.domain.review.entities.Review;
 import org.mapstruct.*;
 
 @Mapper(componentModel = "spring", nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
 public interface ReviewMapper {
-    ReviewGame toEntity(CreateUpdateReviewCommand command);
+    Review toEntity(CreateUpdateReviewCommand command);
 
     @Mapping(target = "title", source = "reviewTitle")
     @Mapping(target = "content", source = "reviewContent")
@@ -24,5 +24,5 @@ public interface ReviewMapper {
     @Mapping(source = "reviewStartedAt", target = "startedAt")
     @Mapping(source = "reviewFinishedAt", target = "finishedAt")
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-    void updateReviewFromCommand(UpsertProfileGameReviewCommand source, @MappingTarget ReviewGame target);
+    void updateReviewFromCommand(UpsertProfileGameReviewCommand source, @MappingTarget Review target);
 }

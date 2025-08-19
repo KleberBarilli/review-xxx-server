@@ -1,10 +1,11 @@
-package com.idealizer.review_x.application.games.profile.review.usecases;
+package com.idealizer.review_x.application.review.usecases;
 
-import com.idealizer.review_x.application.games.profile.review.responses.LastReviewItemResponse;
+import com.idealizer.review_x.application.review.responses.LastReviewItemResponse;
+import com.idealizer.review_x.domain.LogID;
 import com.idealizer.review_x.domain.profile.game.interfaces.SimpleProfileGame;
 import com.idealizer.review_x.domain.profile.game.interfaces.SimpleProfileReview;
 import com.idealizer.review_x.domain.profile.game.repositories.ProfileGameRepository;
-import com.idealizer.review_x.domain.profile.game.repositories.ProfileReviewRepository;
+import com.idealizer.review_x.domain.review.repositories.ReviewRepository;
 import org.bson.types.ObjectId;
 import org.springframework.stereotype.Service;
 
@@ -17,22 +18,22 @@ import java.util.stream.Collectors;
 @Service
 public class FindLastReviewsUseCase {
 
-    private final ProfileReviewRepository profileReviewRepository;
+    private final ReviewRepository reviewRepository;
     private final ProfileGameRepository profileGameRepository;
 
-    public  FindLastReviewsUseCase(ProfileReviewRepository profileReviewRepository, ProfileGameRepository profileGameRepository) {
-        this.profileReviewRepository = profileReviewRepository;
+    public  FindLastReviewsUseCase(ReviewRepository reviewRepository, ProfileGameRepository profileGameRepository) {
+        this.reviewRepository = reviewRepository;
         this.profileGameRepository = profileGameRepository;
     }
 
     public List<LastReviewItemResponse> execute(ObjectId userId) {
 
-        List<SimpleProfileReview> reviews = profileReviewRepository
+        List<SimpleProfileReview> reviews = reviewRepository
                 .findTop5ByUserIdOrderByCreatedAtDesc(userId);
         if (reviews.isEmpty()) return List.of();
 
         List<String> pgIds = reviews.stream()
-                .map(SimpleProfileReview::getProfileGameId)
+                .map(SimpleProfileReview::getProfileTargetId)
                 .filter(Objects::nonNull)
                 .distinct()
                 .toList();
@@ -49,13 +50,14 @@ public class FindLastReviewsUseCase {
 
 
         return reviews.stream().map(r -> {
-            SimpleProfileGame pg = pgMap.get(r.getProfileGameId());
+            SimpleProfileGame pg = pgMap.get(r.getProfileTargetId());
             return new LastReviewItemResponse(
                     pg != null ? pg.getGameId() : null,
-                    r.getProfileGameId() != null ? r.getProfileGameId() : null,
+                    r.getProfileTargetId() != null ? r.getProfileTargetId() : null,
                     pg != null ? pg.getGameName() : null,
                     pg != null ? pg.getGameSlug() : null,
                     pg != null ? pg.getGameCover() : null,
+                    LogID.GAMES,
                     pg != null ? pg.getLiked() : null,
                     pg != null ? pg.getRating() : null,
                     pg != null ? pg.getStatus() : null,

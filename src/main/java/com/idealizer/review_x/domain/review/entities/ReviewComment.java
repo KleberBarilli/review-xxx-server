@@ -1,4 +1,4 @@
-package com.idealizer.review_x.domain.profile.game.entities;
+package com.idealizer.review_x.domain.review.entities;
 
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.CreatedDate;

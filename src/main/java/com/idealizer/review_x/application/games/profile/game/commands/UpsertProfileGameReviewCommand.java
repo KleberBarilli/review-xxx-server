@@ -1,5 +1,6 @@
 package com.idealizer.review_x.application.games.profile.game.commands;
 
+import com.idealizer.review_x.domain.LogID;
 import com.idealizer.review_x.domain.game.entities.enums.GamePlatform;
 import com.idealizer.review_x.domain.profile.game.entities.PlatformType;
 import com.idealizer.review_x.domain.profile.game.entities.ProfileGameStatus;
@@ -10,12 +11,12 @@ import java.util.List;
 
 public class UpsertProfileGameReviewCommand {
     private ObjectId userId;
-    private ObjectId gameId;
+    private ObjectId targetId;
 
     private PlatformType sourcePlatform;
     private GamePlatform playedOn;
-    private String originalName;
-    private String slug;
+    private String targetName;
+    private String targetSlug;
     private ProfileGameStatus status;
     private Integer playtimeInMinutes;
     private Integer rating;
@@ -27,6 +28,7 @@ public class UpsertProfileGameReviewCommand {
     private List<String> favoriteScreenshots;
 
     private String reviewTitle;
+    private LogID reviewType;
     private String reviewContent;
     private Boolean reviewSpoiler;
     private Boolean reviewReplay;
@@ -36,19 +38,19 @@ public class UpsertProfileGameReviewCommand {
     public UpsertProfileGameReviewCommand() {
     }
 
-    public UpsertProfileGameReviewCommand(ObjectId userId, ObjectId gameId, PlatformType sourcePlatform,
+    public UpsertProfileGameReviewCommand(ObjectId userId, ObjectId targetId, PlatformType sourcePlatform,
             GamePlatform playedOn,
-            String originalName, String slug, ProfileGameStatus status, Integer playtimeInMinutes,
+            String targetName, String targetSlug, ProfileGameStatus status, Integer playtimeInMinutes,
             Integer rating, Boolean playing, Boolean liked, Boolean owned, Boolean wishlist,
-            Boolean mastered, List<String> favoriteScreenshots, String reviewTitle, String reviewContent,
+            Boolean mastered, List<String> favoriteScreenshots, String reviewTitle, LogID reviewType, String reviewContent,
             Boolean reviewSpoiler, Boolean reviewReplay, Instant reviewStartedAt,
             Instant reviewFinishedAt) {
         this.userId = userId;
-        this.gameId = gameId;
+        this.targetId = targetId;
         this.sourcePlatform = sourcePlatform;
         this.playedOn = playedOn;
-        this.originalName = originalName;
-        this.slug = slug;
+        this.targetName = targetName;
+        this.targetSlug = targetSlug;
         this.status = status;
         this.playtimeInMinutes = playtimeInMinutes;
         this.rating = rating;
@@ -59,6 +61,7 @@ public class UpsertProfileGameReviewCommand {
         this.mastered = mastered;
         this.favoriteScreenshots = favoriteScreenshots;
         this.reviewTitle = reviewTitle;
+        this.reviewType = reviewType;
         this.reviewContent = reviewContent;
         this.reviewSpoiler = reviewSpoiler;
         this.reviewReplay = reviewReplay;
@@ -74,13 +77,6 @@ public class UpsertProfileGameReviewCommand {
         this.userId = userId;
     }
 
-    public ObjectId getGameId() {
-        return gameId;
-    }
-
-    public void setGameId(ObjectId gameId) {
-        this.gameId = gameId;
-    }
 
     public PlatformType getSourcePlatform() {
         return sourcePlatform;
@@ -98,20 +94,29 @@ public class UpsertProfileGameReviewCommand {
         this.playedOn = playedOn;
     }
 
-    public String getOriginalName() {
-        return originalName;
+
+    public ObjectId getTargetId() {
+        return targetId;
     }
 
-    public void setOriginalName(String originalName) {
-        this.originalName = originalName;
+    public void setTargetId(ObjectId targetId) {
+        this.targetId = targetId;
     }
 
-    public String getSlug() {
-        return slug;
+    public String getTargetName() {
+        return targetName;
     }
 
-    public void setSlug(String slug) {
-        this.slug = slug;
+    public void setTargetName(String targetName) {
+        this.targetName = targetName;
+    }
+
+    public String getTargetSlug() {
+        return targetSlug;
+    }
+
+    public void setTargetSlug(String targetSlug) {
+        this.targetSlug = targetSlug;
     }
 
     public ProfileGameStatus getStatus() {
@@ -232,5 +237,13 @@ public class UpsertProfileGameReviewCommand {
 
     public void setReviewFinishedAt(Instant reviewFinishedAt) {
         this.reviewFinishedAt = reviewFinishedAt;
+    }
+
+    public LogID getReviewType() {
+        return reviewType;
+    }
+
+    public void setReviewType(LogID reviewType) {
+        this.reviewType = reviewType;
     }
 }

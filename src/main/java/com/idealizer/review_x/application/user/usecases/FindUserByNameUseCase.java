@@ -1,7 +1,7 @@
 package com.idealizer.review_x.application.user.usecases;
 
-import com.idealizer.review_x.application.games.profile.review.responses.LastReviewItemResponse;
-import com.idealizer.review_x.application.games.profile.review.usecases.FindLastReviewsUseCase;
+import com.idealizer.review_x.application.review.responses.LastReviewItemResponse;
+import com.idealizer.review_x.application.review.usecases.FindLastReviewsUseCase;
 import com.idealizer.review_x.application.user.mappers.UserMapper;
 import com.idealizer.review_x.application.user.responses.FindUserResponse;
 import com.idealizer.review_x.common.dtos.FindUserArgsDTO;

@@ -2,7 +2,7 @@ package com.idealizer.review_x.infra.persistence.mongo.activity.like.adapters;
 
 
 import com.idealizer.review_x.domain.activity.like.entities.LikeType;
-import com.idealizer.review_x.domain.profile.game.entities.ReviewGame;
+import com.idealizer.review_x.domain.review.entities.Review;
 import com.idealizer.review_x.infra.persistence.mongo.activity.ReviewLikeCounterMongoAdapter;
 import org.bson.types.ObjectId;
 import org.junit.jupiter.api.Test;
@@ -28,7 +28,7 @@ class ReviewLikeCounterMongoAdapterTest {
         ArgumentCaptor<Update> uCap = ArgumentCaptor.forClass(Update.class);
 
         verify(mongo, times(1))
-                .updateFirst(qCap.capture(), uCap.capture(), eq(ReviewGame.class));
+                .updateFirst(qCap.capture(), uCap.capture(), eq(Review.class));
 
         assertEquals(id, qCap.getValue().getQueryObject().get("_id"));
         assertTrue(uCap.getValue().getUpdateObject().containsKey("$inc"));

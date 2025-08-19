@@ -20,8 +20,9 @@ public class FindUserByNameUseCase {
     private final ProfileGameRepository profileGameRepository;
     private final FindLastReviewsUseCase findLastReviewsUseCase;
 
-    public FindUserByNameUseCase(UserRepository userRepository, UserMapper userMapper,
-                                 ProfileGameRepository profileGameRepository, FindLastReviewsUseCase findLastReviewsUseCase) {
+    public FindUserByNameUseCase(
+            UserRepository userRepository, UserMapper userMapper,
+            ProfileGameRepository profileGameRepository, FindLastReviewsUseCase findLastReviewsUseCase) {
         this.userRepository = userRepository;
         this.userMapper = userMapper;
         this.profileGameRepository = profileGameRepository;

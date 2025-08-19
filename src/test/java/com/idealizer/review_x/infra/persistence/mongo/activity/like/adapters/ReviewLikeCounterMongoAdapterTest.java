@@ -1,9 +1,9 @@
-package com.idealizer.review_x.infra.mongo.activity.like.adapters;
+package com.idealizer.review_x.infra.persistence.mongo.activity.like.adapters;
 
 
 import com.idealizer.review_x.domain.activity.like.entities.LikeType;
 import com.idealizer.review_x.domain.profile.game.entities.ReviewGame;
-import com.idealizer.review_x.infra.mongo.activity.ReviewLikeCounterMongoAdapter;
+import com.idealizer.review_x.infra.persistence.mongo.activity.ReviewLikeCounterMongoAdapter;
 import org.bson.types.ObjectId;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;

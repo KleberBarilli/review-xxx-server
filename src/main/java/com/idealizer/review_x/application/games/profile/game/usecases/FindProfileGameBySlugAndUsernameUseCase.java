@@ -1,13 +1,13 @@
 package com.idealizer.review_x.application.games.profile.game.usecases;
 
-import com.idealizer.review_x.application.games.profile.game.responses.PublicProfileGameResponse;
-import com.idealizer.review_x.domain.activity.comment.entities.Comment;
+import com.idealizer.review_x.application.games.profile.game.responses.PublicProfileGameDetailedResponse;
+import com.idealizer.review_x.domain.LogID;
 import com.idealizer.review_x.domain.activity.comment.entities.CommentType;
 import com.idealizer.review_x.domain.activity.comment.repositories.CommentRepository;
 import com.idealizer.review_x.domain.profile.game.interfaces.SimpleProfileGame;
 import com.idealizer.review_x.domain.profile.game.repositories.ProfileGameLogRepository;
 import com.idealizer.review_x.domain.profile.game.repositories.ProfileGameRepository;
-import com.idealizer.review_x.domain.profile.game.repositories.ProfileReviewRepository;
+import com.idealizer.review_x.domain.review.repositories.ReviewRepository;
 import org.bson.types.ObjectId;
 import org.springframework.stereotype.Service;
 
@@ -22,23 +22,23 @@ public class FindProfileGameBySlugAndUsernameUseCase {
     private final Logger logger = Logger.getLogger(FindProfileGameBySlugAndUsernameUseCase.class.getName());
     //todocache
     private final ProfileGameRepository profileGameRepository;
-    private final ProfileReviewRepository profileReviewRepository;
+    private final ReviewRepository reviewRepository;
     private final CommentRepository commentRepository;
     private final ProfileGameLogRepository profileGameLogRepository;
 
     public FindProfileGameBySlugAndUsernameUseCase(ProfileGameRepository profileGameRepository,
-                                                   ProfileReviewRepository profileReviewRepository,
+                                                   ReviewRepository reviewRepository,
                                                    CommentRepository commentRepository,
                                                    ProfileGameLogRepository profileGameLogRepository
     ) {
         this.profileGameRepository = profileGameRepository;
-        this.profileReviewRepository = profileReviewRepository;
+        this.reviewRepository = reviewRepository;
         this.commentRepository = commentRepository;
         this.profileGameLogRepository = profileGameLogRepository;
     }
 
-    public Optional<PublicProfileGameResponse> execute(String gameSlug, String username, Boolean includeComments,
-                                                       Boolean includeLog) {
+    public Optional<PublicProfileGameDetailedResponse> execute(String gameSlug, String username, Boolean includeComments,
+                                                               Boolean includeLog) {
         Optional<SimpleProfileGame> pgOpt = profileGameRepository.findProjectedByUsernameAndGameSlug(username, gameSlug);
 
         if (!pgOpt.isPresent()) {
@@ -50,9 +50,9 @@ public class FindProfileGameBySlugAndUsernameUseCase {
 
         ObjectId profileGameId = new ObjectId(pg.getId());
 
-        PublicProfileGameResponse.Review reviewDto = profileReviewRepository
-                .findProjectedByProfileGameId(profileGameId)
-                .map(r -> new PublicProfileGameResponse.Review((r.getId()),
+        PublicProfileGameDetailedResponse.Review reviewDto = reviewRepository
+                .findProjectedByProfileTargetIdAndTargetType(profileGameId, LogID.GAMES)
+                .map(r -> new PublicProfileGameDetailedResponse.Review((r.getId()),
                         r.getContent(),
                         r.getSpoiler(),
                         r.getReplay(),
@@ -61,12 +61,12 @@ public class FindProfileGameBySlugAndUsernameUseCase {
                 ))
                 .orElse(null);
 
-        List<PublicProfileGameResponse.Comment> comments = List.of();
+        List<PublicProfileGameDetailedResponse.Comment> comments = List.of();
         if (includeComments) {
             var list = commentRepository.findAllByTargetIdAndTargetTypeAndDeletedAtIsNull(
                     new ObjectId(reviewDto.id()), CommentType.REVIEW);
             comments = list.stream().map(
-                    c -> new PublicProfileGameResponse.Comment(
+                    c -> new PublicProfileGameDetailedResponse.Comment(
                             c.getUsername(),
                             c.getFullName(),
                             c.getContent(),
@@ -77,14 +77,14 @@ public class FindProfileGameBySlugAndUsernameUseCase {
                     )).toList();
 
         }
-        List<PublicProfileGameResponse.Log> logs = List.of();
+        List<PublicProfileGameDetailedResponse.Log> logs = List.of();
 
         if (includeLog) {
             logger.log(Level.INFO, "Finding profile game by profileId: " + profileGameId);
             logger.log(Level.INFO, "Finding profile game by userId: " + new ObjectId(pg.getUserId()));
             var list = profileGameLogRepository.findByProfileGameIdAndUserId(profileGameId, new ObjectId(pg.getUserId()));
             logs = list.stream().map(
-                    c -> new PublicProfileGameResponse.Log(
+                    c -> new PublicProfileGameDetailedResponse.Log(
                             c.getYear(),
                             c.getMonth(),
                             c.getDay(),
@@ -95,7 +95,7 @@ public class FindProfileGameBySlugAndUsernameUseCase {
         }
 
 
-        return Optional.of(new PublicProfileGameResponse(
+        return Optional.of(new PublicProfileGameDetailedResponse(
                 pg.getGameId(),
                 pg.getGameName(),
                 pg.getGameSlug(),

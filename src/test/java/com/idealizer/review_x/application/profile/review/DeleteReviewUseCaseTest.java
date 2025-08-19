@@ -1,9 +1,9 @@
 package com.idealizer.review_x.application.profile.review;
 
-import com.idealizer.review_x.application.games.profile.review.usecases.DeleteReviewUseCase;
+import com.idealizer.review_x.application.review.usecases.DeleteReviewUseCase;
 import com.idealizer.review_x.common.MessageUtil;
 import com.idealizer.review_x.common.exceptions.ForbiddenException;
-import com.idealizer.review_x.domain.profile.game.repositories.ProfileReviewRepository;
+import com.idealizer.review_x.domain.review.repositories.ReviewRepository;
 import org.bson.types.ObjectId;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -15,15 +15,15 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 public class DeleteReviewUseCaseTest {
-    private ProfileReviewRepository profileReviewRepository;
+    private ReviewRepository reviewRepository;
     private MessageUtil messageUtil;
     private DeleteReviewUseCase deleteReviewUseCase;
 
     @BeforeEach
     void setUp() {
-        profileReviewRepository = mock(ProfileReviewRepository.class);
+        reviewRepository = mock(ReviewRepository.class);
         messageUtil = mock(MessageUtil.class);
-        deleteReviewUseCase = new DeleteReviewUseCase(profileReviewRepository, messageUtil);
+        deleteReviewUseCase = new DeleteReviewUseCase(reviewRepository, messageUtil);
     }
 
     @Test
@@ -31,10 +31,10 @@ public class DeleteReviewUseCaseTest {
         ObjectId userId = new ObjectId();
         ObjectId reviewId = new ObjectId();
 
-        when(profileReviewRepository.deleteByIdAndUserId(reviewId, userId)).thenReturn(1L);
+        when(reviewRepository.deleteByIdAndUserId(reviewId, userId)).thenReturn(1L);
 
         assertDoesNotThrow(() -> deleteReviewUseCase.execute(userId, reviewId));
-        verify(profileReviewRepository, times(1)).deleteByIdAndUserId(reviewId, userId);
+        verify(reviewRepository, times(1)).deleteByIdAndUserId(reviewId, userId);
     }
 
     @Test
@@ -43,7 +43,7 @@ public class DeleteReviewUseCaseTest {
         ObjectId reviewId = new ObjectId();
         Locale locale = LocaleContextHolder.getLocale();
 
-        when(profileReviewRepository.deleteByIdAndUserId(reviewId, userId)).thenReturn(0L);
+        when(reviewRepository.deleteByIdAndUserId(reviewId, userId)).thenReturn(0L);
         when(messageUtil.get(eq("review.delete.error"), isNull(), eq(locale))).thenReturn("You are not allowed to delete this review");
 
         ForbiddenException exception = assertThrows(ForbiddenException.class, () ->
@@ -51,7 +51,7 @@ public class DeleteReviewUseCaseTest {
         );
 
         assertEquals("You are not allowed to delete this review", exception.getMessage());
-        verify(profileReviewRepository, times(1)).deleteByIdAndUserId(reviewId, userId);
+        verify(reviewRepository, times(1)).deleteByIdAndUserId(reviewId, userId);
     }
 }
 

@@ -49,7 +49,6 @@ public class ProfileGame {
     private Integer playtimeInMinutes;
     private Integer rating;
 
-    private Boolean playing;
     private Boolean liked;
     private Boolean favorite;
     @Field(value = "favorite_order")
@@ -146,14 +145,6 @@ public class ProfileGame {
 
     public void setRating(Integer rating) {
         this.rating = rating;
-    }
-
-    public Boolean getPlaying() {
-        return playing;
-    }
-
-    public void setPlaying(Boolean playing) {
-        this.playing = playing;
     }
 
     public Boolean getFavorite() {

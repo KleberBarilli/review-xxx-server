@@ -3,20 +3,22 @@ package com.idealizer.review_x.application.games.profile.game.usecases;
 import com.idealizer.review_x.application.games.profile.game.commands.CreateUpdateProfileGameCommand;
 import com.idealizer.review_x.application.games.profile.game.commands.UpsertProfileGameReviewCommand;
 import com.idealizer.review_x.application.games.profile.game.mappers.ProfileGameMapper;
-import com.idealizer.review_x.application.games.profile.review.commands.CreateUpdateReviewCommand;
-import com.idealizer.review_x.application.games.profile.review.mappers.ReviewMapper;
-import com.idealizer.review_x.application.games.profile.review.usecases.CreateReviewUseCase;
-import com.idealizer.review_x.application.games.profile.review.usecases.UpdateReviewUseCase;
+import com.idealizer.review_x.application.review.commands.CreateUpdateReviewCommand;
+import com.idealizer.review_x.application.review.mappers.ReviewMapper;
+import com.idealizer.review_x.application.review.usecases.CreateReviewUseCase;
+import com.idealizer.review_x.application.review.usecases.UpdateReviewUseCase;
+import com.idealizer.review_x.domain.LogID;
 import com.idealizer.review_x.domain.game.entities.Game;
 import com.idealizer.review_x.domain.game.repositories.GameRepository;
 import com.idealizer.review_x.domain.profile.game.entities.ProfileGame;
 import com.idealizer.review_x.domain.profile.game.repositories.ProfileGameRepository;
-import com.idealizer.review_x.domain.profile.game.repositories.ProfileReviewRepository;
-import com.idealizer.review_x.domain.profile.game.entities.ReviewGame;
+import com.idealizer.review_x.domain.review.repositories.ReviewRepository;
+import com.idealizer.review_x.domain.review.entities.Review;
 import org.bson.types.ObjectId;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 @Service
@@ -26,7 +28,7 @@ public class UpsertProfileGameReviewUseCase {
 
     private final GameRepository gameRepository;
     private final ProfileGameRepository profileGameRepository;
-    private final ProfileReviewRepository profileReviewRepository;
+    private final ReviewRepository reviewRepository;
     private final ProfileGameMapper profileGameMapper;
     private final ReviewMapper profileReviewMapper;
     private final CreateProfileGameUseCase createProfileGameUseCase;
@@ -35,7 +37,7 @@ public class UpsertProfileGameReviewUseCase {
     private final UpdateReviewUseCase updateReviewUseCase;
 
     public UpsertProfileGameReviewUseCase(GameRepository gameRepository, ProfileGameRepository profileGameRepository,
-                                          ProfileReviewRepository profileReviewRepository,
+                                          ReviewRepository reviewRepository,
                                           ProfileGameMapper profileGameMapper, ReviewMapper profileReviewMapper,
                                           CreateProfileGameUseCase createProfileGameUseCase,
                                           UpdateProfileGameUseCase updateProfileGameUseCase,
@@ -43,7 +45,7 @@ public class UpsertProfileGameReviewUseCase {
                                           UpdateReviewUseCase updateReviewUseCase) {
         this.gameRepository = gameRepository;
         this.profileGameRepository = profileGameRepository;
-        this.profileReviewRepository = profileReviewRepository;
+        this.reviewRepository = reviewRepository;
         this.profileGameMapper = profileGameMapper;
         this.profileReviewMapper = profileReviewMapper;
         this.createProfileGameUseCase = createProfileGameUseCase;
@@ -62,36 +64,40 @@ public class UpsertProfileGameReviewUseCase {
                         command.getReviewReplay() != null;
 
 
-        Optional<ProfileGame> profileGameFound = profileGameRepository.findByGameId(command.getGameId());
-        Optional<Game> game = gameRepository.findById(command.getGameId());
+        Optional<ProfileGame> profileGameFound = profileGameRepository.findByGameId(command.getTargetId());
+        Optional<Game> game = gameRepository.findById(command.getTargetId());
+
 
         if (!game.isPresent()) {
-            logger.warning("Game not found for ID: " + command.getGameId());
+            logger.warning("Game not found for ID: " + command.getTargetId());
             throw new RuntimeException("Game not found");
         }
 
         if (profileGameFound.isPresent()) {
+            logger.warning("Profile Game already exists for ID: " + command.getTargetId());
             ProfileGame profileGame = profileGameFound.get();
             profileGameMapper.updateProfileGameFromCommand(command, profileGame);
             updateProfileGameUseCase.execute(profileGame);
 
 
             if (hasReviewInRequest) {
-                Optional<ReviewGame> existingReview = profileReviewRepository.findByProfileGameId(profileGame.getId());
+                Optional<Review> existingReview = reviewRepository.findByProfileTargetIdAndTargetType(profileGame.getId(), LogID.GAMES);
                 if (existingReview.isEmpty()) {
 
                     CreateUpdateReviewCommand reviewCommand =
                             profileReviewMapper.toCommand(command);
 
                     reviewCommand.setUserId(userId);
-                    reviewCommand.setProfileGameId(profileGame.getId());
-                    reviewCommand.setGameName(game.get().getName());
-                    reviewCommand.setGameSlug(game.get().getSlug());
-                    reviewCommand.setGameCover(game.get().getCover());
+                    reviewCommand.setUsername(username);
+                    reviewCommand.setProfileTargetId(profileGame.getId());
+                    reviewCommand.setTargetType(LogID.GAMES);
+                    reviewCommand.setTargetName(game.get().getName());
+                    reviewCommand.setTargetSlug(game.get().getSlug());
+                    reviewCommand.setTargetCover(game.get().getCover());
                     createReviewUseCase.execute(reviewCommand);
 
                 } else {
-                    ReviewGame review = existingReview.get();
+                    Review review = existingReview.get();
                     profileReviewMapper.updateReviewFromCommand(command, review);
                     updateReviewUseCase.execute(review);
                 }
@@ -99,10 +105,12 @@ public class UpsertProfileGameReviewUseCase {
             }
 
         } else {
+            logger.log(Level.WARNING, "Profile Game not found for ID: " + command.getTargetId());
             CreateUpdateProfileGameCommand profileGameCommand =
                     profileGameMapper.toCreateUpdateCommand(command);
             profileGameCommand.setUserId(userId);
             profileGameCommand.setUsername(username);
+            profileGameCommand.setGameId(game.get().getId());
             profileGameCommand.setGameName(game.get().getName());
             profileGameCommand.setGameSlug(game.get().getSlug());
             profileGameCommand.setGameCover(game.get().getCover());
@@ -113,11 +121,13 @@ public class UpsertProfileGameReviewUseCase {
                     profileReviewMapper.toCommand(command);
 
             if (hasReviewInRequest) {
-                reviewCommand.setGameName(game.get().getName());
-                reviewCommand.setGameSlug(game.get().getSlug());
-                reviewCommand.setGameCover(game.get().getCover());
+                reviewCommand.setTargetName(game.get().getName());
+                reviewCommand.setTargetSlug(game.get().getSlug());
+                reviewCommand.setTargetType(LogID.GAMES);
+                reviewCommand.setTargetCover(game.get().getCover());
                 reviewCommand.setUserId(userId);
-                reviewCommand.setProfileGameId(profileGameId);
+                reviewCommand.setUsername(username);
+                reviewCommand.setProfileTargetId(profileGameId);
                 createReviewUseCase.execute(reviewCommand);
             }
         }

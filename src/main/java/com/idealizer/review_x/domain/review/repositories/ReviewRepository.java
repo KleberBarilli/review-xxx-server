@@ -10,7 +10,7 @@ import org.springframework.data.mongodb.repository.Update;
 import java.util.List;
 import java.util.Optional;
 
-public interface ReviewRepository extends MongoRepository<Review, ObjectId> {
+public interface ReviewRepository extends MongoRepository<Review, ObjectId>, ReviewRepositoryCustom {
     boolean existsByProfileTargetIdAndTargetType(ObjectId targetId, LogID targetType);
     Optional<Review> findByProfileTargetIdAndTargetType(ObjectId profileGameId, LogID targetType);
 

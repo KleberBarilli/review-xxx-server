@@ -8,6 +8,7 @@ import java.time.Instant;
 public class CreateUpdateReviewCommand {
 
     private ObjectId userId;
+    private String username;
     private ObjectId targetId;
     private ObjectId profileTargetId;
     private String title;
@@ -25,11 +26,12 @@ public class CreateUpdateReviewCommand {
     public CreateUpdateReviewCommand() {
     }
 
-    public CreateUpdateReviewCommand(ObjectId userId, ObjectId targetId, ObjectId targetProfileId, LogID targetType, String title, String content,
+    public CreateUpdateReviewCommand(ObjectId userId, String username, ObjectId targetId, ObjectId targetProfileId, LogID targetType, String title, String content,
                                      Boolean spoiler, Boolean replay, Instant startedAt, Instant finishedAt,
                                      String targetName, String targetSlug, String targetCover
     ) {
         this.userId = userId;
+        this.username = username;
         this.targetId = targetId;
         this.profileTargetId = targetProfileId;
         this.targetType = targetType;
@@ -50,6 +52,14 @@ public class CreateUpdateReviewCommand {
 
     public void setUserId(ObjectId userId) {
         this.userId = userId;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public ObjectId getTargetId() {
@@ -148,4 +158,7 @@ public class CreateUpdateReviewCommand {
         this.finishedAt = finishedAt;
     }
 
+    public void setTargetType(LogID targetType) {
+        this.targetType = targetType;
+    }
 }

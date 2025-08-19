@@ -18,6 +18,7 @@ import org.bson.types.ObjectId;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 @Service
@@ -66,12 +67,14 @@ public class UpsertProfileGameReviewUseCase {
         Optional<ProfileGame> profileGameFound = profileGameRepository.findByGameId(command.getTargetId());
         Optional<Game> game = gameRepository.findById(command.getTargetId());
 
+
         if (!game.isPresent()) {
             logger.warning("Game not found for ID: " + command.getTargetId());
             throw new RuntimeException("Game not found");
         }
 
         if (profileGameFound.isPresent()) {
+            logger.warning("Profile Game already exists for ID: " + command.getTargetId());
             ProfileGame profileGame = profileGameFound.get();
             profileGameMapper.updateProfileGameFromCommand(command, profileGame);
             updateProfileGameUseCase.execute(profileGame);
@@ -85,7 +88,9 @@ public class UpsertProfileGameReviewUseCase {
                             profileReviewMapper.toCommand(command);
 
                     reviewCommand.setUserId(userId);
+                    reviewCommand.setUsername(username);
                     reviewCommand.setProfileTargetId(profileGame.getId());
+                    reviewCommand.setTargetType(LogID.GAMES);
                     reviewCommand.setTargetName(game.get().getName());
                     reviewCommand.setTargetSlug(game.get().getSlug());
                     reviewCommand.setTargetCover(game.get().getCover());
@@ -100,10 +105,12 @@ public class UpsertProfileGameReviewUseCase {
             }
 
         } else {
+            logger.log(Level.WARNING, "Profile Game not found for ID: " + command.getTargetId());
             CreateUpdateProfileGameCommand profileGameCommand =
                     profileGameMapper.toCreateUpdateCommand(command);
             profileGameCommand.setUserId(userId);
             profileGameCommand.setUsername(username);
+            profileGameCommand.setGameId(game.get().getId());
             profileGameCommand.setGameName(game.get().getName());
             profileGameCommand.setGameSlug(game.get().getSlug());
             profileGameCommand.setGameCover(game.get().getCover());
@@ -116,8 +123,10 @@ public class UpsertProfileGameReviewUseCase {
             if (hasReviewInRequest) {
                 reviewCommand.setTargetName(game.get().getName());
                 reviewCommand.setTargetSlug(game.get().getSlug());
+                reviewCommand.setTargetType(LogID.GAMES);
                 reviewCommand.setTargetCover(game.get().getCover());
                 reviewCommand.setUserId(userId);
+                reviewCommand.setUsername(username);
                 reviewCommand.setProfileTargetId(profileGameId);
                 createReviewUseCase.execute(reviewCommand);
             }

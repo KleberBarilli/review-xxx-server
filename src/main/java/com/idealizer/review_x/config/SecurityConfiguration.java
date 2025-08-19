@@ -40,7 +40,9 @@ public class SecurityConfiguration {
                 .requestMatchers(
                         "/api/public/**",
                         "/api/users/public/**",
-                        "api/profile-games/public/**")
+                        "api/profile-games/public/**",
+                        "api/reviews/public/**"
+                        )
                 .permitAll()
                 .requestMatchers("/api/users/signIn").permitAll()
                 .requestMatchers("/api/users/signUp").permitAll()

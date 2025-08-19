@@ -14,13 +14,14 @@ import org.springframework.data.mongodb.core.mapping.Field;
 import java.time.Instant;
 
 @Document(collection = "reviews")
-@CompoundIndex(name = "user_target_idx", def = "{'user_id': 1, 'target_id': 1, 'target_type'> 1}", unique = true)
+@CompoundIndex(name = "user_target_idx", def = "{'user_id': 1, 'target_id': 1, 'target_type': 1}", unique = true)
 public class Review {
     @Id
     private ObjectId id;
 
     @Field(value = "user_id")
     private ObjectId userId;
+    private String username;
     @Field(value = "profile_target_id")
     private ObjectId profileTargetId;
     @Field(value = "target_id")
@@ -75,6 +76,13 @@ public class Review {
         this.userId = userId;
     }
 
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
 
     public String getTitle() {
         return title;

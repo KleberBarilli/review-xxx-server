@@ -7,6 +7,7 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.mongodb.core.index.CompoundIndex;
+import org.springframework.data.mongodb.core.index.CompoundIndexes;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
@@ -14,7 +15,33 @@ import org.springframework.data.mongodb.core.mapping.Field;
 import java.time.Instant;
 
 @Document(collection = "reviews")
-@CompoundIndex(name = "user_target_idx", def = "{'user_id': 1, 'target_id': 1, 'target_type': 1}", unique = true)
+@CompoundIndexes({
+        @CompoundIndex(
+                name = "user_target_idx",
+                def  = "{'user_id': 1, 'target_id': 1, 'target_type': 1}",
+                unique = true
+        ),
+
+        @CompoundIndex(
+                name = "reviews_user_updated_idx",
+                def  = "{'username': 1, 'updated_at': -1, '_id': -1}"
+        ),
+
+        @CompoundIndex(
+                name = "reviews_user_created_idx",
+                def  = "{'username': 1, 'created_at': -1, '_id': -1}"
+        ),
+
+        @CompoundIndex(
+                name = "reviews_user_started_idx",
+                def  = "{'username': 1, 'started_at': -1, '_id': -1}"
+        ),
+
+        @CompoundIndex(
+                name = "reviews_user_finished_idx",
+                def  = "{'username': 1, 'finished_at': -1, '_id': -1}"
+        )
+})
 public class Review {
     @Id
     private ObjectId id;

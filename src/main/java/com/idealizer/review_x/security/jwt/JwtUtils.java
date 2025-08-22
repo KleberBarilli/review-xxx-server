@@ -42,7 +42,7 @@ public class JwtUtils {
         return null;
     }
 
-    public String generateToken(UserDetailsImpl p, String locale) {
+    public String generateToken(UserDetailsImpl p) {
         Instant now = Instant.now();
         Instant exp = now.plusMillis(jwtExpirationMs);
 
@@ -53,8 +53,6 @@ public class JwtUtils {
             claims.put("fullName", p.getFullName());
         if (p.getEmail() != null)
             claims.put("email", p.getEmail());
-        if (locale != null && !locale.isBlank())
-            claims.put("locale", locale);
         if (p.getAuthorities() != null && !p.getAuthorities().isEmpty()) {
             claims.put("roles", p.getAuthorities().stream()
                     .map(GrantedAuthority::getAuthority).toList());

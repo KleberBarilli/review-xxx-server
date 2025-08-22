@@ -3,6 +3,7 @@ package com.idealizer.review_x.infra.http.controllers.user;
 import com.idealizer.review_x.application.user.responses.FindUserResponse;
 import com.idealizer.review_x.application.user.responses.LoginResponse;
 import com.idealizer.review_x.application.user.usecases.*;
+import com.idealizer.review_x.common.CommonError;
 import com.idealizer.review_x.common.LocaleUtil;
 import com.idealizer.review_x.common.MessageUtil;
 import com.idealizer.review_x.common.dtos.FindUserArgsDTO;
@@ -41,7 +42,8 @@ public class UserController {
     private final RemoveAvatarUseCase removeAvatarUseCase;
     private final MessageUtil messageUtil;
 
-    public UserController(SignUpUseCase signUpUseCase, SignInUseCase signInUseCase, FindUserByNameUseCase findUserByNameUseCase, UploadAvatarUseCase uploadAvatarUseCase, RemoveAvatarUseCase removeAvatarUseCase, MessageUtil messageUtil) {
+    public UserController(SignUpUseCase signUpUseCase, SignInUseCase signInUseCase, FindUserByNameUseCase findUserByNameUseCase,
+                          UploadAvatarUseCase uploadAvatarUseCase, RemoveAvatarUseCase removeAvatarUseCase, MessageUtil messageUtil) {
         this.signUpUseCase = signUpUseCase;
         this.signInUseCase = signInUseCase;
         this.findUserByNameUseCase = findUserByNameUseCase;
@@ -50,33 +52,32 @@ public class UserController {
         this.messageUtil = messageUtil;
     }
 
-    @PostMapping("/signIn")
+    @PostMapping("/signin")
     public ResponseEntity<?> authenticateUser(@RequestBody @Valid LoginRequestDTO dto) {
-        Locale locale = LocaleContextHolder.getLocale();
         try {
-            LoginResponse response = signInUseCase.execute(dto.username(), dto.password(), locale.toString());
+            LoginResponse response = signInUseCase.execute(dto.identifier(), dto.password());
             return ResponseEntity.ok(response);
         } catch (AuthenticationException exception) {
             Map<String, Object> map = new HashMap<>();
-            map.put("message", messageUtil.get("user.badCredentials", null, LocaleUtil.from(locale.toString())));
-            return new ResponseEntity<Object>(map, HttpStatus.UNAUTHORIZED);
+            map.put("code", CommonError.INVALID_CREDENTIALS.code());
+            return new ResponseEntity<Object>(map, CommonError.INVALID_CREDENTIALS.status());
         }
 
     }
 
-    @PostMapping("/signUp")
+    @PostMapping("/signup")
     public ResponseEntity<?> registerUser(@RequestBody @Valid SignupRequestDTO signupRequestDTO) {
         Locale locale = LocaleContextHolder.getLocale();
         try {
-            signUpUseCase.execute(signupRequestDTO, locale.toString());
+            signUpUseCase.execute(signupRequestDTO);
         } catch (DuplicatedException e) {
             Map<String, Object> map = new HashMap<>();
-            map.put("message", e.getMessage());
-            return new ResponseEntity<Object>(map, HttpStatus.BAD_REQUEST);
+            map.put("code", e.getMessage());
+            return new ResponseEntity<Object>(map, HttpStatus.CONFLICT);
         } catch (Exception e) {
             Map<String, Object> map = new HashMap<>();
             logger.severe("Error during user registration: " + e.getMessage());
-            map.put("message", messageUtil.get("signUp.error", null, LocaleUtil.from(locale.toString())));
+            map.put("message", CommonError.CREATE_USER_GENERIC_ERROR );
             return new ResponseEntity<Object>(map, HttpStatus.BAD_REQUEST);
         }
 

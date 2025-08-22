@@ -2,6 +2,7 @@ package com.idealizer.review_x.application.user.usecases;
 
 import com.idealizer.review_x.application.user.mappers.UserMapper;
 import com.idealizer.review_x.application.user.validators.UserValidator;
+import com.idealizer.review_x.common.CommonError;
 import com.idealizer.review_x.common.LocaleUtil;
 import com.idealizer.review_x.common.MessageUtil;
 import com.idealizer.review_x.common.exceptions.DuplicatedException;
@@ -21,37 +22,26 @@ public class SignUpUseCase {
     private final UserRepository userRepository;
     private final UserValidator userValidator;
     private final UserMapper userMapper;
-    private final MessageUtil messageUtil;
     private final PasswordEncoder passwordEncoder;
 
     public SignUpUseCase(
             UserRepository userRepository,
             UserValidator userValidator,
             UserMapper userMapper,
-            MessageUtil messageUtil,
             PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.userValidator = userValidator;
         this.userMapper = userMapper;
-        this.messageUtil = messageUtil;
         this.passwordEncoder = passwordEncoder;
     }
 
-    public void execute(SignupRequestDTO dto, String locale) {
-        Optional<User> userOptional = userRepository.findByEmailOrName(dto.email(), dto.name());
-
-        if (userOptional.isPresent()) {
-            User user = userOptional.get();
-
-            if (user.getEmail().equals(dto.email())) {
-                throw new DuplicatedException(messageUtil.get("user.email.exists", null, LocaleUtil.from(locale)));
+    public void execute(SignupRequestDTO dto) {
+            if (userRepository.existsByEmail(dto.email())) {
+                throw new DuplicatedException(CommonError.EMAIL_OR_USERNAME_ALREADY_EXISTS.code());
             }
-
-            if (user.getName().equals(dto.name())) {
-                throw new DuplicatedException(messageUtil.get("user.name.exists", null, LocaleUtil.from(locale)));
+            if (userRepository.existsByName(dto.name())) {
+                throw new DuplicatedException(CommonError.EMAIL_OR_USERNAME_ALREADY_EXISTS.code());
             }
-        }
-
         User user = userMapper.toEntity(dto);
 
         userValidator.validate(user);

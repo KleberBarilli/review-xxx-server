@@ -44,8 +44,8 @@ public class SecurityConfiguration {
                         "api/reviews/public/**"
                         )
                 .permitAll()
-                .requestMatchers("/api/users/signIn").permitAll()
-                .requestMatchers("/api/users/signUp").permitAll()
+                .requestMatchers("/api/users/signin").permitAll()
+                .requestMatchers("/api/users/signup").permitAll()
                 .anyRequest().authenticated());
 
         http.csrf(AbstractHttpConfigurer::disable);

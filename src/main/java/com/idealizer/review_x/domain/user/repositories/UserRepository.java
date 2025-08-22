@@ -11,9 +11,14 @@ import org.springframework.data.mongodb.repository.Update;
 import java.util.Optional;
 
 public interface UserRepository extends MongoRepository<User, ObjectId> {
+
+    boolean existsByEmail(String email);
+    boolean existsByName(String username);
+
     Optional<User> findByEmail(String email);
     Optional<User> findByName(String name);
     Optional<User> findByEmailOrName(String email, String name);
+
 
     @Query("{ '_id': ?0 }")
     @Update("{ '$inc': { 'followingCount': ?1 } }")

@@ -20,14 +20,14 @@ public class SignInUseCase {
         this.jwtUtils = jwtUtils;
     }
 
-    public LoginResponse execute(String username, String password, String locale) {
+    public LoginResponse execute(String identifier, String password) {
         Authentication auth = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(username, password));
+                new UsernamePasswordAuthenticationToken(identifier, password));
         SecurityContextHolder.getContext().setAuthentication(auth);
 
         UserDetailsImpl principal = (UserDetailsImpl) auth.getPrincipal();
 
-        String jwtToken = jwtUtils.generateToken(principal, locale); // <-- passa o principal
+        String jwtToken = jwtUtils.generateToken(principal);
         return new LoginResponse(jwtToken);
 
     }

@@ -5,6 +5,9 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Size;
 
+import java.text.Normalizer;
+import java.util.Locale;
+
 @Schema(name = "SignUp")
 public record SignupRequestDTO(
         @Size(min = 3, max = 255)
@@ -24,4 +27,29 @@ public record SignupRequestDTO(
         String bio,
         @Schema(defaultValue = "ANDROID") MobileDeviceType mobileDevice
 ) {
+        public SignupRequestDTO {
+                if (name != null) {
+                        name = normalizeUsername(name);
+                }
+                if (email != null) {
+                        email = email.trim().toLowerCase(Locale.ROOT);
+                }
+                if (fullName != null) {
+                        fullName = fullName.trim();
+                }
+        }
+
+        private static String normalizeUsername(String s) {
+                String out = s.trim().toLowerCase(Locale.ROOT);
+
+                out = Normalizer.normalize(out, Normalizer.Form.NFD)
+                        .replaceAll("\\p{M}", "");
+
+                out = out.replaceAll("[^a-z0-9._-]", "");
+
+                out = out.replaceAll("[._-]{2,}", "-")
+                        .replaceAll("^[._-]+|[._-]+$", "");
+
+                return out;
+        }
 }

@@ -1,6 +1,5 @@
 package com.idealizer.review_x.security.services;
 
-import com.idealizer.review_x.domain.user.entities.User;
 import com.idealizer.review_x.domain.user.repositories.UserRepository;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -16,9 +15,13 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     }
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userRepository.findByName(username)
-                .orElseThrow(()-> new UsernameNotFoundException(("User not found with username: " + username)));
+    public UserDetails loadUserByUsername(String identifier) throws UsernameNotFoundException {
+        String normalizedIdentifier = identifier.toLowerCase();
+
+        var user = (identifier.contains("@")
+                ? userRepository.findByEmail(normalizedIdentifier)
+                : userRepository.findByName(normalizedIdentifier))
+                        .orElseThrow(() -> new UsernameNotFoundException("identifier"));
         return UserDetailsImpl.build(user);
     }
 }

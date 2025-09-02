@@ -31,6 +31,10 @@ public class User {
     private String letterboxdUrl;
     @Field(value = "steam_url")
     private String steamUrl;
+    @Field(value = "psn_url")
+    private String psnUrl;
+    @Field(value = "xbox_url")
+    private String xboxUrl;
     private String locale;
     @Field(value = "mobile_device")
     private MobileDeviceType mobileDevice;
@@ -158,6 +162,22 @@ public class User {
 
     public void setFollowerCount(long followerCount) {
         this.followerCount = followerCount;
+    }
+
+    public String getPsnUrl() {
+        return psnUrl;
+    }
+
+    public void setPsnUrl(String psnUrl) {
+        this.psnUrl = psnUrl;
+    }
+
+    public String getXboxUrl() {
+        return xboxUrl;
+    }
+
+    public void setXboxUrl(String xboxUrl) {
+        this.xboxUrl = xboxUrl;
     }
 
     public long getFollowingCount() {

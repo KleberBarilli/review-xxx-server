@@ -4,7 +4,10 @@ import com.idealizer.review_x.application.games.game.responses.FindGameResponse;
 import com.idealizer.review_x.application.games.game.responses.GameResponse;
 import com.idealizer.review_x.application.games.game.usecases.FindGameByIdOrSlugOrExternalUseCase;
 import com.idealizer.review_x.application.games.game.usecases.FindGameUseCase;
+import com.idealizer.review_x.application.games.game.usecases.FindGamesByPresetUseCase;
 import com.idealizer.review_x.common.dtos.FindAllGamesDTO;
+import com.idealizer.review_x.common.dtos.game.DiscoverRequestDTO;
+import com.idealizer.review_x.domain.game.entities.GameRanking;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -12,6 +15,7 @@ import org.bson.types.ObjectId;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.logging.Logger;
 
 @RestController
@@ -23,11 +27,15 @@ public class GameController {
 
     private final FindGameUseCase findGameUseCase;
     private final FindGameByIdOrSlugOrExternalUseCase findGameByIdOrSlugOrExternalUseCase;
+    private final FindGamesByPresetUseCase findGamesByPresetUseCase;
 
-    public GameController(FindGameUseCase findGameUseCase, FindGameByIdOrSlugOrExternalUseCase findGameByIdOrSlugOrExternalUseCase
+    public GameController(FindGameUseCase findGameUseCase,
+                          FindGameByIdOrSlugOrExternalUseCase findGameByIdOrSlugOrExternalUseCase,
+                          FindGamesByPresetUseCase findGamesByPresetUseCase
                        ) {
         this.findGameUseCase = findGameUseCase;
         this.findGameByIdOrSlugOrExternalUseCase = findGameByIdOrSlugOrExternalUseCase;
+        this.findGamesByPresetUseCase = findGamesByPresetUseCase;
     }
 
     @GetMapping
@@ -68,6 +76,12 @@ public class GameController {
                 .execute(null, null, externalId)
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+    @GetMapping("/discover/preset")
+    @Operation(summary = "Find games by Preset", description = "Returns games by preset")
+    public List<GameRanking> findByPreset (@Valid DiscoverRequestDTO dto){
+        return findGamesByPresetUseCase.execute(dto.preset());
     }
 
 }

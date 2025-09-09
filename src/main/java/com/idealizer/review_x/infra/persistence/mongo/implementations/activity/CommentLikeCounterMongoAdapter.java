@@ -1,4 +1,4 @@
-package com.idealizer.review_x.infra.persistence.mongo.activity;
+package com.idealizer.review_x.infra.persistence.mongo.implementations.activity;
 
 import com.idealizer.review_x.application.activity.like.ports.LikeCounterPort;
 import com.idealizer.review_x.domain.activity.comment.entities.Comment;

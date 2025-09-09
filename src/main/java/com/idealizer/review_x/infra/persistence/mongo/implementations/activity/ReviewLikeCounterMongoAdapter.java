@@ -1,4 +1,4 @@
-package com.idealizer.review_x.infra.persistence.mongo.activity;
+package com.idealizer.review_x.infra.persistence.mongo.implementations.activity;
 
 import com.idealizer.review_x.application.activity.like.ports.LikeCounterPort;
 import com.idealizer.review_x.domain.activity.like.entities.LikeType;
@@ -9,7 +9,6 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Component;
-
 
 @Component
 public class ReviewLikeCounterMongoAdapter implements LikeCounterPort {
@@ -32,4 +31,3 @@ public class ReviewLikeCounterMongoAdapter implements LikeCounterPort {
         mongo.updateFirst(q, u, Review.class);
     }
 }
-

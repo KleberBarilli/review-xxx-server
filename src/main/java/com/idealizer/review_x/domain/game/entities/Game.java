@@ -31,6 +31,7 @@ public class Game {
     private String slug;
     @Field(value = "alternative_names")
     private List<AlternativeName> alternativeNames;
+    private String storyline;
     @Indexed
     private List<String> aliases;
     @Indexed
@@ -90,6 +91,14 @@ public class Game {
 
     public List<Long> getDlcsIgdbIds() {
         return dlcsIgdbIds;
+    }
+
+    public String getStoryline() {
+        return storyline;
+    }
+
+    public void setStoryline(String storyline) {
+        this.storyline = storyline;
     }
 
     public void setDlcsIgdbIds(List<Long> dlcsIgdbIds) {

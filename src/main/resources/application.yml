@@ -38,13 +38,17 @@ spring:
     mongodb:
       uri: ${MONGODB_URI}
       auto-index-creation: true
+      repositories:
+        enabled: false
+
 
   main:
     lazy-initialization: true
 
 app:
-  config:
-    variavel: x
+  mongodb:
+    games:
+      uri: ${MONGODB_URI_GAMES}
 
 logging:
   pattern:

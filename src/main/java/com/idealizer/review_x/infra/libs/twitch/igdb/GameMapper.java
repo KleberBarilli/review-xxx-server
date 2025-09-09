@@ -17,6 +17,7 @@ public class GameMapper {
         Game game = new Game();
         game.setIgdbId(dto.id());
         game.setParentIgdbId(dto.parentIgdbId());
+        game.setStoryline(dto.storyline());
         game.setName(dto.name());
         String incomingSlug = dto.slug();
         String safeSlug = NormalizeSlugs.normalize(

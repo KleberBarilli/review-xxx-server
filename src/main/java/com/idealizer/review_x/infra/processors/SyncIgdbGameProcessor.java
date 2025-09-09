@@ -79,7 +79,7 @@ public class SyncIgdbGameProcessor {
         while (true) {
             String igdbQuery = String.format(
                     """
-                             fields id,name,slug,first_release_date,total_rating,total_rating_count,genres,
+                             fields id,name,slug,first_release_date,storyline,total_rating,total_rating_count,genres,
                             game_modes,cover.image_id,platforms,expansions,updated_at,
                             involved_companies.developer,involved_companies.company.name,
                             videos.name,videos.video_id,game_status,game_type, parent_game;

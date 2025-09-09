@@ -1,4 +1,4 @@
-package com.idealizer.review_x.infra.persistence.mongo;
+package com.idealizer.review_x.infra.persistence.mongo.implementations;
 
 import com.idealizer.review_x.common.dtos.profile.game.FindProfileGamesDTO;
 import com.idealizer.review_x.domain.profile.game.entities.ProfileGame;
@@ -10,7 +10,6 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.projection.ProjectionFactory;
 import org.springframework.data.projection.SpelAwareProxyProjectionFactory;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
@@ -34,29 +33,34 @@ public class ProfileGameRepositoryImpl implements ProfileGameRepositoryCustom {
         if (f.statuses() != null && !f.statuses().isEmpty())
             and.add(Criteria.where("status").in(f.statuses()));
 
-        if (f.wishlist() != null) and.add(Criteria.where("wishlist").is(f.wishlist()));
-        if (f.owned() != null) and.add(Criteria.where("owned").is(f.owned()));
-        if (f.mastered() != null) and.add(Criteria.where("mastered").is(f.mastered()));
-        if (f.liked() != null) and.add(Criteria.where("liked").is(f.liked()));
+        if (f.wishlist() != null)
+            and.add(Criteria.where("wishlist").is(f.wishlist()));
+        if (f.owned() != null)
+            and.add(Criteria.where("owned").is(f.owned()));
+        if (f.mastered() != null)
+            and.add(Criteria.where("mastered").is(f.mastered()));
+        if (f.liked() != null)
+            and.add(Criteria.where("liked").is(f.liked()));
 
         if (f.ratingMin() != null || f.ratingMax() != null) {
             Criteria r = Criteria.where("rating");
-            if (f.ratingMin() != null) r = r.gte(f.ratingMin());
-            if (f.ratingMax() != null) r = r.lte(f.ratingMax());
+            if (f.ratingMin() != null)
+                r = r.gte(f.ratingMin());
+            if (f.ratingMax() != null)
+                r = r.lte(f.ratingMax());
             and.add(r);
         }
 
         Query q = new Query(new Criteria().andOperator(and.toArray(Criteria[]::new)));
 
-        q.fields().include("_id", "status","createdAt", "updatedAt", "rating", "owned", "wishlist", "mastered",
+        q.fields().include("_id", "status", "createdAt", "updatedAt", "rating", "owned", "wishlist", "mastered",
                 "gameName", "gameSlug", "gameCover", "liked");
 
         Sort sort = resolveSort(f.sort(), f.order()).and(Sort.by(Sort.Direction.DESC, "_id"));
         Pageable effective = PageRequest.of(
                 Math.max(pageable.getPageNumber(), 0),
                 Math.max(pageable.getPageSize(), 1),
-                sort
-        );
+                sort);
         q.with(effective);
 
         long total = template.count(Query.of(q).limit(-1).skip(-1).with(Sort.unsorted()), ProfileGame.class);

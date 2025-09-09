@@ -1,8 +1,8 @@
 package com.idealizer.review_x.application.games.profile.game.log.usecases;
 
 import com.idealizer.review_x.common.dtos.profile.game.UpsertProfileGameLogDTO;
-import com.idealizer.review_x.domain.profile.game.entities.ProfileGameLog;
-import com.idealizer.review_x.domain.profile.game.repositories.ProfileGameLogRepository;
+import com.idealizer.review_x.domain.core.profile.game.entities.ProfileGameLog;
+import com.idealizer.review_x.domain.core.profile.game.repositories.ProfileGameLogRepository;
 import org.bson.types.ObjectId;
 import org.springframework.stereotype.Service;
 

@@ -1,6 +1,6 @@
 package com.idealizer.review_x.infra.http.controllers.user.dto;
 
-import com.idealizer.review_x.domain.user.entities.MobileDeviceType;
+import com.idealizer.review_x.domain.core.user.entities.MobileDeviceType;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Size;

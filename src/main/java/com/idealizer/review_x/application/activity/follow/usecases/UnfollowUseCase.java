@@ -1,7 +1,7 @@
 package com.idealizer.review_x.application.activity.follow.usecases;
 
-import com.idealizer.review_x.domain.activity.follow.repositories.FollowRepository;
-import com.idealizer.review_x.domain.user.repositories.UserRepository;
+import com.idealizer.review_x.domain.core.activity.follow.repositories.FollowRepository;
+import com.idealizer.review_x.domain.core.user.repositories.UserRepository;
 import org.bson.types.ObjectId;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

@@ -1,7 +1,8 @@
 package com.idealizer.review_x.infra.libs.twitch.igdb.services;
 
-import com.idealizer.review_x.domain.provider.entities.PlatformType;
-import com.idealizer.review_x.domain.provider.entities.Provider;
+import com.idealizer.review_x.domain.core.provider.entities.PlatformType;
+import com.idealizer.review_x.domain.core.provider.entities.Provider;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -13,25 +14,25 @@ import java.util.Optional;
 @Service
 public class IgdbCredentialsService {
 
-    private final MongoTemplate mongo;
+    private final MongoTemplate coreMongo;
     private final String envClientId;
     private final String envAccessToken;
 
     public record Credentials(String clientId, String accessToken) {}
 
     public IgdbCredentialsService(
-            MongoTemplate mongo,
+            @Qualifier("coreMongoTemplate") MongoTemplate coreMongo,
             @Value("${TWITCH_CLIENT_ID:}") String envClientId,
             @Value("${TWITCH_ACCESS_TOKEN:}") String envAccessToken
     ) {
-        this.mongo = mongo;
+        this.coreMongo = coreMongo;
         this.envClientId = envClientId;
         this.envAccessToken = envAccessToken;
     }
 
     public Credentials get() {
         Query q = new Query(Criteria.where("platform").is(PlatformType.TWITCH));
-        Provider provider = mongo.findOne(q, Provider.class, "providers");
+        Provider provider = coreMongo.findOne(q, Provider.class, "providers");
 
         String clientId = Optional.ofNullable(provider)
                 .map(Provider::getClientId)

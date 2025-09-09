@@ -2,7 +2,7 @@ package com.idealizer.review_x.application.games.profile.game.mappers;
 
 import com.idealizer.review_x.application.games.profile.game.commands.CreateUpdateProfileGameCommand;
 import com.idealizer.review_x.application.games.profile.game.commands.UpsertProfileGameReviewCommand;
-import com.idealizer.review_x.domain.profile.game.entities.ProfileGame;
+import com.idealizer.review_x.domain.core.profile.game.entities.ProfileGame;
 import org.mapstruct.BeanMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingTarget;

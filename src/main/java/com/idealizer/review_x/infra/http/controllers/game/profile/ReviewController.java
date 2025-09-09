@@ -5,9 +5,9 @@ import com.idealizer.review_x.application.review.usecases.FindTimelineByUsername
 import com.idealizer.review_x.common.dtos.FindTimelineDTO;
 import com.idealizer.review_x.common.dtos.PageResponse;
 import com.idealizer.review_x.common.dtos.review.FindReviewDTO;
-import com.idealizer.review_x.domain.profile.BaseTimelineItem;
-import com.idealizer.review_x.domain.profile.game.entities.ProfileGameStatus;
-import com.idealizer.review_x.domain.review.interfaces.BaseReview;
+import com.idealizer.review_x.domain.core.profile.BaseTimelineItem;
+import com.idealizer.review_x.domain.core.profile.game.entities.ProfileGameStatus;
+import com.idealizer.review_x.domain.core.review.interfaces.BaseReview;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.*;
 

@@ -3,7 +3,7 @@ package com.idealizer.review_x.application.profile.review;
 import com.idealizer.review_x.application.review.usecases.DeleteReviewUseCase;
 import com.idealizer.review_x.common.MessageUtil;
 import com.idealizer.review_x.common.exceptions.ForbiddenException;
-import com.idealizer.review_x.domain.review.repositories.ReviewRepository;
+import com.idealizer.review_x.domain.core.review.repositories.ReviewRepository;
 import org.bson.types.ObjectId;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

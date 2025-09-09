@@ -1,7 +1,7 @@
 package com.idealizer.review_x.application.activity.like.services;
 
 import com.idealizer.review_x.application.activity.like.ports.LikeCounterPort;
-import com.idealizer.review_x.domain.activity.like.entities.LikeType;
+import com.idealizer.review_x.domain.core.activity.like.entities.LikeType;
 import org.springframework.stereotype.Component;
 
 import java.util.List;

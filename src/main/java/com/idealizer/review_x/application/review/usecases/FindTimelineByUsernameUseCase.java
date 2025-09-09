@@ -2,8 +2,8 @@ package com.idealizer.review_x.application.review.usecases;
 
 import com.idealizer.review_x.common.dtos.FindTimelineDTO;
 import com.idealizer.review_x.common.dtos.PageResponse;
-import com.idealizer.review_x.domain.profile.BaseTimelineItem;
-import com.idealizer.review_x.domain.review.repositories.ReviewRepository;
+import com.idealizer.review_x.domain.core.profile.BaseTimelineItem;
+import com.idealizer.review_x.domain.core.review.repositories.ReviewRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;

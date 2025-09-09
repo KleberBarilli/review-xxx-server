@@ -1,7 +1,7 @@
 package com.idealizer.review_x.application.user.validators;
 
 import com.idealizer.review_x.common.MessageUtil;
-import com.idealizer.review_x.domain.user.entities.User;
+import com.idealizer.review_x.domain.core.user.entities.User;
 import org.springframework.stereotype.Component;
 
 @Component

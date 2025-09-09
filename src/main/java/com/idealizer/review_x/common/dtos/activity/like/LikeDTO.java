@@ -1,6 +1,6 @@
 package com.idealizer.review_x.common.dtos.activity.like;
 
-import com.idealizer.review_x.domain.activity.like.entities.LikeType;
+import com.idealizer.review_x.domain.core.activity.like.entities.LikeType;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 public record LikeDTO(

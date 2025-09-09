@@ -1,6 +1,6 @@
 package com.idealizer.review_x.application.review.commands;
 
-import com.idealizer.review_x.domain.LogID;
+import com.idealizer.review_x.domain.core.LogID;
 import org.bson.types.ObjectId;
 
 import java.time.Instant;

@@ -1,7 +1,7 @@
 package com.idealizer.review_x.application.review.usecases;
 
-import com.idealizer.review_x.domain.review.entities.Review;
-import com.idealizer.review_x.domain.review.repositories.ReviewRepository;
+import com.idealizer.review_x.domain.core.review.entities.Review;
+import com.idealizer.review_x.domain.core.review.repositories.ReviewRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.logging.Logger;

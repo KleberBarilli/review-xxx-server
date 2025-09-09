@@ -1,6 +1,8 @@
 package com.idealizer.review_x.domain.game.entities;
 
 import com.idealizer.review_x.common.dtos.game.DiscoverPreset;
+
+import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.CompoundIndex;
 import org.springframework.data.mongodb.core.index.CompoundIndexes;
@@ -16,7 +18,7 @@ import java.util.List;
 })
 public class GameRanking {
     @Id
-    private String id;
+    private ObjectId id;
 
     private DiscoverPreset preset;
 
@@ -50,11 +52,11 @@ public class GameRanking {
         public List<Long> platforms;
     }
 
-    public String getId() {
+    public ObjectId getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(ObjectId id) {
         this.id = id;
     }
 

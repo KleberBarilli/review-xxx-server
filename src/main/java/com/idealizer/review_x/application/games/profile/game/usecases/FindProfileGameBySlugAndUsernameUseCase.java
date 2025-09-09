@@ -1,13 +1,13 @@
 package com.idealizer.review_x.application.games.profile.game.usecases;
 
 import com.idealizer.review_x.application.games.profile.game.responses.PublicProfileGameDetailedResponse;
-import com.idealizer.review_x.domain.LogID;
-import com.idealizer.review_x.domain.activity.comment.entities.CommentType;
-import com.idealizer.review_x.domain.activity.comment.repositories.CommentRepository;
-import com.idealizer.review_x.domain.profile.game.interfaces.SimpleProfileGame;
-import com.idealizer.review_x.domain.profile.game.repositories.ProfileGameLogRepository;
-import com.idealizer.review_x.domain.profile.game.repositories.ProfileGameRepository;
-import com.idealizer.review_x.domain.review.repositories.ReviewRepository;
+import com.idealizer.review_x.domain.core.LogID;
+import com.idealizer.review_x.domain.core.activity.comment.entities.CommentType;
+import com.idealizer.review_x.domain.core.activity.comment.repositories.CommentRepository;
+import com.idealizer.review_x.domain.core.profile.game.interfaces.SimpleProfileGame;
+import com.idealizer.review_x.domain.core.profile.game.repositories.ProfileGameLogRepository;
+import com.idealizer.review_x.domain.core.profile.game.repositories.ProfileGameRepository;
+import com.idealizer.review_x.domain.core.review.repositories.ReviewRepository;
 import org.bson.types.ObjectId;
 import org.springframework.stereotype.Service;
 

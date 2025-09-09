@@ -18,7 +18,6 @@ public class IgdbPopularityClient {
         this.igdb = igdb;
     }
 
-    /** Retorna Top-K para um popularity_type específico do IGDB. */
     public List<PopularityPrimitive> topKByType(int popularityTypeId, int k) {
         String body = """
       fields game_id, value, popularity_type;
@@ -26,7 +25,6 @@ public class IgdbPopularityClient {
       limit %d;
       where popularity_type = %d;
       """.formatted(k, popularityTypeId);
-
         try {
             return igdb.post()
                     .uri("/v4/popularity_primitives")
@@ -34,13 +32,11 @@ public class IgdbPopularityClient {
                     .retrieve()
                     .body(new ParameterizedTypeReference<>() {});
         } catch (RestClientResponseException e) {
-            // joga erro com corpo da resposta pra facilitar debug
             throw new RuntimeException(
                     "IGDB error %d: %s".formatted(e.getRawStatusCode(), e.getResponseBodyAsString()), e);
         }
     }
 
-    // DTO alinhado ao snake_case retornado pelo IGDB
     public record PopularityPrimitive(
             @JsonProperty("game_id") Long gameId,
             @JsonProperty("value") Double value,

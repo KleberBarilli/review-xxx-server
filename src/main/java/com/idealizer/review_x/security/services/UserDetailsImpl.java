@@ -1,6 +1,6 @@
 package com.idealizer.review_x.security.services;
 
-import com.idealizer.review_x.domain.user.entities.User;
+import com.idealizer.review_x.domain.core.user.entities.User;
 import net.minidev.json.annotate.JsonIgnore;
 import org.bson.types.ObjectId;
 import org.springframework.security.core.GrantedAuthority;

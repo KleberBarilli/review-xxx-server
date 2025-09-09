@@ -1,6 +1,6 @@
 package com.idealizer.review_x.common.dtos.review;
 
-import com.idealizer.review_x.domain.profile.game.entities.ProfileGameStatus;
+import com.idealizer.review_x.domain.core.profile.game.entities.ProfileGameStatus;
 
 import java.util.Set;
 

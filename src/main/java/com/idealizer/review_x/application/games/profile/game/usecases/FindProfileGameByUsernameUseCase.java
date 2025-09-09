@@ -2,8 +2,8 @@ package com.idealizer.review_x.application.games.profile.game.usecases;
 
 import com.idealizer.review_x.common.dtos.PageResponse;
 import com.idealizer.review_x.common.dtos.profile.game.FindProfileGamesDTO;
-import com.idealizer.review_x.domain.profile.game.interfaces.BaseProfileGame;
-import com.idealizer.review_x.domain.profile.game.repositories.ProfileGameRepository;
+import com.idealizer.review_x.domain.core.profile.game.interfaces.BaseProfileGame;
+import com.idealizer.review_x.domain.core.profile.game.repositories.ProfileGameRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;

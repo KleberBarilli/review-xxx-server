@@ -1,7 +1,7 @@
 package com.idealizer.review_x.application.review.responses;
 
-import com.idealizer.review_x.domain.LogID;
-import com.idealizer.review_x.domain.profile.game.entities.ProfileGameStatus;
+import com.idealizer.review_x.domain.core.LogID;
+import com.idealizer.review_x.domain.core.profile.game.entities.ProfileGameStatus;
 
 import java.time.Instant;
 

@@ -1,9 +1,10 @@
 package com.idealizer.review_x.infra.persistence.mongo.implementations;
 
 import com.idealizer.review_x.common.dtos.profile.game.FindProfileGamesDTO;
-import com.idealizer.review_x.domain.profile.game.entities.ProfileGame;
-import com.idealizer.review_x.domain.profile.game.interfaces.BaseProfileGame;
-import com.idealizer.review_x.domain.profile.game.repositories.ProfileGameRepositoryCustom;
+import com.idealizer.review_x.domain.core.profile.game.entities.ProfileGame;
+import com.idealizer.review_x.domain.core.profile.game.interfaces.BaseProfileGame;
+import com.idealizer.review_x.domain.core.profile.game.repositories.ProfileGameRepositoryCustom;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.*;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -18,11 +19,11 @@ import java.util.List;
 @Repository
 public class ProfileGameRepositoryImpl implements ProfileGameRepositoryCustom {
 
-    private final MongoTemplate template;
+    private final MongoTemplate coreMongo;
     private final ProjectionFactory projectionFactory = new SpelAwareProxyProjectionFactory();
 
-    public ProfileGameRepositoryImpl(MongoTemplate template) {
-        this.template = template;
+    public ProfileGameRepositoryImpl( @Qualifier("coreMongoTemplate") MongoTemplate coreMongo) {
+        this.coreMongo = coreMongo;
     }
 
     @Override
@@ -63,9 +64,9 @@ public class ProfileGameRepositoryImpl implements ProfileGameRepositoryCustom {
                 sort);
         q.with(effective);
 
-        long total = template.count(Query.of(q).limit(-1).skip(-1).with(Sort.unsorted()), ProfileGame.class);
+        long total = coreMongo.count(Query.of(q).limit(-1).skip(-1).with(Sort.unsorted()), ProfileGame.class);
 
-        List<ProfileGame> docs = template.find(q, ProfileGame.class, template.getCollectionName(ProfileGame.class));
+        List<ProfileGame> docs = coreMongo.find(q, ProfileGame.class, coreMongo.getCollectionName(ProfileGame.class));
         List<BaseProfileGame> content = docs.stream()
                 .map(doc -> projectionFactory.createProjection(BaseProfileGame.class, doc))
                 .toList();

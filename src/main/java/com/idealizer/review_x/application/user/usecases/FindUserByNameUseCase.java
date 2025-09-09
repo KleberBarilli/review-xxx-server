@@ -5,9 +5,9 @@ import com.idealizer.review_x.application.review.usecases.FindLastReviewsUseCase
 import com.idealizer.review_x.application.user.mappers.UserMapper;
 import com.idealizer.review_x.application.user.responses.FindUserResponse;
 import com.idealizer.review_x.common.dtos.FindUserArgsDTO;
-import com.idealizer.review_x.domain.profile.game.interfaces.SimpleProfileGame;
-import com.idealizer.review_x.domain.profile.game.repositories.ProfileGameRepository;
-import com.idealizer.review_x.domain.user.repositories.UserRepository;
+import com.idealizer.review_x.domain.core.profile.game.interfaces.SimpleProfileGame;
+import com.idealizer.review_x.domain.core.profile.game.repositories.ProfileGameRepository;
+import com.idealizer.review_x.domain.core.user.repositories.UserRepository;
 import org.bson.types.ObjectId;
 import org.springframework.stereotype.Service;
 

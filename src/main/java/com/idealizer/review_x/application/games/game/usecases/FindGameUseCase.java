@@ -6,6 +6,8 @@ import com.idealizer.review_x.application.games.game.responses.SimpleGameRespons
 import com.idealizer.review_x.common.dtos.FindAllGamesDTO;
 import com.idealizer.review_x.domain.game.entities.Game;
 import com.idealizer.review_x.common.helpers.NormalizeAliases;
+
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -22,7 +24,7 @@ public class FindGameUseCase {
     private final MongoTemplate mongoTemplate;
     private final GameMapper gameMapper;
 
-    public FindGameUseCase(MongoTemplate mongoTemplate, GameMapper gameMapper) {
+    public FindGameUseCase(@Qualifier("gamesMongoTemplate") MongoTemplate mongoTemplate, GameMapper gameMapper) {
         this.mongoTemplate = mongoTemplate;
         this.gameMapper = gameMapper;
     }

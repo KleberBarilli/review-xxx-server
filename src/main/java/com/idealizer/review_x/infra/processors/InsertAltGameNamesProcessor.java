@@ -5,11 +5,12 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.idealizer.review_x.domain.game.entities.Game;
-import com.idealizer.review_x.domain.provider.entities.PlatformType;
-import com.idealizer.review_x.domain.provider.entities.Provider;
+import com.idealizer.review_x.domain.core.provider.entities.PlatformType;
+import com.idealizer.review_x.domain.core.provider.entities.Provider;
 import com.idealizer.review_x.common.helpers.NormalizeAliases;
 import jakarta.annotation.PostConstruct;
 import org.bson.types.ObjectId;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.BulkOperations;
@@ -39,7 +40,8 @@ public class InsertAltGameNamesProcessor {
     private static final Duration HTTP_TIMEOUT = Duration.ofSeconds(20);
 
 
-    private final MongoTemplate mongoTemplate;
+    private final MongoTemplate coreMongo;
+    private final MongoTemplate gamesMongo;
     private final ObjectMapper objectMapper;
     private final HttpClient httpClient;
 
@@ -47,8 +49,10 @@ public class InsertAltGameNamesProcessor {
     private String clientId;
 
 
-    public InsertAltGameNamesProcessor(MongoTemplate mongoTemplate) {
-        this.mongoTemplate = mongoTemplate;
+    public InsertAltGameNamesProcessor( @Qualifier("coreMongoTemplate") MongoTemplate coreMongo,
+                                        @Qualifier("gamesMongoTemplate") MongoTemplate gamesMongo) {
+        this.gamesMongo = gamesMongo;
+        this.coreMongo = coreMongo;
         this.objectMapper = new ObjectMapper();
         this.httpClient = HttpClient.newBuilder()
                 .connectTimeout(Duration.ofSeconds(10))
@@ -62,7 +66,7 @@ public class InsertAltGameNamesProcessor {
     }
     private String getAccessToken() {
         Query query = new Query(Criteria.where("platform").is(PlatformType.TWITCH));
-        Provider provider = mongoTemplate.findOne(query, Provider.class, "providers");
+        Provider provider = coreMongo.findOne(query, Provider.class, "providers");
         if (provider == null) {
             throw new IllegalStateException("Provider not found for platform: TWITCH");
         }
@@ -83,7 +87,7 @@ public class InsertAltGameNamesProcessor {
                 Criteria.where("alternative_names").size(0)
         );
 
-        long total = mongoTemplate.count(new Query(baseFilter), Game.class);
+        long total = gamesMongo.count(new Query(baseFilter), Game.class);
         logger.info("Total de jogos a preencher ALT: " + total);
         if (total == 0) return;
 
@@ -101,7 +105,7 @@ public class InsertAltGameNamesProcessor {
 
             q.fields().include("_id").include("igdb_id").include("name").include("slug");
 
-            List<Game> batch = mongoTemplate.find(q, Game.class);
+            List<Game> batch = gamesMongo.find(q, Game.class);
             if (batch.isEmpty()) break;
 
             logger.info(String.format("Processando lote (%,d itens) a partir de _id>%s",
@@ -157,7 +161,7 @@ public class InsertAltGameNamesProcessor {
                                 ));
                     }
 
-                    BulkOperations ops = mongoTemplate.bulkOps(BulkOperations.BulkMode.UNORDERED, Game.class);
+                    BulkOperations ops = gamesMongo.bulkOps(BulkOperations.BulkMode.UNORDERED, Game.class);
 
                     for (Game g : batch) {
                         ObjectId oid = safeGetObjectId(g);

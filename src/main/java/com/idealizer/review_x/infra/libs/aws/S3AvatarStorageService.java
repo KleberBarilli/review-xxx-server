@@ -1,6 +1,6 @@
 package com.idealizer.review_x.infra.libs.aws;
 
-import com.idealizer.review_x.domain.user.services.AvatarStorageService;
+import com.idealizer.review_x.domain.core.user.services.AvatarStorageService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import software.amazon.awssdk.core.sync.RequestBody;

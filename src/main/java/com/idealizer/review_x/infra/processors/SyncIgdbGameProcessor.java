@@ -3,12 +3,13 @@ package com.idealizer.review_x.infra.processors;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.idealizer.review_x.domain.game.entities.Game;
-import com.idealizer.review_x.domain.provider.entities.PlatformType;
-import com.idealizer.review_x.domain.provider.entities.Provider;
+import com.idealizer.review_x.domain.core.provider.entities.PlatformType;
+import com.idealizer.review_x.domain.core.provider.entities.Provider;
 import com.idealizer.review_x.infra.libs.twitch.igdb.GameMapper;
 import com.idealizer.review_x.infra.libs.twitch.igdb.IgdbGameDTO;
 import com.idealizer.review_x.infra.processors.utils.Updates;
 import jakarta.annotation.PostConstruct;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.mongodb.core.BulkOperations;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -42,10 +43,13 @@ public class SyncIgdbGameProcessor {
     @Value("${TWITCH_CLIENT_ID}")
     private String clientId;
 
-    private final MongoTemplate mongoTemplate;
+    private final MongoTemplate gamesMongo;
+    private final MongoTemplate coreMongo;
 
-    public SyncIgdbGameProcessor(MongoTemplate mongoTemplate) {
-        this.mongoTemplate = mongoTemplate;
+    public SyncIgdbGameProcessor(  @Qualifier("gamesMongoTemplate") MongoTemplate gamesMongo,
+                                   @Qualifier("coreMongoTemplate") MongoTemplate coreMongo) {
+        this.coreMongo = coreMongo;
+        this.gamesMongo = gamesMongo;
     }
 
     @PostConstruct
@@ -56,7 +60,7 @@ public class SyncIgdbGameProcessor {
 
     private String getAccessToken() {
         Query query = new Query(Criteria.where("platform").is(PlatformType.TWITCH));
-        Provider provider = mongoTemplate.findOne(query, Provider.class, "providers");
+        Provider provider = coreMongo.findOne(query, Provider.class, "providers");
         if (provider == null) {
             throw new IllegalStateException("Provider not found for platform: TWITCH");
         }
@@ -110,7 +114,7 @@ public class SyncIgdbGameProcessor {
                 if (games.isEmpty())
                     break;
 
-                BulkOperations bulkOps = mongoTemplate.bulkOps(BulkOperations.BulkMode.UNORDERED, Game.class);
+                BulkOperations bulkOps = gamesMongo.bulkOps(BulkOperations.BulkMode.UNORDERED, Game.class);
                 boolean hasUpdates = false;
 
                 for (IgdbGameDTO dto : games) {

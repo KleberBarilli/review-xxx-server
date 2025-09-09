@@ -7,13 +7,13 @@ import com.idealizer.review_x.application.review.commands.CreateUpdateReviewComm
 import com.idealizer.review_x.application.review.mappers.ReviewMapper;
 import com.idealizer.review_x.application.review.usecases.CreateReviewUseCase;
 import com.idealizer.review_x.application.review.usecases.UpdateReviewUseCase;
-import com.idealizer.review_x.domain.LogID;
+import com.idealizer.review_x.domain.core.LogID;
 import com.idealizer.review_x.domain.game.entities.Game;
 import com.idealizer.review_x.domain.game.repositories.GameRepository;
-import com.idealizer.review_x.domain.profile.game.entities.ProfileGame;
-import com.idealizer.review_x.domain.profile.game.repositories.ProfileGameRepository;
-import com.idealizer.review_x.domain.review.repositories.ReviewRepository;
-import com.idealizer.review_x.domain.review.entities.Review;
+import com.idealizer.review_x.domain.core.profile.game.entities.ProfileGame;
+import com.idealizer.review_x.domain.core.profile.game.repositories.ProfileGameRepository;
+import com.idealizer.review_x.domain.core.review.repositories.ReviewRepository;
+import com.idealizer.review_x.domain.core.review.entities.Review;
 import org.bson.types.ObjectId;
 import org.springframework.stereotype.Service;
 

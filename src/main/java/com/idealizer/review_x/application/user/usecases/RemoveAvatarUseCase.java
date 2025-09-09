@@ -1,8 +1,8 @@
 package com.idealizer.review_x.application.user.usecases;
 
-import com.idealizer.review_x.domain.user.entities.User;
-import com.idealizer.review_x.domain.user.repositories.UserRepository;
-import com.idealizer.review_x.domain.user.services.AvatarStorageService;
+import com.idealizer.review_x.domain.core.user.entities.User;
+import com.idealizer.review_x.domain.core.user.repositories.UserRepository;
+import com.idealizer.review_x.domain.core.user.services.AvatarStorageService;
 import org.springframework.stereotype.Service;
 
 @Service

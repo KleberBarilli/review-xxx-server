@@ -2,12 +2,13 @@ package com.idealizer.review_x.infra.persistence.mongo.implementations;
 
 import com.idealizer.review_x.common.dtos.FindTimelineDTO;
 import com.idealizer.review_x.common.dtos.review.FindReviewDTO;
-import com.idealizer.review_x.domain.profile.BaseTimelineItem;
-import com.idealizer.review_x.domain.profile.game.entities.ProfileGame;
-import com.idealizer.review_x.domain.review.entities.Review;
-import com.idealizer.review_x.domain.review.interfaces.BaseReview;
-import com.idealizer.review_x.domain.review.repositories.ReviewRepositoryCustom;
+import com.idealizer.review_x.domain.core.profile.BaseTimelineItem;
+import com.idealizer.review_x.domain.core.profile.game.entities.ProfileGame;
+import com.idealizer.review_x.domain.core.review.entities.Review;
+import com.idealizer.review_x.domain.core.review.interfaces.BaseReview;
+import com.idealizer.review_x.domain.core.review.repositories.ReviewRepositoryCustom;
 import org.bson.Document;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.*;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.aggregation.*;
@@ -24,11 +25,11 @@ import java.util.stream.Stream;
 @Repository
 public class ReviewRepositoryImpl implements ReviewRepositoryCustom {
 
-        private final MongoTemplate template;
+        private final MongoTemplate coreMongo;
         private final ProjectionFactory projectionFactory = new SpelAwareProxyProjectionFactory();
 
-        public ReviewRepositoryImpl(MongoTemplate template) {
-                this.template = template;
+        public ReviewRepositoryImpl( @Qualifier("coreMongoTemplate") MongoTemplate coreMongo) {
+                this.coreMongo = coreMongo;
         }
 
         static class RawAggregationOperation implements AggregationOperation {
@@ -50,7 +51,7 @@ public class ReviewRepositoryImpl implements ReviewRepositoryCustom {
 
                 pre.add(Aggregation.match(Criteria.where("username").is(username)));
 
-                String pgColl = template.getCollectionName(ProfileGame.class);
+                String pgColl = coreMongo.getCollectionName(ProfileGame.class);
                 pre.add(new RawAggregationOperation(new Document("$lookup",
                                 new Document("from", pgColl)
                                                 .append("let", new Document("uid", "$userId").append("gid", "$gameId"))
@@ -96,7 +97,7 @@ public class ReviewRepositoryImpl implements ReviewRepositoryCustom {
                 String sortDbField = switch (sortUi) {
                         case "startedAt" -> "started_at";
                         case "finishedAt" -> "finished_at";
-                        case "rating" -> "rating"; // já está no topo após $addFields
+                        case "rating" -> "rating";
                         default -> "updated_at";
                 };
                 Sort.Direction dir = "asc".equalsIgnoreCase(f.order()) ? Sort.Direction.ASC : Sort.Direction.DESC;
@@ -173,14 +174,14 @@ public class ReviewRepositoryImpl implements ReviewRepositoryCustom {
                 Aggregation dataAgg = Aggregation.newAggregation(
                                 Stream.concat(pre.stream(), sortAndPage.stream()).toList());
 
-                String coll = template.getCollectionName(Review.class);
+                String coll = coreMongo.getCollectionName(Review.class);
 
-                var dataRes = template.aggregate(dataAgg, coll, Document.class);
+                var dataRes = coreMongo.aggregate(dataAgg, coll, Document.class);
                 List<BaseReview> content = dataRes.getMappedResults().stream()
                                 .map(doc -> projectionFactory.createProjection(BaseReview.class, doc))
                                 .toList();
 
-                var cntRes = template.aggregate(countAgg, coll, Document.class).getUniqueMappedResult();
+                var cntRes = coreMongo.aggregate(countAgg, coll, Document.class).getUniqueMappedResult();
                 long total = (cntRes == null) ? 0L : ((Number) cntRes.get("total")).longValue();
 
                 return new PageImpl<>(content, PageRequest.of(page, size), total);
@@ -193,7 +194,7 @@ public class ReviewRepositoryImpl implements ReviewRepositoryCustom {
 
                 base.add(Aggregation.match(Criteria.where("username").is(username)));
 
-                String pgColl = template.getCollectionName(ProfileGame.class);
+                String pgColl = coreMongo.getCollectionName(ProfileGame.class);
                 base.add(new RawAggregationOperation(new Document("$lookup",
                                 new Document("from", pgColl)
                                                 .append("let", new Document("uid", "$userId").append("gid", "$gameId"))
@@ -302,14 +303,14 @@ public class ReviewRepositoryImpl implements ReviewRepositoryCustom {
                         }
                 });
 
-                String coll = template.getCollectionName(Review.class);
+                String coll = coreMongo.getCollectionName(Review.class);
 
-                var dataRes = template.aggregate(dataAgg, coll, Document.class);
+                var dataRes = coreMongo.aggregate(dataAgg, coll, Document.class);
                 List<BaseTimelineItem> content = dataRes.getMappedResults().stream()
                                 .map(doc -> projectionFactory.createProjection(BaseTimelineItem.class, doc))
                                 .toList();
 
-                var cntRes = template.aggregate(countAgg, coll, Document.class).getUniqueMappedResult();
+                var cntRes = coreMongo.aggregate(countAgg, coll, Document.class).getUniqueMappedResult();
                 long total = (cntRes == null) ? 0L : ((Number) cntRes.get("total")).longValue();
 
                 return new PageImpl<>(content, PageRequest.of(page, size), total);

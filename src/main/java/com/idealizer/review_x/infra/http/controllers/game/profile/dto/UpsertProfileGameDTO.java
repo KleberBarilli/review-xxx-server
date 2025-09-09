@@ -2,8 +2,8 @@ package com.idealizer.review_x.infra.http.controllers.game.profile.dto;
 
 import com.idealizer.review_x.common.validators.ValidUrl;
 import com.idealizer.review_x.domain.game.entities.enums.GamePlatform;
-import com.idealizer.review_x.domain.profile.game.entities.PlatformType;
-import com.idealizer.review_x.domain.profile.game.entities.ProfileGameStatus;
+import com.idealizer.review_x.domain.core.profile.game.entities.PlatformType;
+import com.idealizer.review_x.domain.core.profile.game.entities.ProfileGameStatus;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;

@@ -4,8 +4,8 @@ import com.idealizer.review_x.application.games.profile.game.commands.CreateUpda
 import com.idealizer.review_x.common.dtos.profile.game.UpdateFavoriteGameDTO;
 import com.idealizer.review_x.domain.game.entities.Game;
 import com.idealizer.review_x.domain.game.repositories.GameRepository;
-import com.idealizer.review_x.domain.profile.game.entities.ProfileGame;
-import com.idealizer.review_x.domain.profile.game.repositories.ProfileGameRepository;
+import com.idealizer.review_x.domain.core.profile.game.entities.ProfileGame;
+import com.idealizer.review_x.domain.core.profile.game.repositories.ProfileGameRepository;
 import org.bson.types.ObjectId;
 import org.springframework.stereotype.Service;
 

@@ -1,7 +1,7 @@
 package com.idealizer.review_x.infra.http.controllers.provider;
 
 import com.idealizer.review_x.application.provider.usecases.CreateProviderUseCase;
-import com.idealizer.review_x.domain.provider.entities.Provider;
+import com.idealizer.review_x.domain.core.provider.entities.Provider;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;

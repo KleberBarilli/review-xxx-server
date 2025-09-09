@@ -1,6 +1,6 @@
 package com.idealizer.review_x.security.services;
 
-import com.idealizer.review_x.domain.user.repositories.UserRepository;
+import com.idealizer.review_x.domain.core.user.repositories.UserRepository;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;

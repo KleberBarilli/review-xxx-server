@@ -13,7 +13,7 @@ import org.springframework.boot.autoconfigure.data.mongo.MongoDataAutoConfigurat
 		MongoAutoConfiguration.class,
 		MongoDataAutoConfiguration.class
 })
-@EnableMongoAuditing
+@EnableMongoAuditing()
 @EnableScheduling
 public class ReviewXApplication {
 	public static void main(String[] args) {

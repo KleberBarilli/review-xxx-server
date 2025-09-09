@@ -1,0 +1,21 @@
+package com.idealizer.review_x.domain.core.profile.game.interfaces;
+
+import com.idealizer.review_x.domain.core.profile.game.entities.ProfileGameStatus;
+
+import java.time.Instant;
+
+public interface SimpleProfileGame {
+
+    String getId();
+    String getUserId();
+    String getGameId();
+    String getGameName();
+    String getGameSlug();
+    String getGameCover();
+    Boolean getLiked();
+    Boolean getHasReview();
+    Integer getRating();
+    ProfileGameStatus getStatus();
+    Integer getFavoriteOrder();
+    Instant getCreatedAt();
+}

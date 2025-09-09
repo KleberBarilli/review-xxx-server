@@ -1,8 +1,8 @@
 package com.idealizer.review_x.application.activity.comment.usecases;
 
 import com.idealizer.review_x.common.exceptions.NotFoundException;
-import com.idealizer.review_x.domain.activity.comment.entities.Comment;
-import com.idealizer.review_x.domain.activity.comment.repositories.CommentRepository;
+import com.idealizer.review_x.domain.core.activity.comment.entities.Comment;
+import com.idealizer.review_x.domain.core.activity.comment.repositories.CommentRepository;
 import org.bson.types.ObjectId;
 import org.springframework.stereotype.Service;
 

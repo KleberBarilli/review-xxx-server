@@ -1,8 +1,8 @@
 package com.idealizer.review_x.application.provider.usecases;
 
-import com.idealizer.review_x.domain.provider.entities.PlatformType;
-import com.idealizer.review_x.domain.provider.entities.Provider;
-import com.idealizer.review_x.domain.provider.repositories.ProviderRepository;
+import com.idealizer.review_x.domain.core.provider.entities.PlatformType;
+import com.idealizer.review_x.domain.core.provider.entities.Provider;
+import com.idealizer.review_x.domain.core.provider.repositories.ProviderRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;

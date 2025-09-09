@@ -4,10 +4,11 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.idealizer.review_x.domain.game.entities.Game;
-import com.idealizer.review_x.domain.provider.entities.PlatformType;
-import com.idealizer.review_x.domain.provider.entities.Provider;
+import com.idealizer.review_x.domain.core.provider.entities.PlatformType;
+import com.idealizer.review_x.domain.core.provider.entities.Provider;
 import jakarta.annotation.PostConstruct;
 import org.bson.types.ObjectId;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.BulkOperations;
@@ -40,7 +41,8 @@ public class UpsertGameTimeToBeatProcessor {
     int REFRESH_AFTER_DAYS = 30;
     Date refreshThreshold = Date.from(java.time.Instant.now().minus(java.time.Duration.ofDays(REFRESH_AFTER_DAYS)));
 
-    private final MongoTemplate mongoTemplate;
+    private final MongoTemplate gamesMongo;
+    private final MongoTemplate coreMongo;;
     private final ObjectMapper objectMapper;
     private final HttpClient httpClient;
 
@@ -50,8 +52,10 @@ public class UpsertGameTimeToBeatProcessor {
     Instant now = Instant.now();
 
 
-    public UpsertGameTimeToBeatProcessor(MongoTemplate mongoTemplate) {
-        this.mongoTemplate = mongoTemplate;
+    public UpsertGameTimeToBeatProcessor(@Qualifier("gamesMongoTemplate") MongoTemplate gamesMongo,
+                                         @Qualifier("coreMongoTemplate") MongoTemplate coreMongo) {
+        this.coreMongo = coreMongo;
+        this.gamesMongo = gamesMongo;
         this.objectMapper = new ObjectMapper();
         this.httpClient = HttpClient.newBuilder()
                 .connectTimeout(Duration.ofSeconds(10))
@@ -65,7 +69,7 @@ public class UpsertGameTimeToBeatProcessor {
     }
     private String getAccessToken() {
         Query query = new Query(Criteria.where("platform").is(PlatformType.TWITCH));
-        Provider provider = mongoTemplate.findOne(query, Provider.class, "providers");
+        Provider provider = coreMongo.findOne(query, Provider.class, "providers");
         if (provider == null) {
             throw new IllegalStateException("Provider not found for platform: TWITCH");
         }
@@ -96,7 +100,7 @@ public class UpsertGameTimeToBeatProcessor {
 
         Criteria baseFilter = new Criteria().andOperator(noTtb, staleTtb);
 
-        long total = mongoTemplate.count(new Query(baseFilter), Game.class);
+        long total = gamesMongo.count(new Query(baseFilter), Game.class);
         logger.info("Total de jogos a preencher TTB: " + total);
         if (total == 0) return;
 
@@ -114,7 +118,7 @@ public class UpsertGameTimeToBeatProcessor {
 
             q.fields().include("_id").include("igdb_id");
 
-            List<Game> batch = mongoTemplate.find(q, Game.class);
+            List<Game> batch = gamesMongo.find(q, Game.class);
             if (batch.isEmpty()) break;
 
             logger.info(String.format("Processando lote (%,d itens) a partir de _id>%s",
@@ -142,7 +146,7 @@ public class UpsertGameTimeToBeatProcessor {
                         for (IgdbTtb t : ttbs) byGameId.put(t.game_id, t);
                     }
 
-                    BulkOperations ops = mongoTemplate.bulkOps(BulkOperations.BulkMode.UNORDERED, Game.class);
+                    BulkOperations ops = gamesMongo.bulkOps(BulkOperations.BulkMode.UNORDERED, Game.class);
 
                     for (Game g : batch) {
                         Long gid = safeGetIgdbId(g);

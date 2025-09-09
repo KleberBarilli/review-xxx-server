@@ -2,12 +2,13 @@ package com.idealizer.review_x.infra.processors;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.idealizer.review_x.domain.provider.entities.PlatformType;
-import com.idealizer.review_x.domain.provider.entities.Provider;
+import com.idealizer.review_x.domain.core.provider.entities.PlatformType;
+import com.idealizer.review_x.domain.core.provider.entities.Provider;
 import com.idealizer.review_x.infra.libs.twitch.igdb.GameMapper;
 import com.idealizer.review_x.infra.libs.twitch.igdb.IgdbGameDTO;
 import com.idealizer.review_x.domain.game.entities.Game;
 import jakarta.annotation.PostConstruct;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.BulkOperations;
@@ -41,10 +42,15 @@ public class InsertIgbdGameProcessor {
     @Value("${TWITCH_CLIENT_ID}")
     private String clientId;
 
-    private final MongoTemplate mongoTemplate;
+    private final MongoTemplate gamesMongo;
+    private final MongoTemplate coreMongo;
 
-    public InsertIgbdGameProcessor(MongoTemplate mongoTemplate) {
-        this.mongoTemplate = mongoTemplate;
+    public InsertIgbdGameProcessor(
+            @Qualifier("gamesMongoTemplate") MongoTemplate gamesMongo,
+            @Qualifier("coreMongoTemplate") MongoTemplate coreMongo
+    ) {
+        this.gamesMongo = gamesMongo;
+        this.coreMongo = coreMongo;
     }
 
     @PostConstruct
@@ -54,19 +60,19 @@ public class InsertIgbdGameProcessor {
 
     private String getAccessToken() {
         Query query = new Query(Criteria.where("platform").is(PlatformType.TWITCH));
-        Provider provider = mongoTemplate.findOne(query, Provider.class, "providers");
+        Provider provider = coreMongo.findOne(query, Provider.class, "providers");
         if (provider == null) {
             throw new IllegalStateException("Provider not found for platform: TWITCH");
         }
         return provider.getAccessToken();
     }
 
-    @Scheduled(cron = "0 13 00 * * *", zone = "America/Sao_Paulo")
+    @Scheduled(cron = "0 27 17 * * *", zone = "America/Sao_Paulo")
 
     public void importGames() {
 
         Query query = new Query().with(Sort.by(Sort.Direction.DESC, "igdb_id")).limit(1);
-        Game latestGame = mongoTemplate.findOne(query, Game.class);
+        Game latestGame = gamesMongo.findOne(query, Game.class);
         Long lastGameId = latestGame != null ? latestGame.getIgdbId() : 0;
         logger.info("Starting full game insert from IGDB...");
         logger.info("Last game ID in database: " + lastGameId);
@@ -111,12 +117,12 @@ public class InsertIgbdGameProcessor {
                 if (games.isEmpty())
                     break;
 
-                BulkOperations bulkOps = mongoTemplate.bulkOps(BulkOperations.BulkMode.UNORDERED, Game.class);
+                BulkOperations bulkOps = gamesMongo.bulkOps(BulkOperations.BulkMode.UNORDERED, Game.class);
 
                 boolean hasInserts = false;
                 for (IgdbGameDTO dto : games) {
                     Game game = GameMapper.toEntity(dto);
-                    boolean exists = mongoTemplate.exists(
+                    boolean exists = gamesMongo.exists(
                             new Query(Criteria.where("igdb_id").is(game.getIgdbId())), Game.class);
                     if (!exists) {
                         game.setCreatedAt(now);

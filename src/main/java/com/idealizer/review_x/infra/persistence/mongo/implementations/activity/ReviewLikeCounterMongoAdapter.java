@@ -1,9 +1,10 @@
 package com.idealizer.review_x.infra.persistence.mongo.implementations.activity;
 
 import com.idealizer.review_x.application.activity.like.ports.LikeCounterPort;
-import com.idealizer.review_x.domain.activity.like.entities.LikeType;
-import com.idealizer.review_x.domain.review.entities.Review;
+import com.idealizer.review_x.domain.core.activity.like.entities.LikeType;
+import com.idealizer.review_x.domain.core.review.entities.Review;
 import org.bson.types.ObjectId;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -13,10 +14,10 @@ import org.springframework.stereotype.Component;
 @Component
 public class ReviewLikeCounterMongoAdapter implements LikeCounterPort {
 
-    private final MongoTemplate mongo;
+    private final MongoTemplate coreMongo;
 
-    public ReviewLikeCounterMongoAdapter(MongoTemplate mongo) {
-        this.mongo = mongo;
+    public ReviewLikeCounterMongoAdapter(@Qualifier("coreMongoTemplate") MongoTemplate coreMongo) {
+        this.coreMongo = coreMongo;
     }
 
     @Override
@@ -28,6 +29,6 @@ public class ReviewLikeCounterMongoAdapter implements LikeCounterPort {
     public void inc(ObjectId targetId, int delta) {
         Query q = Query.query(Criteria.where("_id").is(targetId));
         Update u = new Update().inc("likeCount", delta);
-        mongo.updateFirst(q, u, Review.class);
+        coreMongo.updateFirst(q, u, Review.class);
     }
 }

@@ -1,9 +1,9 @@
 package com.idealizer.review_x.application.games.profile.game.commands;
 
-import com.idealizer.review_x.domain.LogID;
+import com.idealizer.review_x.domain.core.LogID;
 import com.idealizer.review_x.domain.game.entities.enums.GamePlatform;
-import com.idealizer.review_x.domain.profile.game.entities.PlatformType;
-import com.idealizer.review_x.domain.profile.game.entities.ProfileGameStatus;
+import com.idealizer.review_x.domain.core.profile.game.entities.PlatformType;
+import com.idealizer.review_x.domain.core.profile.game.entities.ProfileGameStatus;
 import org.bson.types.ObjectId;
 
 import java.time.Instant;

@@ -1,8 +1,8 @@
 package com.idealizer.review_x.application.activity.like.usecases;
 
 import com.idealizer.review_x.application.activity.like.services.LikeCounterRegistryService;
-import com.idealizer.review_x.domain.activity.like.entities.LikeType;
-import com.idealizer.review_x.domain.activity.like.repositories.LikeRepository;
+import com.idealizer.review_x.domain.core.activity.like.entities.LikeType;
+import com.idealizer.review_x.domain.core.activity.like.repositories.LikeRepository;
 import org.bson.types.ObjectId;
 import org.springframework.stereotype.Service;
 

@@ -2,7 +2,7 @@ package com.idealizer.review_x.application.review.usecases;
 
 import com.idealizer.review_x.common.MessageUtil;
 import com.idealizer.review_x.common.exceptions.ForbiddenException;
-import com.idealizer.review_x.domain.review.repositories.ReviewRepository;
+import com.idealizer.review_x.domain.core.review.repositories.ReviewRepository;
 import org.bson.types.ObjectId;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Service;

@@ -4,6 +4,7 @@ import com.idealizer.review_x.common.dtos.game.DiscoverPreset;
 import com.idealizer.review_x.infra.libs.twitch.igdb.services.IgdbPopularityClient;
 import jakarta.xml.bind.DatatypeConverter;
 import org.bson.Document;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -38,18 +39,18 @@ public class DiscoverRankingsProcessor {
     private static final String GAMES_COLL = "games";
     private static final int TOP_K = 50;
 
-    private final MongoTemplate mongo;
+    private final MongoTemplate gamesMongo;
     private final IgdbPopularityClient igdb;
 
-    public DiscoverRankingsProcessor(MongoTemplate mongo, IgdbPopularityClient igdb) {
-        this.mongo = mongo;
+    public DiscoverRankingsProcessor(@Qualifier("gamesMongoTemplate") MongoTemplate gamesMongo, IgdbPopularityClient igdb) {
+        this.gamesMongo = gamesMongo;
         this.igdb = igdb;
     }
 
     @Scheduled(cron = "0 11 18 * * *", zone = "America/Sao_Paulo")
     public void runDaily() {
         long t0 = nowMs();
-        long gamesCount = mongo.count(new Query(), GAMES_COLL);
+        long gamesCount = gamesMongo.count(new Query(), GAMES_COLL);
         log.info("[discover] starting processor | topK=" + TOP_K + " | games.count=" + gamesCount);
 
         try {
@@ -79,7 +80,7 @@ public class DiscoverRankingsProcessor {
         log.info("[discover:" + preset.name() + "] igdb primitives: " + (prim == null ? 0 : prim.size()) + " | " + tookMs(tCall) + " ms");
 
         if (prim == null || prim.isEmpty()) {
-            var del = mongo.remove(new Query(Criteria.where("preset").is(preset.name())), RANKINGS_COLL);
+            var del = gamesMongo.remove(new Query(Criteria.where("preset").is(preset.name())), RANKINGS_COLL);
             log.warning("[discover:" + preset.name() + "] empty primitives -> cleared preset | deleted=" + (del != null ? del.getDeletedCount() : 0));
             log.info("[discover:" + preset.name() + "] done in " + tookMs(tPreset) + " ms");
             return;
@@ -128,13 +129,13 @@ public class DiscoverRankingsProcessor {
                 + " | top preview=" + previewTop(toInsert, 3));
 
         long tReplace = nowMs();
-        var del = mongo.remove(new Query(Criteria.where("preset").is(preset.name())), RANKINGS_COLL);
+        var del = gamesMongo.remove(new Query(Criteria.where("preset").is(preset.name())), RANKINGS_COLL);
         int deleted = del != null ? (int) del.getDeletedCount() : 0;
 
         int insertedCount = 0;
         if (!toInsert.isEmpty()) {
             try {
-                Collection<Document> res = mongo.insert(toInsert, RANKINGS_COLL);
+                Collection<Document> res = gamesMongo.insert(toInsert, RANKINGS_COLL);
                 insertedCount = res.size();
             } catch (DataAccessException dae) {
                 log.log(Level.SEVERE, "[discover:" + preset.name() + "] insert failed", dae);
@@ -162,7 +163,7 @@ public class DiscoverRankingsProcessor {
         base.limit(20_000);
 
         long tFind = nowMs();
-        List<Document> pool = mongo.find(base, Document.class, GAMES_COLL);
+        List<Document> pool = gamesMongo.find(base, Document.class, GAMES_COLL);
         log.info("[discover:TOP_RATED] pool size=" + pool.size() + " | " + tookMs(tFind) + " ms");
 
         long tScore = nowMs();
@@ -210,12 +211,12 @@ public class DiscoverRankingsProcessor {
                 + " | top preview=" + previewTop(toInsert, 3));
 
         long tReplace = nowMs();
-        var del = mongo.remove(new Query(Criteria.where("preset").is(DiscoverPreset.TOP_RATED.name())), RANKINGS_COLL);
+        var del = gamesMongo.remove(new Query(Criteria.where("preset").is(DiscoverPreset.TOP_RATED.name())), RANKINGS_COLL);
         int deleted = del != null ? (int) del.getDeletedCount() : 0;
 
         int insertedCount = 0;
         if (!toInsert.isEmpty()) {
-            Collection<Document> res = mongo.insert(toInsert, RANKINGS_COLL);
+            Collection<Document> res = gamesMongo.insert(toInsert, RANKINGS_COLL);
             insertedCount = res.size();
         }
 
@@ -239,7 +240,7 @@ public class DiscoverRankingsProcessor {
                 F_TOTAL_RATING, F_TOTAL_RATING_COUNT, F_POPULARITY, F_FOLLOWS, F_HYPES,
                 "firstReleaseDate", "totalRating", "totalRatingCount", "popularity", "follows", "hypes",
                 "coverImageId");
-        return mongo.find(q, Document.class, GAMES_COLL);
+        return gamesMongo.find(q, Document.class, GAMES_COLL);
     }
 
     private Long readIgdbId(Document d) {

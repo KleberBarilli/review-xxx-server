@@ -5,7 +5,7 @@ import com.idealizer.review_x.infra.http.controllers.user.dto.SignupRequestDTO;
 import org.bson.types.ObjectId;
 import org.mapstruct.Mapper;
 
-import com.idealizer.review_x.domain.user.entities.User;
+import com.idealizer.review_x.domain.core.user.entities.User;
 import org.mapstruct.Mapping;
 
 @Mapper(componentModel = "spring")

@@ -3,16 +3,13 @@ package com.idealizer.review_x.application.user.usecases;
 import com.idealizer.review_x.application.user.mappers.UserMapper;
 import com.idealizer.review_x.application.user.validators.UserValidator;
 import com.idealizer.review_x.common.CommonError;
-import com.idealizer.review_x.common.LocaleUtil;
-import com.idealizer.review_x.common.MessageUtil;
 import com.idealizer.review_x.common.exceptions.DuplicatedException;
-import com.idealizer.review_x.domain.user.entities.User;
-import com.idealizer.review_x.domain.user.repositories.UserRepository;
+import com.idealizer.review_x.domain.core.user.entities.User;
+import com.idealizer.review_x.domain.core.user.repositories.UserRepository;
 import com.idealizer.review_x.infra.http.controllers.user.dto.SignupRequestDTO;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
 import java.util.logging.Logger;
 
 @Service

@@ -1,8 +1,8 @@
 package com.idealizer.review_x.application.profile.game;
 
 import com.idealizer.review_x.application.games.profile.game.usecases.UpdateProfileGameUseCase;
-import com.idealizer.review_x.domain.profile.game.entities.ProfileGame;
-import com.idealizer.review_x.domain.profile.game.repositories.ProfileGameRepository;
+import com.idealizer.review_x.domain.core.profile.game.entities.ProfileGame;
+import com.idealizer.review_x.domain.core.profile.game.repositories.ProfileGameRepository;
 import org.bson.types.ObjectId;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

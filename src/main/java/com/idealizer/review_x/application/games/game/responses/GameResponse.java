@@ -13,7 +13,6 @@ public class GameResponse {
     private String id;
     private Long externalId;
     private List<Long> dlcsIds;
-    private List<Long> similarGamesIds;
     private String name;
     private List<AlternativeName> alternativeNames;
     private String slug;
@@ -24,16 +23,10 @@ public class GameResponse {
     private List<GameGenre> genres;
     private List<GameMode> modes;
     private List<GamePlatform> platforms;
-    private List<String> engines;
     private String developer;
     private String trailerUrl;
-    private List<GameWebsite> websites;
     private GameTimeToBeat timeToBeat;
-
-    private String storyline;
-    private String summary;
     private String cover;
-    private List<String> screenshots;
     private Double totalRating;
     private Integer totalRatingCount;
     private Instant updatedAt;
@@ -60,14 +53,6 @@ public class GameResponse {
 
     public void setDlcsIds(List<Long> dlcsIds) {
         this.dlcsIds = dlcsIds;
-    }
-
-    public List<Long> getSimilarGamesIds() {
-        return similarGamesIds;
-    }
-
-    public void setSimilarGamesIds(List<Long> similarGamesIds) {
-        this.similarGamesIds = similarGamesIds;
     }
 
     public String getName() {
@@ -142,14 +127,6 @@ public class GameResponse {
         this.platforms = platforms;
     }
 
-    public List<String> getEngines() {
-        return engines;
-    }
-
-    public void setEngines(List<String> engines) {
-        this.engines = engines;
-    }
-
     public String getDeveloper() {
         return developer;
     }
@@ -166,14 +143,6 @@ public class GameResponse {
         this.trailerUrl = trailerUrl;
     }
 
-    public List<GameWebsite> getWebsites() {
-        return websites;
-    }
-
-    public void setWebsites(List<GameWebsite> websites) {
-        this.websites = websites;
-    }
-
     public GameTimeToBeat getTimeToBeat() {
         return timeToBeat;
     }
@@ -182,36 +151,12 @@ public class GameResponse {
         this.timeToBeat = timeToBeat;
     }
 
-    public String getStoryline() {
-        return storyline;
-    }
-
-    public void setStoryline(String storyline) {
-        this.storyline = storyline;
-    }
-
-    public String getSummary() {
-        return summary;
-    }
-
-    public void setSummary(String summary) {
-        this.summary = summary;
-    }
-
     public String getCover() {
         return cover;
     }
 
     public void setCover(String cover) {
         this.cover = cover;
-    }
-
-    public List<String> getScreenshots() {
-        return screenshots;
-    }
-
-    public void setScreenshots(List<String> screenshots) {
-        this.screenshots = screenshots;
     }
 
     public Double getTotalRating() {

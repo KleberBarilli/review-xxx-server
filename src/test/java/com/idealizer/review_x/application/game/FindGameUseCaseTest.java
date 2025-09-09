@@ -47,11 +47,14 @@ public class FindGameUseCaseTest {
                 null,
                 null,
                 null,
-                null, null, null
-        );
+                null, null);
 
-        Game g1 = new Game(); g1.setId(new ObjectId()); g1.setName("A");
-        Game g2 = new Game(); g2.setId(new ObjectId()); g2.setName("B");
+        Game g1 = new Game();
+        g1.setId(new ObjectId());
+        g1.setName("A");
+        Game g2 = new Game();
+        g2.setId(new ObjectId());
+        g2.setName("B");
         List<Game> found = List.of(g1, g2);
 
         ArgumentCaptor<Query> findQ = ArgumentCaptor.forClass(Query.class);
@@ -60,8 +63,12 @@ public class FindGameUseCaseTest {
         when(mongoTemplate.find(findQ.capture(), eq(Game.class), eq("games"))).thenReturn(found);
         when(mongoTemplate.count(countQ.capture(), eq(Game.class), eq("games"))).thenReturn(42L);
 
-        SimpleGameResponse s1 = new SimpleGameResponse(); s1.setId(g1.getId().toHexString()); s1.setName("A");
-        SimpleGameResponse s2 = new SimpleGameResponse(); s2.setId(g2.getId().toHexString()); s2.setName("B");
+        SimpleGameResponse s1 = new SimpleGameResponse();
+        s1.setId(g1.getId().toHexString());
+        s1.setName("A");
+        SimpleGameResponse s2 = new SimpleGameResponse();
+        s2.setId(g2.getId().toHexString());
+        s2.setName("B");
         when(gameMapper.toSimpleDomainList(found)).thenReturn(List.of(s1, s2));
 
         FindGameResponse resp = useCase.execute(dto);
@@ -104,19 +111,21 @@ public class FindGameUseCaseTest {
                 List.of(GameGenre.RACING),
                 List.of(GameMode.SINGLE_PLAYER),
                 List.of(GamePlatform.GAME_BOY),
-                LocalDate.of(2015,1,1),
-                List.of(GameType.REMAKE, GameType.MAIN_GAME),
-                List.of("Unity", "Unreal")
-        );
+                LocalDate.of(2015, 1, 1),
+                List.of(GameType.REMAKE, GameType.MAIN_GAME));
 
-        Game g1 = new Game(); g1.setId(new ObjectId()); g1.setName("GTA V");
+        Game g1 = new Game();
+        g1.setId(new ObjectId());
+        g1.setName("GTA V");
         List<Game> found = List.of(g1);
 
         ArgumentCaptor<Query> findQ = ArgumentCaptor.forClass(Query.class);
         when(mongoTemplate.find(findQ.capture(), eq(Game.class), eq("games"))).thenReturn(found);
         when(mongoTemplate.count(any(Query.class), eq(Game.class), eq("games"))).thenReturn(1L);
 
-        SimpleGameResponse s1 = new SimpleGameResponse(); s1.setId(g1.getId().toHexString()); s1.setName("GTA V");
+        SimpleGameResponse s1 = new SimpleGameResponse();
+        s1.setId(g1.getId().toHexString());
+        s1.setName("GTA V");
         when(gameMapper.toSimpleDomainList(found)).thenReturn(List.of(s1));
 
         FindGameResponse resp = useCase.execute(dto);
@@ -175,9 +184,6 @@ public class FindGameUseCaseTest {
         assertTrue(qo.containsKey("type"));
         assertTrue(((Document) qo.get("type")).containsKey("$in"));
 
-        assertTrue(qo.containsKey("engines"));
-        assertTrue(((Document) qo.get("engines")).containsKey("$in"));
-
         assertTrue(qo.containsKey("firstReleaseDate"));
         assertTrue(((Document) qo.get("firstReleaseDate")).containsKey("$gte"));
 
@@ -190,8 +196,7 @@ public class FindGameUseCaseTest {
         FindAllGamesDTO dto = new FindAllGamesDTO(
                 0, -1, null, "desc",
                 null, null, List.of(), List.of(), List.of(), List.of(),
-                null, List.of(), List.of()
-        );
+                null, List.of());
 
         List<Game> found = List.of();
         ArgumentCaptor<Query> findQ = ArgumentCaptor.forClass(Query.class);

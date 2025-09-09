@@ -46,8 +46,7 @@ public class FindGameUseCase {
 
                 ors.add(
                         Criteria.where("aliases")
-                                .elemMatch(new Criteria().gte(c).lt(c + "\uffff"))
-                );
+                                .elemMatch(new Criteria().gte(c).lt(c + "\uffff")));
             }
             q.addCriteria(new Criteria().orOperator(ors.toArray(new Criteria[0])));
         }
@@ -71,10 +70,6 @@ public class FindGameUseCase {
         }
         if (dto.types() != null && !dto.types().isEmpty()) {
             q.addCriteria(Criteria.where("type").in(dto.types()));
-        }
-
-        if (dto.engines() != null && !dto.engines().isEmpty()) {
-            q.addCriteria(Criteria.where("engines").in(dto.engines()));
         }
 
         if (dto.firstReleaseDate() != null) {
@@ -108,7 +103,8 @@ public class FindGameUseCase {
     }
 
     private static List<String> normalizeSlugQueryCandidates(String raw) {
-        if (raw == null) return List.of();
+        if (raw == null)
+            return List.of();
         return NormalizeAliases.slugCandidates(raw.trim());
     }
 

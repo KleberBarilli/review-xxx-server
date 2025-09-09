@@ -73,21 +73,22 @@ public class SyncIgdbGameProcessor {
         long updatedSince = now.minus(48, ChronoUnit.HOURS).getEpochSecond();
         Instant oneDayAgo = now.minus(1, ChronoUnit.DAYS);
 
-
         int offset = 0;
         int page = 1;
 
         while (true) {
-            String igdbQuery = String.format("""
-                 fields id,name,slug,summary,storyline,first_release_date,total_rating,total_rating_count,genres,
-                game_modes,cover.image_id,screenshots.image_id,platforms,expansions,similar_games,updated_at,
-                involved_companies.developer,involved_companies.company.name,game_engines.name,websites.url,websites.type,
-                videos.name,videos.video_id,game_status,game_type, parent_game;
-                    where updated_at > %d & game_type = (0,2,8,9);
-                    sort id asc;
-                    limit %d;
-                    offset %d;
-                    """, updatedSince, PAGE_SIZE, offset);
+            String igdbQuery = String.format(
+                    """
+                             fields id,name,slug,first_release_date,total_rating,total_rating_count,genres,
+                            game_modes,cover.image_id,platforms,expansions,updated_at,
+                            involved_companies.developer,involved_companies.company.name,
+                            videos.name,videos.video_id,game_status,game_type, parent_game;
+                                where updated_at > %d & game_type = (0,2,8,9);
+                                sort id asc;
+                                limit %d;
+                                offset %d;
+                                """,
+                    updatedSince, PAGE_SIZE, offset);
 
             HttpRequest request = HttpRequest.newBuilder()
                     .uri(URI.create(IGDB_BASE_URL + "/games"))
@@ -96,7 +97,6 @@ public class SyncIgdbGameProcessor {
                     .header("Accept", "application/json")
                     .POST(HttpRequest.BodyPublishers.ofString(igdbQuery))
                     .build();
-
 
             try {
                 HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
@@ -107,7 +107,8 @@ public class SyncIgdbGameProcessor {
 
                 List<IgdbGameDTO> games = mapper.readValue(response.body(), new TypeReference<>() {
                 });
-                if (games.isEmpty()) break;
+                if (games.isEmpty())
+                    break;
 
                 BulkOperations bulkOps = mongoTemplate.bulkOps(BulkOperations.BulkMode.UNORDERED, Game.class);
                 boolean hasUpdates = false;
@@ -118,9 +119,7 @@ public class SyncIgdbGameProcessor {
                             Criteria.where("igdbId").is(mapped.getIgdbId()),
                             new Criteria().orOperator(
                                     Criteria.where("updatedAt").lt(oneDayAgo),
-                                    Criteria.where("updatedAt").exists(false)
-                            )
-                    );
+                                    Criteria.where("updatedAt").exists(false)));
                     Query q = new Query(crit);
 
                     Update update = new Update()
@@ -130,20 +129,14 @@ public class SyncIgdbGameProcessor {
                             .set("totalRating", mapped.getTotalRating())
                             .set("totalRatingCount", mapped.getTotalRatingCount())
                             .set("cover", mapped.getCover())
-                            .set("similarGamesIgdbIds", mapped.getSimilarGamesIgdbIds())
                             .set("updatedAt", now);
 
-                    Updates.setIfNotNull(update, "summary",     mapped.getSummary());
-                    Updates.setIfNotNull(update, "storyline",   mapped.getStoryline());
-                    Updates.setIfNotNull(update, "genres",      mapped.getGenres());
-                    Updates.setIfNotNull(update, "platforms",   mapped.getPlatforms());
-                    Updates.setIfNotNull(update, "modes",       mapped.getModes());
-                    Updates.setIfNotNull(update, "screenshots", mapped.getScreenshots());
+                    Updates.setIfNotNull(update, "genres", mapped.getGenres());
+                    Updates.setIfNotNull(update, "platforms", mapped.getPlatforms());
+                    Updates.setIfNotNull(update, "modes", mapped.getModes());
 
-                    Updates.setIfNotNull(update, "developer",   mapped.getDeveloper());
-                    Updates.setIfNotNull(update, "trailerUrl",  mapped.getTrailerUrl());
-                    Updates.setIfNotNull(update, "websites",    mapped.getWebsites());
-                    Updates.setIfNotNull(update, "engines",     mapped.getEngines());
+                    Updates.setIfNotNull(update, "developer", mapped.getDeveloper());
+                    Updates.setIfNotNull(update, "trailerUrl", mapped.getTrailerUrl());
 
                     bulkOps.updateOne(q, update);
                     hasUpdates = true;

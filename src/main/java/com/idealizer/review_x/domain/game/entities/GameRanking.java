@@ -31,8 +31,6 @@ public class GameRanking {
     private Instant sourceSyncAt;
     private Instant expiresAt;
 
-
-
     public static class Signals {
         public Double totalRating;
         public Integer totalRatingCount;
@@ -46,7 +44,6 @@ public class GameRanking {
     public static class GameSnapshot {
         public String name;
         public String slug;
-        public String summary;
         public String cover;
         public Instant firstReleaseDate;
         public List<Long> genres;
@@ -133,4 +130,3 @@ public class GameRanking {
         this.expiresAt = expiresAt;
     }
 }
-

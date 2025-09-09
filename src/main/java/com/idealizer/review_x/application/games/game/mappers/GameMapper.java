@@ -15,19 +15,17 @@ public interface GameMapper {
     @Mapping(target = "id", source = "id")
     @Mapping(target = "igdbId", source = "externalId")
     @Mapping(target = "dlcsIgdbIds", source = "dlcsIds")
-    @Mapping(target = "similarGamesIgdbIds", source = "similarGamesIds")
     Game toEntity(GameResponse dto);
-
 
     @Mapping(target = "id", source = "id")
     @Mapping(target = "externalId", source = "igdbId")
     @Mapping(target = "dlcsIds", source = "dlcsIgdbIds")
-    @Mapping(target = "similarGamesIds", source = "similarGamesIgdbIds")
     GameResponse toDetailedDomain(Game game);
 
     @Mapping(target = "id", source = "id")
     @Mapping(target = "externalId", source = "igdbId")
     SimpleGameResponse toSimpleDomain(Game game);
+
     List<SimpleGameResponse> toSimpleDomainList(List<Game> games);
 
     default ObjectId map(String value) {

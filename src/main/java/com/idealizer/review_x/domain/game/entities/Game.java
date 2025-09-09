@@ -14,9 +14,6 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.util.List;
 
-
-
-
 @Document(collection = "games")
 public class Game {
     @Id
@@ -29,8 +26,6 @@ public class Game {
     private Long parentIgdbId;
     @Field(value = "dlcs_igdb_ids")
     private List<Long> dlcsIgdbIds;
-    @Field(value = "similar_games_igdb_ids")
-    private List<Long> similarGamesIgdbIds;
     private String name;
     @Indexed(unique = true)
     private String slug;
@@ -40,8 +35,6 @@ public class Game {
     private List<String> aliases;
     @Indexed
     private GameType type;
-    private String summary;
-    private String storyline;
     @Field(value = "first_release_date")
     private LocalDate firstReleaseDate;
     @Field(value = "total_rating")
@@ -58,12 +51,9 @@ public class Game {
     @Indexed
     private GameStatus status;
     private String cover;
-    private List<String> screenshots;
     @Indexed
     private String developer;
-    private List<GameWebsite> websites;
     private String trailerUrl;
-    private List<String> engines;
     @Field(value = "time_to_beat")
     private GameTimeToBeat timeToBeat;
     @Field(value = "created_at")
@@ -101,16 +91,11 @@ public class Game {
     public List<Long> getDlcsIgdbIds() {
         return dlcsIgdbIds;
     }
+
     public void setDlcsIgdbIds(List<Long> dlcsIgdbIds) {
         this.dlcsIgdbIds = dlcsIgdbIds;
     }
 
-    public List<Long> getSimilarGamesIgdbIds() {
-        return similarGamesIgdbIds;
-    }
-    public void setSimilarGamesIgdbIds(List<Long> similarGamesIgdbIds) {
-        this.similarGamesIgdbIds = similarGamesIgdbIds;
-    }
     public String getName() {
         return name;
     }
@@ -133,22 +118,6 @@ public class Game {
 
     public void setSlug(String slug) {
         this.slug = slug;
-    }
-
-    public String getSummary() {
-        return summary;
-    }
-
-    public void setSummary(String summary) {
-        this.summary = summary;
-    }
-
-    public String getStoryline() {
-        return storyline;
-    }
-
-    public void setStoryline(String storyline) {
-        this.storyline = storyline;
     }
 
     public LocalDate getFirstReleaseDate() {
@@ -194,10 +163,10 @@ public class Game {
     public List<GameMode> getModes() {
         return modes;
     }
+
     public void setModes(List<GameMode> modes) {
         this.modes = modes;
     }
-
 
     public String getCover() {
         return cover;
@@ -207,27 +176,12 @@ public class Game {
         this.cover = cover;
     }
 
-    public List<String> getScreenshots() {
-        return screenshots;
-    }
-
-    public void setScreenshots(List<String> screenshots) {
-        this.screenshots = screenshots;
-    }
-
     public String getDeveloper() {
         return developer;
     }
+
     public void setDeveloper(String developer) {
         this.developer = developer;
-    }
-
-    public List<GameWebsite> getWebsites() {
-        return websites;
-    }
-
-    public void setWebsites(List<GameWebsite> websites) {
-        this.websites = websites;
     }
 
     public String getTrailerUrl() {
@@ -236,14 +190,6 @@ public class Game {
 
     public void setTrailerUrl(String trailerUrl) {
         this.trailerUrl = trailerUrl;
-    }
-
-    public List<String> getEngines() {
-        return engines;
-    }
-
-    public void setEngines(List<String> engines) {
-        this.engines = engines;
     }
 
     public List<AlternativeName> getAlternativeNames() {
@@ -293,6 +239,5 @@ public class Game {
     public void setUpdatedAt(Instant updatedAt) {
         this.updatedAt = updatedAt;
     }
-
 
 }

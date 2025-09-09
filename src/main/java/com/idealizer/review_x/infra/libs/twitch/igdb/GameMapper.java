@@ -13,8 +13,6 @@ import java.util.*;
 
 public class GameMapper {
 
-
-
     public static Game toEntity(IgdbGameDTO dto) {
         Game game = new Game();
         game.setIgdbId(dto.id());
@@ -22,8 +20,7 @@ public class GameMapper {
         game.setName(dto.name());
         String incomingSlug = dto.slug();
         String safeSlug = NormalizeSlugs.normalize(
-                (incomingSlug == null || incomingSlug.isBlank()) ? dto.name() : incomingSlug
-        );
+                (incomingSlug == null || incomingSlug.isBlank()) ? dto.name() : incomingSlug);
         game.setSlug(safeSlug);
         Optional.ofNullable(dto.gameStatus())
                 .map(GameStatus::fromIgdbStatus)
@@ -32,16 +29,9 @@ public class GameMapper {
         Optional.ofNullable(dto.gameType())
                 .map(GameType::fromId)
                 .ifPresent(game::setType);
-        game.setSummary(dto.summary());
-        game.setStoryline(dto.storyline());
         game.setFirstReleaseDate(
                 toLocalDate(dto.firstReleaseDate()));
         game.setCover(dto.cover() == null ? null : dto.cover().imageId());
-        game.setScreenshots(dto.screenshots() == null
-                ? List.of()
-                : dto.screenshots().stream()
-                        .map(IgdbImageDTO::imageId)
-                        .toList());
         game.setTotalRating(dto.totalRating());
         game.setTotalRatingCount(dto.totalRatingCount());
         game.setDlcsIgdbIds(dto.expansions());
@@ -74,40 +64,16 @@ public class GameMapper {
                 .filter(Objects::nonNull)
                 .findFirst()
                 .orElse(null);
-        game.setDeveloper(mainDev != null ?  NormalizeSlugs.normalize(mainDev.toLowerCase()) : null);
+        game.setDeveloper(mainDev != null ? NormalizeSlugs.normalize(mainDev.toLowerCase()) : null);
         String url = TrailerPicker.pickBestTrailerUrl(
                 dto.videos(),
                 IgdbVideoDTO::name,
-                IgdbVideoDTO::video_id
-        );
+                IgdbVideoDTO::video_id);
         game.setTrailerUrl(url);
-        List<GameWebsite> sites = Optional.ofNullable(dto.websites())
-                .orElse(List.of())
-                .stream()
-                .filter(Objects::nonNull)
-                .filter(w -> w.url() != null && !w.url().isBlank() && w.type() != null)
-                .map(w -> new GameWebsite(
-                        GameWebsiteType.fromId(w.type()),
-                      (w.url())
-                ))
-                .distinct()
-                .toList();
-
-        game.setWebsites(sites);
-        List<String> engines = Optional.ofNullable(dto.gameEngines())
-                .orElse(List.of())
-                .stream()
-                .filter(Objects::nonNull)
-                .map(IgdbGameEngine::name)
-                .filter(Objects::nonNull)
-                .toList();
-        game.setEngines(engines);
         game.setUpdatedAt(dto.updatedAt() != null ? Instant.ofEpochSecond(dto.updatedAt()) : null);
-        game.setSimilarGamesIgdbIds(dto.similarGames());
 
         return game;
     }
-
 
     private static LocalDate toLocalDate(Long timestamp) {
         if (timestamp == null)

@@ -78,16 +78,18 @@ public class InsertIgbdGameProcessor {
         int page = 1;
 
         while (true) {
-            String igdbQuery = String.format("""
-                fields id,name,slug,summary,storyline,first_release_date,total_rating,total_rating_count,genres,
-                game_modes,cover.image_id,screenshots.image_id,platforms,expansions,similar_games,updated_at,
-                involved_companies.developer,involved_companies.company.name,game_engines.name,websites.url,websites.type,
-                videos.name,videos.video_id,game_status,game_type, parent_game;
-               where game_type = (0,8,9) & id > %d;
-                sort id asc;
-                limit %d;
-                offset %d;
-                """, lastGameId, PAGE_SIZE, offset);
+            String igdbQuery = String.format(
+                    """
+                             fields id,name,slug,first_release_date,total_rating,total_rating_count,genres,
+                             game_modes,cover.image_id,platforms,expansions,updated_at,
+                             involved_companies.developer,involved_companies.company.name,
+                             videos.name,videos.video_id,game_status,game_type, parent_game;
+                            where game_type = (0,8,9) & id > %d;
+                             sort id asc;
+                             limit %d;
+                             offset %d;
+                             """,
+                    lastGameId, PAGE_SIZE, offset);
 
             HttpRequest request = HttpRequest.newBuilder()
                     .uri(URI.create(IGDB_BASE_URL + "/games"))
@@ -104,8 +106,10 @@ public class InsertIgbdGameProcessor {
                     break;
                 }
 
-                List<IgdbGameDTO> games = mapper.readValue(response.body(), new TypeReference<>() {});
-                if (games.isEmpty()) break;
+                List<IgdbGameDTO> games = mapper.readValue(response.body(), new TypeReference<>() {
+                });
+                if (games.isEmpty())
+                    break;
 
                 BulkOperations bulkOps = mongoTemplate.bulkOps(BulkOperations.BulkMode.UNORDERED, Game.class);
 
@@ -113,8 +117,7 @@ public class InsertIgbdGameProcessor {
                 for (IgdbGameDTO dto : games) {
                     Game game = GameMapper.toEntity(dto);
                     boolean exists = mongoTemplate.exists(
-                            new Query(Criteria.where("igdb_id").is(game.getIgdbId())), Game.class
-                    );
+                            new Query(Criteria.where("igdb_id").is(game.getIgdbId())), Game.class);
                     if (!exists) {
                         game.setCreatedAt(now);
                         game.setUpdatedAt(now);
@@ -141,4 +144,3 @@ public class InsertIgbdGameProcessor {
         logger.info("Finished IGDB new game insert.");
     }
 }
-

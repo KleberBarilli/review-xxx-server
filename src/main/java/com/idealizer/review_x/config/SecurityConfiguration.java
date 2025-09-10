@@ -5,6 +5,7 @@ import com.idealizer.review_x.security.jwt.JwtAuthTokenFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -15,13 +16,16 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import java.util.List;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfiguration {
-
     private AuthEntryPointJwt unauthorizedHandler;
-
     public SecurityConfiguration(AuthEntryPointJwt unauthorizedHandler) {
         this.unauthorizedHandler = unauthorizedHandler;
     }
@@ -32,25 +36,46 @@ public class SecurityConfiguration {
     }
 
     @Bean
-    SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
-
-        http.authorizeHttpRequests((requests)
-                -> requests
-                .requestMatchers("/api/csrf-token").permitAll()
-                .requestMatchers(
-                        "/api/public/**",
-                        "/api/users/public/**",
-                        "api/profile-games/public/**",
-                        "api/reviews/public/**"
+    SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http, OAuth2LoginSuccessHandler oAuth2LoginSuccessHandler,
+                                                   OAuth2LoginFailureHandler oAuth2LoginFailureHandler
+    ) throws Exception {
+        http
+                .csrf(csrf -> csrf
+                        .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+                        .ignoringRequestMatchers(
+                                "/api/users/signin",
+                                "/api/users/signup",
+                                "/api/users/mobile/signin"
                         )
-                .permitAll()
-                .requestMatchers("/api/users/signin").permitAll()
-                .requestMatchers("/api/users/signup").permitAll()
-                .anyRequest().authenticated());
+                        .ignoringRequestMatchers(req -> {
+                            String h = req.getHeader("Authorization");
+                            return h != null && h.startsWith("Bearer ");
+                        })
+                )
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/api/csrf-token").permitAll()
 
-        http.csrf(AbstractHttpConfigurer::disable);
-        http.exceptionHandling(exception ->
-                exception.authenticationEntryPoint(unauthorizedHandler));
+                        .requestMatchers(
+                                "/api/public/**",
+                                "/api/users/public/**",
+                                "/api/profile-games/public/**",
+                                "/api/reviews/public/**"
+                        ).permitAll()
+
+                        .requestMatchers(org.springframework.http.HttpMethod.POST,
+                                "/api/users/signin",
+                                "/api/users/signup",
+                                "/api/users/mobile/signin"
+                        ).permitAll()
+                        .anyRequest().authenticated()
+                )
+                .oauth2Login(o -> o
+                        .successHandler(oAuth2LoginSuccessHandler)
+                        .failureHandler(oAuth2LoginFailureHandler)
+                )
+                .cors(Customizer.withDefaults())
+                .exceptionHandling(ex -> ex.authenticationEntryPoint(unauthorizedHandler));
+
         http.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
@@ -75,10 +100,25 @@ public class SecurityConfiguration {
         return authConfig.getAuthenticationManager();
     }
 
-
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        var cfg = new CorsConfiguration();
+        cfg.setAllowedOrigins(List.of(
+                "http://localhost:3000",
+                "https://loggvault.com"
+        ));
+        cfg.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
+        cfg.setAllowedHeaders(List.of("Content-Type", "Authorization", "X-XSRF-TOKEN"));
+        cfg.setAllowCredentials(true);
+
+        var src = new UrlBasedCorsConfigurationSource();
+        src.registerCorsConfiguration("/**", cfg);
+        return src;
     }
 
 }

@@ -38,6 +38,7 @@ public class User {
     private String locale;
     @Field(value = "mobile_device")
     private MobileDeviceType mobileDevice;
+    private String signUpMethod;
 
     @Field(value = "follower_count")
     private long followerCount = 0L;
@@ -82,6 +83,14 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getSignUpMethod() {
+        return signUpMethod;
+    }
+
+    public void setSignUpMethod(String signUpMethod) {
+        this.signUpMethod = signUpMethod;
     }
 
     public String getBio() {

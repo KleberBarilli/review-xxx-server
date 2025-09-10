@@ -11,9 +11,12 @@ import com.idealizer.review_x.common.exceptions.DuplicatedException;
 import com.idealizer.review_x.infra.http.controllers.user.dto.LoginRequestDTO;
 import com.idealizer.review_x.infra.http.controllers.user.dto.SignupRequestDTO;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import org.springframework.context.i18n.LocaleContextHolder;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 
 import org.springframework.security.core.AuthenticationException;
@@ -52,8 +55,8 @@ public class UserController {
         this.messageUtil = messageUtil;
     }
 
-    @PostMapping("/signin")
-    public ResponseEntity<?> authenticateUser(@RequestBody @Valid LoginRequestDTO dto) {
+    @PostMapping("/mobile/signin")
+    public ResponseEntity<?> authenticateMobileUser(@RequestBody @Valid LoginRequestDTO dto) {
         try {
             LoginResponse response = signInUseCase.execute(dto.identifier(), dto.password());
             return ResponseEntity.ok(response);
@@ -64,6 +67,40 @@ public class UserController {
         }
 
     }
+
+    @PostMapping("/signin")
+    public ResponseEntity<?> authenticateUser(@RequestBody @Valid LoginRequestDTO dto) {
+        try {
+            LoginResponse response = signInUseCase.execute(dto.identifier(), dto.password());
+
+            boolean isProd = false; //todo env
+            ResponseCookie accessCookie = ResponseCookie.from("LV_AT", response.token())
+                    .httpOnly(true)
+                    .secure(isProd)
+                    .sameSite("Lax")
+                    .path("/")
+                    .maxAge(15 * 60)
+                    // .domain("loggvault.com")
+                    .build();
+
+            return ResponseEntity.ok()
+                    .header(HttpHeaders.SET_COOKIE, accessCookie.toString())
+                    .body(Map.of("ok", true));
+        } catch (AuthenticationException ex) {
+            Map<String, Object> map = new HashMap<>();
+            map.put("code", CommonError.INVALID_CREDENTIALS.code());
+            return new ResponseEntity<>(map, CommonError.INVALID_CREDENTIALS.status());
+        }
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<Void> logout(HttpServletResponse res) {
+        ResponseCookie clear = ResponseCookie.from("LV_AT", "")
+                .httpOnly(true).secure(false).sameSite("Lax").path("/").maxAge(0).build();
+        res.addHeader(HttpHeaders.SET_COOKIE, clear.toString());
+        return ResponseEntity.noContent().build();
+    }
+
 
     @PostMapping("/signup")
     public ResponseEntity<?> registerUser(@RequestBody @Valid SignupRequestDTO signupRequestDTO) {

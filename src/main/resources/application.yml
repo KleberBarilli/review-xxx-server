@@ -20,13 +20,13 @@ spring:
       name: "admin"
       password: "root"
 
-#    oauth2:
-#      client:
-#        registration:
-#          google:
-#            client-id: ${GOOGLE_CLIENT_ID}
-#            client-secret: ${GOOGLE_CLIENT_SECRET}
-#            scope: profile, email
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: ${GOOGLE_CLIENT_ID}
+            client-secret: ${GOOGLE_CLIENT_SECRET}
+            scope: profile, email
 #        provider:
 #          google:
 #            authorization-uri: https://accounts.google.com/o/oauth2/v2/auth
@@ -49,6 +49,8 @@ app:
   mongodb:
     games:
       uri: ${MONGODB_URI_GAMES}
+  frontend:
+    url: ${FRONTEND_URL}
 
 logging:
   pattern:
@@ -77,3 +79,6 @@ springdoc:
   override-with-generic-response: true
 server:
   port: 9090
+  error:
+    whitelabel:
+      enabled: false

@@ -41,6 +41,9 @@ public class JwtAuthTokenFilter extends OncePerRequestFilter {
 
         try {
             String jwt = parseJwt(request);
+            if(jwt == null){
+                jwt = getJwtFromCookie(request, "LV_AT");
+            }
             if (jwt != null && jwtUtils.validateJwtToken(jwt)) {
                 String username = jwtUtils.getUserNameFromJwtToken(jwt);
 
@@ -66,4 +69,21 @@ public class JwtAuthTokenFilter extends OncePerRequestFilter {
         String jwt = jwtUtils.getJwtFromHeader(request);
         return jwt;
     }
+
+    private String getJwtFromHeader(HttpServletRequest request) {
+        String headerAuth = request.getHeader("Authorization");
+        if (headerAuth != null && headerAuth.startsWith("Bearer ")) {
+            return headerAuth.substring(7);
+        }
+        return null;
+    }
+
+    private String getJwtFromCookie(HttpServletRequest request, String name) {
+        if (request.getCookies() == null) return null;
+        for (var c : request.getCookies()) {
+            if (name.equals(c.getName())) return c.getValue();
+        }
+        return null;
+    }
+
 }

@@ -76,7 +76,7 @@ public class UserController {
             boolean isProd = false; //todo env
             ResponseCookie accessCookie = ResponseCookie.from("LV_AT", response.token())
                     .httpOnly(true)
-                    .secure(isProd)      // HTTPS em prod
+                    .secure(isProd)
                     .sameSite("Lax")
                     .path("/")
                     .maxAge(15 * 60)
@@ -85,7 +85,7 @@ public class UserController {
 
             return ResponseEntity.ok()
                     .header(HttpHeaders.SET_COOKIE, accessCookie.toString())
-                    .body(Map.of("ok", true)); // ou .noContent().build()
+                    .body(Map.of("ok", true));
         } catch (AuthenticationException ex) {
             Map<String, Object> map = new HashMap<>();
             map.put("code", CommonError.INVALID_CREDENTIALS.code());

@@ -79,7 +79,7 @@ public class OAuth2LoginSuccessHandler extends SavedRequestAwareAuthenticationSu
 
 
             this.setAlwaysUseDefaultTargetUrl(true);
-            this.setDefaultTargetUrl(frontendUrl + "/games");
+            this.setDefaultTargetUrl(frontendUrl + "/redirect");
             super.onAuthenticationSuccess(request, response, authentication);
         } catch (Exception e) {
             response.setStatus(HttpServletResponse.SC_FOUND);

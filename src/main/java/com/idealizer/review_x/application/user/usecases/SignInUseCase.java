@@ -35,13 +35,9 @@ public class SignInUseCase {
                 new UsernamePasswordAuthenticationToken(identifier, password)
         );
         SecurityContextHolder.getContext().setAuthentication(auth);
-
         UserDetailsImpl principal = (UserDetailsImpl) auth.getPrincipal();
-
-        // Access curto (expiração configurada em JwtUtils.jwtExpirationMs)
         String access = jwtUtils.generateToken(principal);
 
-        // Refresh longo (cookie será setado no controller)
         var pair = refreshService.issue(principal.getId().toHexString(), null, refreshDays);
 
         List<String> roles = principal.getAuthorities().stream()

@@ -67,7 +67,7 @@ public class InsertIgbdGameProcessor {
         return provider.getAccessToken();
     }
 
-    @Scheduled(cron = "0 27 17 * * *", zone = "America/Sao_Paulo")
+    @Scheduled(cron = "0 45 17 * * *", zone = "America/Sao_Paulo")
 
     public void importGames() {
 

@@ -3,8 +3,6 @@ package com.idealizer.review_x.config;
 import com.idealizer.review_x.application.user.usecases.FindUserByEmailUseCase;
 import com.idealizer.review_x.application.user.usecases.SignUpUseCase;
 import com.idealizer.review_x.infra.http.controllers.user.dto.SignupRequestDTO;
-import com.idealizer.review_x.security.jwt.JwtUtils;
-import com.idealizer.review_x.security.services.UserDetailsImpl;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -16,75 +14,91 @@ import org.springframework.security.oauth2.client.authentication.OAuth2Authentic
 import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
-
 import java.io.IOException;
-
-
+import com.idealizer.review_x.domain.core.tokens.CookieUtil;
+import com.idealizer.review_x.domain.core.tokens.RefreshService;
+import java.util.Map;
+import java.util.Optional;
 
 @Component
 public class OAuth2LoginSuccessHandler extends SavedRequestAwareAuthenticationSuccessHandler {
 
     private final SignUpUseCase signUpUseCase;
     private final FindUserByEmailUseCase findUserByEmailUseCase;
-    private final JwtUtils jwtUtils;
+    private final RefreshService refreshService;
+    private final CookieUtil cookies;
 
     @Value("${app.frontend.url}")
     private String frontendUrl;
 
-    public OAuth2LoginSuccessHandler(SignUpUseCase signUpUseCase,
-                                     FindUserByEmailUseCase findUserByEmailUseCase,
-                                     JwtUtils jwtUtils) {
+    @Value("${auth.refresh.days:60}")
+    private int refreshDays;
+
+    private final String COOKIE_DOMAIN = System.getenv("COOKIE_DOMAIN");
+
+    public OAuth2LoginSuccessHandler(
+            SignUpUseCase signUpUseCase,
+            FindUserByEmailUseCase findUserByEmailUseCase,
+            RefreshService refreshService,
+            CookieUtil cookies
+    ) {
         this.signUpUseCase = signUpUseCase;
         this.findUserByEmailUseCase = findUserByEmailUseCase;
-        this.jwtUtils = jwtUtils;
+        this.refreshService = refreshService;
+        this.cookies = cookies;
     }
 
     @Override
-    public void onAuthenticationSuccess(HttpServletRequest request,
-                                        HttpServletResponse response,
-                                        Authentication authentication) throws IOException, ServletException {
+    public void onAuthenticationSuccess(
+            HttpServletRequest request,
+            HttpServletResponse response,
+            Authentication authentication
+    ) throws IOException, ServletException {
 
         try {
             OAuth2AuthenticationToken oauth = (OAuth2AuthenticationToken) authentication;
-            var principal = (DefaultOAuth2User) oauth.getPrincipal();
-            var attrs = principal.getAttributes();
+            DefaultOAuth2User principal = (DefaultOAuth2User) oauth.getPrincipal();
+            Map<String, Object> attrs = principal.getAttributes();
 
-            String email = String.valueOf(attrs.getOrDefault("email", ""));
-            String username = email.contains("@") ? email.substring(0, email.indexOf('@')) : "user";
-            var userOpt = findUserByEmailUseCase.execute(email);
+            String email = String.valueOf(attrs.getOrDefault("email", "")).trim();
+            if (email.isBlank()) {
+                response.sendRedirect(frontendUrl + "/auth/error?code=missing_email_scope");
+                return;
+            }
+
+            Optional<?> userOpt = findUserByEmailUseCase.execute(email);
             if (userOpt.isEmpty()) {
+                String username = email.contains("@") ? email.substring(0, email.indexOf('@')) : "user";
                 signUpUseCase.execute(new SignupRequestDTO(username, email, null, null, null, null));
             }
+
             var user = findUserByEmailUseCase.execute(email)
                     .orElseThrow(() -> new IllegalStateException("User not found after signup"));
 
-            var userDetails = new UserDetailsImpl(
-                    user.getId(),
-                    user.getName(),
-                    null,
-                    user.getEmail(),
-                    null
-            );
+            var pair = refreshService.issue(user.getId().toHexString(), null, refreshDays);
+            cookies.setRefreshCookie(response, pair.cookieValue(), refreshDays * 24 * 3600, COOKIE_DOMAIN);
 
-            String jwtToken = jwtUtils.generateToken(userDetails);
 
-            var cookie = ResponseCookie.from("LV_AT", jwtToken)
+            boolean isHttps = request.isSecure() || "true".equals(System.getenv("COOKIE_SECURE"));
+            String name = isHttps ? "__Host-refresh" : "refresh";
+
+            ResponseCookie cookie = ResponseCookie.from(name, pair.cookieValue())
                     .httpOnly(true)
-                    .secure(false)
+                    .secure(isHttps)
                     .sameSite("Lax")
                     .path("/")
-                    .maxAge(15 * 60)
+                    .maxAge(refreshDays * 24L * 3600L)
                     .build();
-            response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
 
+            response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
 
             this.setAlwaysUseDefaultTargetUrl(true);
             this.setDefaultTargetUrl(frontendUrl + "/redirect");
             super.onAuthenticationSuccess(request, response, authentication);
+
         } catch (Exception e) {
-            response.setStatus(HttpServletResponse.SC_FOUND);
+            logger.error(e);
             response.sendRedirect(frontendUrl + "/auth/error?code=token_issue_failed");
         }
-
     }
 }

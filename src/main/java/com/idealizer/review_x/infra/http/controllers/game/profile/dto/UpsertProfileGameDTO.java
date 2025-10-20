@@ -53,6 +53,14 @@ public class UpsertProfileGameDTO {
     @ValidUrl
     private List<String> favoriteScreenshots;
 
+    @Schema(defaultValue = "2025-07-25T12:00:00Z")
+    @PastOrPresent(message = "The start date cannot be in the future")
+    private Instant startedAt;
+
+    @Schema(defaultValue = "2025-07-30T12:00:00Z")
+    @PastOrPresent(message = "The finish date cannot be in the future")
+    private Instant finishedAt;
+
     @Schema(defaultValue = "GOTY 2025")
     @Size(min = 3, max = 50, message = "The title must be between 3 and 50 characters")
     private String reviewTitle;
@@ -69,19 +77,11 @@ public class UpsertProfileGameDTO {
     @Schema(defaultValue = "false")
     private Boolean reviewReplay;
 
-    @Schema(defaultValue = "2025-07-25T12:00:00Z")
-    @PastOrPresent(message = "The start date cannot be in the future")
-    private Instant reviewStartedAt;
-
-    @Schema(defaultValue = "2025-07-30T12:00:00Z")
-    @PastOrPresent(message = "The finish date cannot be in the future")
-    private Instant reviewFinishedAt;
-
     public UpsertProfileGameDTO(GamePlatform playedOn, PlatformType sourcePlatform, ProfileGameStatus status,
                                 Integer playtimeInMinutes, Boolean playing, Boolean liked, Boolean owned,
                                 Boolean wishlist, Boolean mastered, Integer rating, List<String> favoriteScreenshots, String reviewTitle,
                                 String reviewContent, Boolean reviewSpoiler, Boolean reviewReplay,
-                                Instant reviewStartedAt, Instant reviewFinishedAt) {
+                                Instant startedAt, Instant finishedAt) {
         this.playedOn = playedOn;
         this.sourcePlatform = sourcePlatform;
         this.status = status;
@@ -93,12 +93,12 @@ public class UpsertProfileGameDTO {
         this.mastered = mastered;
         this.rating = rating;
         this.favoriteScreenshots = favoriteScreenshots;
+        this.startedAt = startedAt;
+        this.finishedAt = finishedAt;
         this.reviewTitle = reviewTitle;
         this.reviewContent = reviewContent;
         this.reviewSpoiler = reviewSpoiler;
         this.reviewReplay = reviewReplay;
-        this.reviewStartedAt = reviewStartedAt;
-        this.reviewFinishedAt = reviewFinishedAt;
     }
 
     public GamePlatform getPlayedOn() {
@@ -145,6 +145,13 @@ public class UpsertProfileGameDTO {
         return favoriteScreenshots;
     }
 
+    public Instant getStartedAt() {
+        return startedAt;
+    }
+    public Instant getFinishedAt() {
+        return finishedAt;
+    }
+
     public String getReviewTitle() {
         return reviewTitle;
     }
@@ -161,11 +168,5 @@ public class UpsertProfileGameDTO {
         return reviewReplay;
     }
 
-    public Instant getReviewStartedAt() {
-        return reviewStartedAt;
-    }
 
-    public Instant getReviewFinishedAt() {
-        return reviewFinishedAt;
-    }
 }

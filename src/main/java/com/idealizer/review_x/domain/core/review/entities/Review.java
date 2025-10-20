@@ -64,12 +64,7 @@ public class Review {
     @Field(value = "like_count")
     private long likeCount = 0L;
 
-    @Field(value = "started_at")
-    @PastOrPresent
-    private Instant startedAt;
-    @Field(value = "finished_at")
-    @PastOrPresent
-    private Instant finishedAt;
+
     @Field(value = "created_at")
     @CreatedDate
     private Instant createdAt;
@@ -148,22 +143,6 @@ public class Review {
 
     public void setLikes(long likeCount) {
         this.likeCount = likeCount;
-    }
-
-    public Instant getStartedAt() {
-        return startedAt;
-    }
-
-    public void setStartedAt(Instant startedAt) {
-        this.startedAt = startedAt;
-    }
-
-    public Instant getFinishedAt() {
-        return finishedAt;
-    }
-
-    public void setFinishedAt(Instant finishedAt) {
-        this.finishedAt = finishedAt;
     }
 
     public Instant getCreatedAt() {

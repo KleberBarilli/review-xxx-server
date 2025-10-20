@@ -1,6 +1,8 @@
 package com.idealizer.review_x.application.games.profile.game.responses;
 
+import com.idealizer.review_x.domain.core.profile.game.entities.PlatformType;
 import com.idealizer.review_x.domain.core.profile.game.entities.ProfileGameStatus;
+import com.idealizer.review_x.domain.game.entities.enums.GamePlatform;
 
 import java.time.Instant;
 import java.util.List;
@@ -12,7 +14,15 @@ public record PublicProfileGameDetailedResponse(
         String gameCover,
         Integer rating,
         Boolean liked,
+        Boolean mastered,
+        Boolean backlog,
+        Boolean playing,
+        Boolean wishlist,
+        GamePlatform playedOn,
+        PlatformType sourcePlatform,
         Boolean hasReview,
+        Instant startedAt,
+        Instant finishedAt,
         ProfileGameStatus status,
         Integer favoriteOrder,
         Instant createdAt,

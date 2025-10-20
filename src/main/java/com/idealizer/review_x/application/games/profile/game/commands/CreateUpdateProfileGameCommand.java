@@ -5,6 +5,7 @@ import com.idealizer.review_x.domain.core.profile.game.entities.PlatformType;
 import com.idealizer.review_x.domain.core.profile.game.entities.ProfileGameStatus;
 import org.bson.types.ObjectId;
 
+import java.time.Instant;
 import java.util.List;
 
 public class CreateUpdateProfileGameCommand {
@@ -26,6 +27,8 @@ public class CreateUpdateProfileGameCommand {
     private List<String> favoriteScreenshots;
     private Boolean favorite;
     private Integer favoriteOrder;
+    private Instant startedAt;
+    private Instant finishedAt;
 
     private String gameName;
     private String gameSlug;
@@ -38,7 +41,7 @@ public class CreateUpdateProfileGameCommand {
             PlatformType sourcePlatform, GamePlatform playedOn, Boolean hasReview, ProfileGameStatus status,
             Integer playtimeInMinutes, Integer rating, Boolean playing, Boolean liked, Boolean owned, Boolean wishlist,
             Boolean mastered, List<String> favoriteScreenshots, Boolean favorite, int favoriteOrder, String gameName,
-            String gameSlug, String gameCover) {
+            String gameSlug, String gameCover, Instant startedAt, Instant finishedAt) {
         this.userId = userId;
         this.username = username;
         this.gameId = gameId;
@@ -59,6 +62,8 @@ public class CreateUpdateProfileGameCommand {
         this.gameName = gameName;
         this.gameSlug = gameSlug;
         this.gameCover = gameCover;
+        this.startedAt = startedAt;
+        this.finishedAt = finishedAt;
     }
 
     public ObjectId getUserId() {
@@ -219,5 +224,18 @@ public class CreateUpdateProfileGameCommand {
 
     public void setFavoriteOrder(Integer favoriteOrder) {
         this.favoriteOrder = favoriteOrder;
+    }
+
+    public Instant getStartedAt() {
+        return startedAt;
+    }
+    public void setStartedAt(Instant startedAt) {
+        this.startedAt = startedAt;
+    }
+    public Instant getFinishedAt() {
+        return finishedAt;
+    }
+    public void setFinishedAt(Instant finishedAt) {
+        this.finishedAt = finishedAt;
     }
 }

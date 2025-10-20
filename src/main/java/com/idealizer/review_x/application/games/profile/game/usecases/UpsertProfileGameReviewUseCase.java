@@ -58,8 +58,6 @@ public class UpsertProfileGameReviewUseCase {
         boolean hasReviewInRequest =
                 command.getReviewTitle() != null ||
                         command.getReviewContent() != null ||
-                        command.getReviewStartedAt() != null ||
-                        command.getReviewFinishedAt() != null ||
                         command.getReviewSpoiler() != null ||
                         command.getReviewReplay() != null;
 

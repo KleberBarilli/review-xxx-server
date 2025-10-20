@@ -2,6 +2,7 @@ package com.idealizer.review_x.domain.core.profile.game.entities;
 
 import com.idealizer.review_x.domain.game.entities.enums.GamePlatform;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.PastOrPresent;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
@@ -69,13 +70,22 @@ public class ProfileGame {
     @Field(value = "favorite_order")
     private Integer favoriteOrder;
     private Boolean owned;
+    private Boolean playing;
     private Boolean wishlist;
+    private Boolean backlog;
     private Boolean mastered;
     @Field(value = "has_review")
     private Boolean hasReview;
 
     @Field(value = "favorite_screenshots")
     private List<String> favoriteScreenshots;
+
+    @Field(value = "started_at")
+    @PastOrPresent
+    private Instant startedAt;
+    @Field(value = "finished_at")
+    @PastOrPresent
+    private Instant finishedAt;
 
     @Field(value = "created_at")
     @CreatedDate
@@ -176,6 +186,34 @@ public class ProfileGame {
 
     public void setOwned(Boolean owned) {
         this.owned = owned;
+    }
+    public Boolean getPlaying() {
+        return playing;
+    }
+    public void setPlaying(Boolean playing) {
+        this.playing = playing;
+    }
+    public Boolean getBacklog() {
+        return backlog;
+    }
+    public void setBacklog(Boolean backlog) {
+        this.backlog = backlog;
+    }
+
+    public Instant getStartedAt() {
+        return startedAt;
+    }
+
+    public void setStartedAt(Instant startedAt) {
+        this.startedAt = startedAt;
+    }
+
+    public Instant getFinishedAt() {
+        return finishedAt;
+    }
+
+    public void setFinishedAt(Instant finishedAt) {
+        this.finishedAt = finishedAt;
     }
 
     public Boolean getWishlist() {

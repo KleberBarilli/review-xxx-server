@@ -26,14 +26,15 @@ public class UpsertProfileGameReviewCommand {
     private Boolean wishlist;
     private Boolean mastered;
     private List<String> favoriteScreenshots;
+    private Instant startedAt;
+    private Instant finishedAt;
 
     private String reviewTitle;
     private LogID reviewType;
     private String reviewContent;
     private Boolean reviewSpoiler;
     private Boolean reviewReplay;
-    private Instant reviewStartedAt;
-    private Instant reviewFinishedAt;
+
 
     public UpsertProfileGameReviewCommand() {
     }
@@ -43,8 +44,8 @@ public class UpsertProfileGameReviewCommand {
             String targetName, String targetSlug, ProfileGameStatus status, Integer playtimeInMinutes,
             Integer rating, Boolean playing, Boolean liked, Boolean owned, Boolean wishlist,
             Boolean mastered, List<String> favoriteScreenshots, String reviewTitle, LogID reviewType, String reviewContent,
-            Boolean reviewSpoiler, Boolean reviewReplay, Instant reviewStartedAt,
-            Instant reviewFinishedAt) {
+            Boolean reviewSpoiler, Boolean reviewReplay, Instant startedAt,
+            Instant finishedAt) {
         this.userId = userId;
         this.targetId = targetId;
         this.sourcePlatform = sourcePlatform;
@@ -65,8 +66,8 @@ public class UpsertProfileGameReviewCommand {
         this.reviewContent = reviewContent;
         this.reviewSpoiler = reviewSpoiler;
         this.reviewReplay = reviewReplay;
-        this.reviewStartedAt = reviewStartedAt;
-        this.reviewFinishedAt = reviewFinishedAt;
+        this.startedAt = startedAt;
+        this.finishedAt = finishedAt;
     }
 
     public ObjectId getUserId() {
@@ -223,20 +224,20 @@ public class UpsertProfileGameReviewCommand {
         this.reviewReplay = reviewReplay;
     }
 
-    public Instant getReviewStartedAt() {
-        return reviewStartedAt;
+    public Instant getStartedAt() {
+        return startedAt;
     }
 
-    public void setReviewStartedAt(Instant reviewStartedAt) {
-        this.reviewStartedAt = reviewStartedAt;
+    public void setStartedAt(Instant StartedAt) {
+        this.startedAt = StartedAt;
     }
 
-    public Instant getReviewFinishedAt() {
-        return reviewFinishedAt;
+    public Instant getFinishedAt() {
+        return finishedAt;
     }
 
-    public void setReviewFinishedAt(Instant reviewFinishedAt) {
-        this.reviewFinishedAt = reviewFinishedAt;
+    public void setFinishedAt(Instant finishedAt) {
+        this.finishedAt = finishedAt;
     }
 
     public LogID getReviewType() {

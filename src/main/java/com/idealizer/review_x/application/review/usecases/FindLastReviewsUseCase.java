@@ -43,11 +43,8 @@ public class FindLastReviewsUseCase {
                 .map(ObjectId::new)
                 .toList();
 
-
         Map<String, SimpleProfileGame> pgMap = profileGameRepository.findByIdIn(pgObjectIds).stream()
                 .collect(Collectors.toMap(SimpleProfileGame::getId, Function.identity()));
-
-
 
         return reviews.stream().map(r -> {
             SimpleProfileGame pg = pgMap.get(r.getProfileTargetId());

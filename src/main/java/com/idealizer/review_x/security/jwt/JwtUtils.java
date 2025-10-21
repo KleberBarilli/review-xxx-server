@@ -42,20 +42,20 @@ public class JwtUtils {
         return null;
     }
 
-    public String generateToken(UserDetailsImpl p) {
+    public String generateToken(UserDetailsImpl p, long ttlMillis, Map<String, Object> extraClaims) {
         Instant now = Instant.now();
-        Instant exp = now.plusMillis(jwtExpirationMs);
+        Instant exp = now.plusMillis(ttlMillis);
 
         Map<String, Object> claims = new HashMap<>();
-        if (p.getUsername() != null)
-            claims.put("username", p.getUsername());
-        if (p.getFullName() != null)
-            claims.put("fullName", p.getFullName());
-        if (p.getEmail() != null)
-            claims.put("email", p.getEmail());
+        if (p.getUsername() != null) claims.put("username", p.getUsername());
+        if (p.getFullName() != null) claims.put("fullName", p.getFullName());
+        if (p.getEmail() != null) claims.put("email", p.getEmail());
         if (p.getAuthorities() != null && !p.getAuthorities().isEmpty()) {
             claims.put("roles", p.getAuthorities().stream()
                     .map(GrantedAuthority::getAuthority).toList());
+        }
+        if (extraClaims != null && !extraClaims.isEmpty()) {
+            claims.putAll(extraClaims);
         }
 
         return Jwts.builder()
@@ -65,6 +65,11 @@ public class JwtUtils {
                 .claims(claims)
                 .signWith(key())
                 .compact();
+    }
+
+    public String generateToken(UserDetailsImpl p) {
+        Map<String, Object> webClaims = Map.of("aud", "web", "typ", "access");
+        return generateToken(p, jwtExpirationMs, webClaims);
     }
 
     public String getUserNameFromJwtToken(String token) {
@@ -82,10 +87,6 @@ public class JwtUtils {
         return claims.getSubject();
     }
 
-    private Key key() {
-        return Keys.hmacShaKeyFor(Decoders.BASE64.decode(jwtSecret));
-    }
-
     public boolean validateJwtToken(String authToken) {
         try {
             Jwts.parser().verifyWith((SecretKey) key()).build().parseSignedClaims(authToken);
@@ -100,5 +101,9 @@ public class JwtUtils {
             logger.error("JWT claims string is empty: {}", e.getMessage());
         }
         return false;
+    }
+
+    private Key key() {
+        return Keys.hmacShaKeyFor(Decoders.BASE64.decode(jwtSecret));
     }
 }

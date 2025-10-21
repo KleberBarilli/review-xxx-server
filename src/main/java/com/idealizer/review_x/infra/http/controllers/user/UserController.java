@@ -1,5 +1,6 @@
 package com.idealizer.review_x.infra.http.controllers.user;
 
+import com.idealizer.review_x.application.user.responses.AccessTokenResponse;
 import com.idealizer.review_x.application.user.responses.FindUserResponse;
 import com.idealizer.review_x.application.user.responses.LoginResponse;
 import com.idealizer.review_x.application.user.usecases.*;
@@ -36,16 +37,16 @@ public class UserController {
     private final Logger logger = Logger.getLogger(UserController.class.getName());
 
     private final SignUpUseCase signUpUseCase;
-    private final SignInUseCase signInUseCase;
+    private final MobileSignInUseCase mobileSignInUseCase;
     private final FindUserByNameUseCase findUserByNameUseCase;
     private final UploadAvatarUseCase uploadAvatarUseCase;
     private final RemoveAvatarUseCase removeAvatarUseCase;
     private final MessageUtil messageUtil;
 
-    public UserController(SignUpUseCase signUpUseCase, SignInUseCase signInUseCase, FindUserByNameUseCase findUserByNameUseCase,
+    public UserController(SignUpUseCase signUpUseCase, MobileSignInUseCase mobileSignInUseCase, FindUserByNameUseCase findUserByNameUseCase,
                           UploadAvatarUseCase uploadAvatarUseCase, RemoveAvatarUseCase removeAvatarUseCase, MessageUtil messageUtil) {
         this.signUpUseCase = signUpUseCase;
-        this.signInUseCase = signInUseCase;
+        this.mobileSignInUseCase = mobileSignInUseCase;
         this.findUserByNameUseCase = findUserByNameUseCase;
         this.uploadAvatarUseCase = uploadAvatarUseCase;
         this.removeAvatarUseCase = removeAvatarUseCase;
@@ -55,7 +56,7 @@ public class UserController {
     @PostMapping("/mobile/signin")
     public ResponseEntity<?> authenticateMobileUser(@RequestBody @Valid LoginRequestDTO dto) {
         try {
-            LoginResponse response = signInUseCase.execute(dto.identifier(), dto.password());
+            AccessTokenResponse response = mobileSignInUseCase.execute(dto.identifier(), dto.password());
             return ResponseEntity.ok(response);
         } catch (AuthenticationException exception) {
             Map<String, Object> map = new HashMap<>();

@@ -113,9 +113,9 @@ public class AuthController {
                 refreshService.detectReuseAndRevokeFamilyIfNeeded(value)
         );
 
-        cookies.clearHostRefresh(res);               // apaga __Host-refresh (sem Domain, Secure, Strict, Path=/)
-        cookies.clearDevRefresh(res, null);          // apaga refresh (em localhost NÃO use domain; passe null)
-        cookies.clearJSessionId(res, false);         // opcional: expira o JSESSIONID (true em prod https)
+        cookies.clearHostRefresh(res);
+        cookies.clearDevRefresh(res, null);
+        cookies.clearJSessionId(res, false);
 
         return ResponseEntity.noContent().build();
     }

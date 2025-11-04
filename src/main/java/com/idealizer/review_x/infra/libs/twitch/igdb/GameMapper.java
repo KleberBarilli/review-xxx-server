@@ -19,6 +19,19 @@ public class GameMapper {
         game.setParentIgdbId(dto.parentIgdbId());
         game.setStoryline(dto.storyline());
         game.setName(dto.name());
+        if (dto.screenshots() != null) {
+            List<String> shots = dto.screenshots().stream()
+                    .filter(Objects::nonNull)
+                    .map(sc -> sc.imageId())
+                    .filter(Objects::nonNull)
+                    .distinct()
+                    .limit(5)
+                    .toList();
+
+            if (!shots.isEmpty()) {
+                game.setScreenshots(shots);
+            }
+        }
         String incomingSlug = dto.slug();
         String safeSlug = NormalizeSlugs.normalize(
                 (incomingSlug == null || incomingSlug.isBlank()) ? dto.name() : incomingSlug);
@@ -26,7 +39,6 @@ public class GameMapper {
         Optional.ofNullable(dto.gameStatus())
                 .map(GameStatus::fromIgdbStatus)
                 .ifPresent(game::setStatus);
-
         Optional.ofNullable(dto.gameType())
                 .map(GameType::fromId)
                 .ifPresent(game::setType);

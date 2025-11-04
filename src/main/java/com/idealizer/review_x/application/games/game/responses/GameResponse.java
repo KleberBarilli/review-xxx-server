@@ -16,6 +16,8 @@ public class GameResponse {
     private String name;
     private List<AlternativeName> alternativeNames;
     private String slug;
+    private String storyline;
+    private List<String> screenshots;
     private GameType type;
     private GameStatus status;
 
@@ -57,6 +59,22 @@ public class GameResponse {
 
     public String getName() {
         return name;
+    }
+
+    public String getStoryline() {
+        return storyline;
+    }
+
+    public void setStoryline(String storyline) {
+        this.storyline = storyline;
+    }
+
+    public List<String> getScreenshots() {
+        return screenshots;
+    }
+
+    public void setScreenshots(List<String> screenshots) {
+        this.screenshots = screenshots;
     }
 
     public void setName(String name) {

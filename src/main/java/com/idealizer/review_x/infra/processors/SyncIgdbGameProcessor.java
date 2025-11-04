@@ -67,7 +67,7 @@ public class SyncIgdbGameProcessor {
         return provider.getAccessToken();
     }
 
-    @Scheduled(cron = "0 01 04 * * *", zone = "America/Sao_Paulo")
+    @Scheduled(cron = "0 31 00 * * *", zone = "America/Sao_Paulo")
     public void syncGames() {
         logger.info("Starting game synchronization from IGDB...");
         String accessToken = getAccessToken();
@@ -76,7 +76,6 @@ public class SyncIgdbGameProcessor {
 
         long updatedSince = now.minus(48, ChronoUnit.HOURS).getEpochSecond();
         Instant oneDayAgo = now.minus(1, ChronoUnit.DAYS);
-
         int offset = 0;
         int page = 1;
 
@@ -86,7 +85,7 @@ public class SyncIgdbGameProcessor {
                              fields id,name,slug,first_release_date,storyline,total_rating,total_rating_count,genres,
                             game_modes,cover.image_id,platforms,expansions,updated_at,
                             involved_companies.developer,involved_companies.company.name,
-                            videos.name,videos.video_id,game_status,game_type, parent_game;
+                            videos.name,videos.video_id,game_status,game_type, parent_game, storyline, screenshots.image_id;
                                 where updated_at > %d & game_type = (0,2,8,9);
                                 sort id asc;
                                 limit %d;
@@ -128,6 +127,7 @@ public class SyncIgdbGameProcessor {
 
                     Update update = new Update()
                             .set("name", mapped.getName())
+                            .set("storyline", mapped.getStoryline())
                             .set("type", mapped.getType())
                             .set("status", mapped.getStatus())
                             .set("totalRating", mapped.getTotalRating())
@@ -142,6 +142,11 @@ public class SyncIgdbGameProcessor {
                     Updates.setIfNotNull(update, "developer", mapped.getDeveloper());
                     Updates.setIfNotNull(update, "trailerUrl", mapped.getTrailerUrl());
 
+                    var screenshots = mapped.getScreenshots();
+                    if (screenshots != null && !screenshots.isEmpty()) {
+                        var top5 = screenshots.stream().limit(5).toList();
+                        update.set("screenshots", top5);
+                    }
                     bulkOps.updateOne(q, update);
                     hasUpdates = true;
                 }

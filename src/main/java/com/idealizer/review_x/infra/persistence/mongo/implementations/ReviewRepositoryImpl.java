@@ -38,7 +38,6 @@ public class ReviewRepositoryImpl implements ReviewRepositoryCustom {
                 @Override public Document toDocument(AggregationOperationContext ctx) { return doc; }
         }
 
-        // -------- utils para $ifNull aninhado (camel + snake + aliases) ----------
         private static Document ifNull(Document a, Object b) { return new Document("$ifNull", Arrays.asList(a, b)); }
         private static Document field(String name) { return new Document("$ifNull", Arrays.asList("$" + name, null)); }
 
@@ -50,10 +49,8 @@ public class ReviewRepositoryImpl implements ReviewRepositoryCustom {
 
                 String pgColl = coreMongo.getCollectionName(ProfileGame.class);
 
-                // uid = $userId || $user_id
                 Document uidExpr = ifNull(field("userId"), "$user_id");
 
-                // gid = $gameId || $game_id || $targetId || $target_id   (reviews usam target_id)
                 Document gid1 = ifNull(field("gameId"), "$game_id");
                 Document gid2 = ifNull(field("targetId"), "$target_id");
                 Document gidExpr = new Document("$ifNull", Arrays.asList(gid1, gid2));
@@ -90,6 +87,7 @@ public class ReviewRepositoryImpl implements ReviewRepositoryCustom {
                                                 new Document("_id", 0)
                                                         .append("rating", 1)
                                                         .append("liked", 1)
+                                                        .append("mastered", 1)
                                                         .append("status", 1)
                                                         .append("updated_at", 1)
                                         )
@@ -101,10 +99,10 @@ public class ReviewRepositoryImpl implements ReviewRepositoryCustom {
                         new Document("pg", new Document("$arrayElemAt", Arrays.asList("$pg", 0))))
                 ));
 
-                // rating/liked/status vêm do PG; se PG não existir, mantém o que houver no doc (ou null)
                 pre.add(new RawAggregationOperation(new Document("$addFields",
                         new Document("rating", new Document("$ifNull", Arrays.asList("$pg.rating", "$rating")))
                                 .append("liked",  new Document("$ifNull", Arrays.asList("$pg.liked",  "$liked")))
+                                .append("mastered",  new Document("$ifNull", Arrays.asList("$pg.mastered",  "mastered")))
                                 .append("status", new Document("$ifNull", Arrays.asList("$pg.status", "$status"))))
                 ));
 
@@ -145,7 +143,6 @@ public class ReviewRepositoryImpl implements ReviewRepositoryCustom {
                 sortAndPage.add(Aggregation.skip((long) page * size));
                 sortAndPage.add(Aggregation.limit(size));
 
-                // $project final — sempre referência, nunca literal 1
                 sortAndPage.add(new RawAggregationOperation(new Document("$project",
                         new Document()
                                 .append("id", "$_id")
@@ -163,6 +160,7 @@ public class ReviewRepositoryImpl implements ReviewRepositoryCustom {
                                 .append("finishedAt",  new Document("$ifNull", Arrays.asList("$finishedAt",  "$finished_at")))
                                 .append("rating", "$rating")
                                 .append("liked",  "$liked")
+                                .append("mastered", "$mastered")
                                 .append("status", "$status")
                 )));
 
@@ -215,6 +213,7 @@ public class ReviewRepositoryImpl implements ReviewRepositoryCustom {
                                                 new Document("_id", 0)
                                                         .append("rating", 1)
                                                         .append("liked", 1)
+                                                        .append("mastered", 1)
                                                         .append("status", 1)
                                                         .append("updated_at", 1)
                                         )
@@ -228,6 +227,7 @@ public class ReviewRepositoryImpl implements ReviewRepositoryCustom {
                 base.add(new RawAggregationOperation(new Document("$addFields",
                         new Document("rating", new Document("$ifNull", Arrays.asList("$pg.rating", "$rating")))
                                 .append("liked",  new Document("$ifNull", Arrays.asList("$pg.liked",  "$liked")))
+                                .append("mastered",  new Document("$ifNull", Arrays.asList("$pg.mastered",  "$mastered")))
                                 .append("status", new Document("$ifNull", Arrays.asList("$pg.status", "$status"))))
                 ));
 
@@ -285,7 +285,8 @@ public class ReviewRepositoryImpl implements ReviewRepositoryCustom {
                                 .append("targetSlug",  new Document("$ifNull", Arrays.asList("$targetSlug",  "$target_slug")))
                                 .append("targetCover", new Document("$ifNull", Arrays.asList("$targetCover", "$target_cover")))
                                 .append("rating", "$rating")
-                                .append("liked",  "$liked")
+                                .append("liked", "$liked")
+                                .append("mastered", "$mastered")
                                 .append("status", "$status")
                                 .append("eventType", "$events.type")
                                 .append("eventAt", "$events.at")

@@ -55,6 +55,7 @@ public class Game {
     @Indexed
     private String developer;
     private String trailerUrl;
+    private List<String> screenshots;
     @Field(value = "time_to_beat")
     private GameTimeToBeat timeToBeat;
     @Field(value = "created_at")
@@ -119,6 +120,14 @@ public class Game {
 
     public List<String> getAliases() {
         return aliases;
+    }
+
+    public List<String> getScreenshots() {
+        return screenshots;
+    }
+
+    public void setScreenshots(List<String> screenshots) {
+        this.screenshots = screenshots;
     }
 
     public void setAliases(List<String> aliases) {

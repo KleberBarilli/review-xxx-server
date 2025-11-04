@@ -12,6 +12,7 @@ public interface BaseReview {
     String getTargetSlug();
     String getTargetCover();
     Boolean getLiked();
+    Boolean getMastered();
     String getContent();
     Boolean getSpoiler();
     Boolean getReplay();

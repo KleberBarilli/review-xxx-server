@@ -27,4 +27,6 @@ public interface ProfileGameRepository extends MongoRepository<ProfileGame, Obje
     List<ProfileGame> findByUserIdAndGameIdIn(ObjectId userId, List<ObjectId> gameIds);
 
     List<SimpleProfileGame> findByIdIn(List<ObjectId> ids);
+
+    List<SimpleProfileGame> findProjectedByIdIn(List<ObjectId> ids);
 }

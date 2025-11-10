@@ -61,8 +61,6 @@ public class ProfileGame {
     private ProfileGameStatus status;
 
     @Indexed
-    @Field(value = "playtime_in_minutes")
-    private Integer playtimeInMinutes;
     private Integer rating;
 
     private Boolean liked;
@@ -156,13 +154,7 @@ public class ProfileGame {
         this.status = status;
     }
 
-    public Integer getPlaytimeInMinutes() {
-        return playtimeInMinutes;
-    }
 
-    public void setPlaytimeInMinutes(Integer playtimeInMinutes) {
-        this.playtimeInMinutes = playtimeInMinutes;
-    }
 
     public Integer getRating() {
         return rating;

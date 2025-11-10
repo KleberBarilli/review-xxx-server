@@ -18,7 +18,6 @@ public class UpsertProfileGameReviewCommand {
     private String targetName;
     private String targetSlug;
     private ProfileGameStatus status;
-    private Integer playtimeInMinutes;
     private Integer rating;
     private Boolean playing;
     private Boolean liked;
@@ -41,7 +40,7 @@ public class UpsertProfileGameReviewCommand {
 
     public UpsertProfileGameReviewCommand(ObjectId userId, ObjectId targetId, PlatformType sourcePlatform,
             GamePlatform playedOn,
-            String targetName, String targetSlug, ProfileGameStatus status, Integer playtimeInMinutes,
+            String targetName, String targetSlug, ProfileGameStatus status,
             Integer rating, Boolean playing, Boolean liked, Boolean owned, Boolean wishlist,
             Boolean mastered, List<String> favoriteScreenshots, String reviewTitle, LogID reviewType, String reviewContent,
             Boolean reviewSpoiler, Boolean reviewReplay, Instant startedAt,
@@ -53,7 +52,6 @@ public class UpsertProfileGameReviewCommand {
         this.targetName = targetName;
         this.targetSlug = targetSlug;
         this.status = status;
-        this.playtimeInMinutes = playtimeInMinutes;
         this.rating = rating;
         this.playing = playing;
         this.liked = liked;
@@ -126,14 +124,6 @@ public class UpsertProfileGameReviewCommand {
 
     public void setStatus(ProfileGameStatus status) {
         this.status = status;
-    }
-
-    public Integer getPlaytimeInMinutes() {
-        return playtimeInMinutes;
-    }
-
-    public void setPlaytimeInMinutes(Integer playtimeInMinutes) {
-        this.playtimeInMinutes = playtimeInMinutes;
     }
 
     public Integer getRating() {

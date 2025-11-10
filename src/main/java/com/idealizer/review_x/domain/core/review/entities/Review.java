@@ -1,7 +1,6 @@
 package com.idealizer.review_x.domain.core.review.entities;
 
 import com.idealizer.review_x.domain.core.LogID;
-import jakarta.validation.constraints.PastOrPresent;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
@@ -39,7 +38,9 @@ import java.time.Instant;
         @CompoundIndex(
                 name = "reviews_user_finished_idx",
                 def  = "{'username': 1, 'finished_at': -1, '_id': -1}"
-        )
+        ),
+        @CompoundIndex(name = "reviews_user_created_global_idx",
+                def = "{'user_id': 1, 'created_at': -1, '_id': -1}")
 })
 public class Review {
     @Id

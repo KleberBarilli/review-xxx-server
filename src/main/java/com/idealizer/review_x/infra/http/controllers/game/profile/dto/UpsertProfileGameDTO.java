@@ -24,10 +24,6 @@ public class UpsertProfileGameDTO {
     @Schema(defaultValue = "COMPLETED")
     private ProfileGameStatus status;
 
-    @Schema(defaultValue = "1000")
-    @Min(1)
-    @Max(3000000)
-    private Integer playtimeInMinutes;
 
     @Schema(defaultValue = "false")
     private Boolean playing;
@@ -77,15 +73,14 @@ public class UpsertProfileGameDTO {
     @Schema(defaultValue = "false")
     private Boolean reviewReplay;
 
-    public UpsertProfileGameDTO(GamePlatform playedOn, PlatformType sourcePlatform, ProfileGameStatus status,
-                                Integer playtimeInMinutes, Boolean playing, Boolean liked, Boolean owned,
+    public UpsertProfileGameDTO(GamePlatform playedOn, PlatformType sourcePlatform, ProfileGameStatus status
+                                , Boolean playing, Boolean liked, Boolean owned,
                                 Boolean wishlist, Boolean mastered, Integer rating, List<String> favoriteScreenshots, String reviewTitle,
                                 String reviewContent, Boolean reviewSpoiler, Boolean reviewReplay,
                                 Instant startedAt, Instant finishedAt) {
         this.playedOn = playedOn;
         this.sourcePlatform = sourcePlatform;
         this.status = status;
-        this.playtimeInMinutes = playtimeInMinutes;
         this.playing = playing;
         this.liked = liked;
         this.owned = owned;
@@ -113,9 +108,6 @@ public class UpsertProfileGameDTO {
         return status;
     }
 
-    public Integer getPlaytimeInMinutes() {
-        return playtimeInMinutes;
-    }
 
     public Boolean getPlaying() {
         return playing;

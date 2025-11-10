@@ -63,7 +63,7 @@ logging:
     root: warn
     io:
       lettuce:
-        core: DEBUG
+        core: WARN
     com:
       idealizer:
         review_x: trace

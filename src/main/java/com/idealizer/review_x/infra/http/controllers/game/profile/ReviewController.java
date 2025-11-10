@@ -1,5 +1,8 @@
 package com.idealizer.review_x.infra.http.controllers.game.profile;
 
+import com.idealizer.review_x.application.review.responses.LastReviewItemResponse;
+import com.idealizer.review_x.application.review.usecases.FindLastReviewsByUserUseCase;
+import com.idealizer.review_x.application.review.usecases.FindLastReviewsUseCase;
 import com.idealizer.review_x.application.review.usecases.FindReviewByUsernameUseCase;
 import com.idealizer.review_x.application.review.usecases.FindTimelineByUsernameUseCase;
 import com.idealizer.review_x.common.dtos.FindTimelineDTO;
@@ -21,12 +24,15 @@ public class ReviewController {
 
     private final FindReviewByUsernameUseCase findReviewByUsernameUseCase;
     private final FindTimelineByUsernameUseCase findTimelineByUsernameUseCase;
+    private final FindLastReviewsUseCase findLastReviewsUseCase;
 
     public ReviewController(FindReviewByUsernameUseCase findReviewByUsernameUseCase,
-                            FindTimelineByUsernameUseCase timelineByUsernameUseCase
+                            FindTimelineByUsernameUseCase timelineByUsernameUseCase,
+                            FindLastReviewsUseCase findLastReviewsUseCase
     ) {
         this.findReviewByUsernameUseCase = findReviewByUsernameUseCase;
         this.findTimelineByUsernameUseCase = timelineByUsernameUseCase;
+        this.findLastReviewsUseCase = findLastReviewsUseCase;
     }
 
     @GetMapping("public/{username}")
@@ -61,5 +67,10 @@ public class ReviewController {
     ) {
         FindTimelineDTO dto = new FindTimelineDTO(pageNumber, limit, sort, order, year, types );
         return findTimelineByUsernameUseCase.execute(username, dto);
+    }
+
+    @GetMapping("/public/last")
+    public List<LastReviewItemResponse>  getLastReviews(){
+        return this.findLastReviewsUseCase.execute();
     }
 }

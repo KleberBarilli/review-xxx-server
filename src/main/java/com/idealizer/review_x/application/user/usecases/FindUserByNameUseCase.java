@@ -1,7 +1,7 @@
 package com.idealizer.review_x.application.user.usecases;
 
 import com.idealizer.review_x.application.review.responses.LastReviewItemResponse;
-import com.idealizer.review_x.application.review.usecases.FindLastReviewsUseCase;
+import com.idealizer.review_x.application.review.usecases.FindLastReviewsByUserUseCase;
 import com.idealizer.review_x.application.user.mappers.UserMapper;
 import com.idealizer.review_x.application.user.responses.FindUserResponse;
 import com.idealizer.review_x.common.dtos.FindUserArgsDTO;
@@ -18,15 +18,15 @@ public class FindUserByNameUseCase {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
     private final ProfileGameRepository profileGameRepository;
-    private final FindLastReviewsUseCase findLastReviewsUseCase;
+    private final FindLastReviewsByUserUseCase findLastReviewsByUserUseCase;
 
     public FindUserByNameUseCase(
             UserRepository userRepository, UserMapper userMapper,
-            ProfileGameRepository profileGameRepository, FindLastReviewsUseCase findLastReviewsUseCase) {
+            ProfileGameRepository profileGameRepository, FindLastReviewsByUserUseCase findLastReviewsByUserUseCase) {
         this.userRepository = userRepository;
         this.userMapper = userMapper;
         this.profileGameRepository = profileGameRepository;
-        this.findLastReviewsUseCase = findLastReviewsUseCase;
+        this.findLastReviewsByUserUseCase = findLastReviewsByUserUseCase;
 
     }
 
@@ -49,7 +49,7 @@ public class FindUserByNameUseCase {
 
         if (args.lastReviews()) {
             List<LastReviewItemResponse> lastReviews =
-                    findLastReviewsUseCase.execute(userId);
+                    findLastReviewsByUserUseCase.execute(userId);
             user.setLastReviews(lastReviews);
         }
 

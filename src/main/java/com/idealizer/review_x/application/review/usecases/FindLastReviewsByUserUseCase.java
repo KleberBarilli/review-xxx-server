@@ -16,24 +16,20 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Service
-public class FindLastReviewsUseCase {
+public class FindLastReviewsByUserUseCase {
 
     private final ReviewRepository reviewRepository;
     private final ProfileGameRepository profileGameRepository;
 
-    public FindLastReviewsUseCase(ReviewRepository reviewRepository,
-                                  ProfileGameRepository profileGameRepository) {
+    public FindLastReviewsByUserUseCase(ReviewRepository reviewRepository, ProfileGameRepository profileGameRepository) {
         this.reviewRepository = reviewRepository;
         this.profileGameRepository = profileGameRepository;
     }
 
-    /**
-     * Retorna sempre os últimos 20 reviews globais (GAMES).
-     */
-    public List<LastReviewItemResponse> execute() {
-        List<SimpleProfileReview> reviews =
-                reviewRepository.findTop20ByTargetTypeOrderByCreatedAtDesc(LogID.GAMES);
+    public List<LastReviewItemResponse> execute(ObjectId userId) {
 
+        List<SimpleProfileReview> reviews = reviewRepository
+                .findTop5ByUserIdOrderByCreatedAtDesc(userId);
         if (reviews.isEmpty()) return List.of();
 
         List<String> pgIds = reviews.stream()
@@ -49,8 +45,9 @@ public class FindLastReviewsUseCase {
 
         Map<String, SimpleProfileGame> pgMap = profileGameRepository.findByIdIn(pgObjectIds).stream()
                 .collect(Collectors.toMap(SimpleProfileGame::getId, Function.identity()));
+
         return reviews.stream().map(r -> {
-            SimpleProfileGame pg = r.getProfileTargetId() != null ? pgMap.get(r.getProfileTargetId()) : null;
+            SimpleProfileGame pg = pgMap.get(r.getProfileTargetId());
             return new LastReviewItemResponse(
                     pg != null ? pg.getGameId() : null,
                     r.getProfileTargetId() != null ? r.getProfileTargetId() : null,

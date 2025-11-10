@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/feed")
+@RequestMapping("/api/feed")
 public class FeedController {
 
     private final FollowingFeedService feedService;
@@ -33,5 +33,6 @@ public class FeedController {
 
         return feedService.execute(userId, page, size);
     }
+
 
 }

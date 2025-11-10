@@ -26,4 +26,6 @@ public interface ReviewRepository extends MongoRepository<Review, ObjectId>, Rev
     long findAndModifyById(ObjectId id, int delta);
 
     Page<SimpleReview> findProjectedByUserIdIn(List<ObjectId> userIds, Pageable pageable);
+
+    List<SimpleProfileReview> findTop20ByTargetTypeOrderByCreatedAtDesc(LogID targetType);
 }

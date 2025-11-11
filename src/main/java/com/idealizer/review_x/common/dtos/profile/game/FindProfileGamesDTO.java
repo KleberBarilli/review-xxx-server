@@ -14,6 +14,8 @@ public record FindProfileGamesDTO(
         Boolean owned,
         Boolean mastered,
         Boolean liked,
+        Boolean backlog,
+        Boolean playing,
         Integer ratingMin,
         Integer ratingMax
 ) {

@@ -101,13 +101,15 @@ public class ProfileGameController {
             @RequestParam(required = false) Boolean owned,
             @RequestParam(required = false) Boolean mastered,
             @RequestParam(required = false) Boolean liked,
+            @RequestParam(required = false) Boolean backlog,
+            @RequestParam(required = false) Boolean playing,
             @RequestParam(required = false) Integer ratingMin,
             @RequestParam(required = false) Integer ratingMax
     ) {
 
         FindProfileGamesDTO f = new FindProfileGamesDTO(
                 pageNumber, limit, sort, order,
-                status, wishlist, owned, mastered, liked, ratingMin, ratingMax
+                status, wishlist, owned, mastered, liked, backlog, playing, ratingMin, ratingMax
         );
         return findProfileGameByUsernameUseCase.execute(username, f);
 

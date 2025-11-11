@@ -72,7 +72,7 @@ logging:
         web: info
         security: info
         data:
-          redis: DEBUG
+          redis: WARN
 
 management:
   server:

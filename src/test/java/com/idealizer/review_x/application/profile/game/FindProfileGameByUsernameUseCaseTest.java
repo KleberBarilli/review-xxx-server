@@ -42,7 +42,7 @@ class FindProfileGameByUsernameUseCaseTest {
         String username = "kleber";
         FindProfileGamesDTO dto = new FindProfileGamesDTO(
                 0, 10, "updatedAt", "desc",
-                null, null, null, null, null, null, null
+                null, null, null, null, null, null, null, null, null
         );
 
         Page<BaseProfileGame> repoPage = new PageImpl<>(
@@ -77,7 +77,7 @@ class FindProfileGameByUsernameUseCaseTest {
         String username = "kleber";
         FindProfileGamesDTO dto = new FindProfileGamesDTO(
                 -5, 0, null, null,
-                Set.of(), null, null, null, null, null, null
+                Set.of(), null, null, null, null, null, null, null, null
         );
 
         when(profileGameRepository.searchProjected(eq(username), eq(dto), any(Pageable.class)))

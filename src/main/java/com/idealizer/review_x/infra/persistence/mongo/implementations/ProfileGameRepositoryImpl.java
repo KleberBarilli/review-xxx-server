@@ -43,6 +43,12 @@ public class ProfileGameRepositoryImpl implements ProfileGameRepositoryCustom {
         if (f.liked() != null)
             and.add(Criteria.where("liked").is(f.liked()));
 
+        if (f.backlog() != null)
+            and.add(Criteria.where("backlog").is(f.backlog()));
+
+        if (f.playing() != null)
+            and.add(Criteria.where("playing").is(f.playing()));
+
         if (f.ratingMin() != null || f.ratingMax() != null) {
             Criteria r = Criteria.where("rating");
             if (f.ratingMin() != null)
@@ -55,7 +61,7 @@ public class ProfileGameRepositoryImpl implements ProfileGameRepositoryCustom {
         Query q = new Query(new Criteria().andOperator(and.toArray(Criteria[]::new)));
 
         q.fields().include("_id", "status", "createdAt", "updatedAt", "rating", "owned", "wishlist", "mastered",
-                "gameName", "gameSlug", "gameCover", "liked");
+                "gameName", "gameSlug", "gameCover", "liked", "backlog", "playing");
 
         Sort sort = resolveSort(f.sort(), f.order()).and(Sort.by(Sort.Direction.DESC, "_id"));
         Pageable effective = PageRequest.of(

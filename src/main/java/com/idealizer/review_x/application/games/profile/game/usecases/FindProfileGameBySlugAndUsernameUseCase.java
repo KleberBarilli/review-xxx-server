@@ -93,8 +93,6 @@ public class FindProfileGameBySlugAndUsernameUseCase {
                     )).toList();
 
         }
-
-
         return Optional.of(new PublicProfileGameDetailedResponse(
                 pg.getGameId(),
                 pg.getGameName(),
@@ -103,6 +101,7 @@ public class FindProfileGameBySlugAndUsernameUseCase {
                 pg.getRating(),
                 pg.getLiked(),
                 pg.getMastered(),
+                pg.getOwned(),
                 pg.getBacklog(),
                 pg.getPlaying(),
                 pg.getWishlist(),

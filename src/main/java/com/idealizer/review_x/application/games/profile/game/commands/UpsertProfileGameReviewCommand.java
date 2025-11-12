@@ -22,6 +22,7 @@ public class UpsertProfileGameReviewCommand {
     private Boolean playing;
     private Boolean liked;
     private Boolean owned;
+    private Boolean backlog;
     private Boolean wishlist;
     private Boolean mastered;
     private List<String> favoriteScreenshots;
@@ -41,7 +42,7 @@ public class UpsertProfileGameReviewCommand {
     public UpsertProfileGameReviewCommand(ObjectId userId, ObjectId targetId, PlatformType sourcePlatform,
             GamePlatform playedOn,
             String targetName, String targetSlug, ProfileGameStatus status,
-            Integer rating, Boolean playing, Boolean liked, Boolean owned, Boolean wishlist,
+            Integer rating, Boolean playing, Boolean liked, Boolean owned, Boolean backlog, Boolean wishlist,
             Boolean mastered, List<String> favoriteScreenshots, String reviewTitle, LogID reviewType, String reviewContent,
             Boolean reviewSpoiler, Boolean reviewReplay, Instant startedAt,
             Instant finishedAt) {
@@ -56,6 +57,7 @@ public class UpsertProfileGameReviewCommand {
         this.playing = playing;
         this.liked = liked;
         this.owned = owned;
+        this.backlog = backlog;
         this.wishlist = wishlist;
         this.mastered = mastered;
         this.favoriteScreenshots = favoriteScreenshots;
@@ -236,5 +238,13 @@ public class UpsertProfileGameReviewCommand {
 
     public void setReviewType(LogID reviewType) {
         this.reviewType = reviewType;
+    }
+
+    public Boolean getBacklog() {
+        return backlog;
+    }
+
+    public void setBacklog(Boolean backlog) {
+        this.backlog = backlog;
     }
 }

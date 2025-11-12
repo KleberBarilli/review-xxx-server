@@ -34,6 +34,9 @@ public class UpsertProfileGameDTO {
     @Schema(defaultValue = "true")
     private Boolean owned;
 
+    @Schema(defaultValue = "true")
+    private Boolean backlog;
+
     @Schema(defaultValue = "false")
     private Boolean wishlist;
 
@@ -74,7 +77,7 @@ public class UpsertProfileGameDTO {
     private Boolean reviewReplay;
 
     public UpsertProfileGameDTO(GamePlatform playedOn, PlatformType sourcePlatform, ProfileGameStatus status
-                                , Boolean playing, Boolean liked, Boolean owned,
+                                , Boolean playing, Boolean liked, Boolean owned, Boolean backlog,
                                 Boolean wishlist, Boolean mastered, Integer rating, List<String> favoriteScreenshots, String reviewTitle,
                                 String reviewContent, Boolean reviewSpoiler, Boolean reviewReplay,
                                 Instant startedAt, Instant finishedAt) {
@@ -84,6 +87,7 @@ public class UpsertProfileGameDTO {
         this.playing = playing;
         this.liked = liked;
         this.owned = owned;
+        this.backlog = backlog;
         this.wishlist = wishlist;
         this.mastered = mastered;
         this.rating = rating;
@@ -160,5 +164,7 @@ public class UpsertProfileGameDTO {
         return reviewReplay;
     }
 
-
+    public Boolean getBacklog() {
+        return backlog;
+    }
 }

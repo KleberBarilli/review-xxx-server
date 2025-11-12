@@ -16,6 +16,7 @@ public interface SimpleProfileGame {
     String getGameCover();
     Boolean getLiked();
     Boolean getMastered();
+    Boolean getOwned();
     Boolean getBacklog();
     Boolean getPlaying();
     Boolean getWishlist();

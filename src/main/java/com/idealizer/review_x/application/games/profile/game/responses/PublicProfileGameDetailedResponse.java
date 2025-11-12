@@ -15,6 +15,7 @@ public record PublicProfileGameDetailedResponse(
         Integer rating,
         Boolean liked,
         Boolean mastered,
+        Boolean owned,
         Boolean backlog,
         Boolean playing,
         Boolean wishlist,

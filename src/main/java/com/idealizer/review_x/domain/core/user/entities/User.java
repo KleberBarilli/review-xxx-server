@@ -27,14 +27,6 @@ public class User {
     private String bio;
     @Field(value = "avatar_url")
     private String avatarUrl;
-    @Field(value = "letterboxd_url")
-    private String letterboxdUrl;
-    @Field(value = "steam_url")
-    private String steamUrl;
-    @Field(value = "psn_url")
-    private String psnUrl;
-    @Field(value = "xbox_url")
-    private String xboxUrl;
     private String locale;
     @Field(value = "mobile_device")
     private MobileDeviceType mobileDevice;
@@ -52,6 +44,27 @@ public class User {
     @Field(value = "updated_at")
     @LastModifiedDate
     private Instant updatedAt;
+
+
+    //Social links
+    @Field("steam_url")
+    private String steamUrl;
+    @Field("psn_url")
+    private String psnUrl;
+    @Field("xbox_url")
+    private String xboxUrl;
+    @Field("letterboxd_url")
+    private String letterboxdUrl;
+    @Field("instagram_url")
+    private String instagramUrl;
+    @Field("twitter_url")
+    private String twitterUrl;
+    @Field("reddit_url")
+    private String redditUrl;
+    @Field("youtube_url")
+    private String youtubeUrl;
+    @Field("discord_url")
+    private String discordUrl;
 
     public ObjectId getId() {
         return id;
@@ -107,22 +120,6 @@ public class User {
 
     public void setAvatarUrl(String avatarUrl) {
         this.avatarUrl = avatarUrl;
-    }
-
-    public String getLetterboxdUrl() {
-        return letterboxdUrl;
-    }
-
-    public void setLetterboxdUrl(String letterboxdUrl) {
-        this.letterboxdUrl = letterboxdUrl;
-    }
-
-    public String getSteamUrl() {
-        return steamUrl;
-    }
-
-    public void setSteamUrl(String steamUrl) {
-        this.steamUrl = steamUrl;
     }
 
     public String getLocale() {
@@ -195,6 +192,62 @@ public class User {
 
     public void setFollowingCount(long followingCount) {
         this.followingCount = followingCount;
+    }
+
+    public String getLetterboxdUrl() {
+        return letterboxdUrl;
+    }
+
+    public void setLetterboxdUrl(String letterboxdUrl) {
+        this.letterboxdUrl = letterboxdUrl;
+    }
+
+    public String getSteamUrl() {
+        return steamUrl;
+    }
+
+    public void setSteamUrl(String steamUrl) {
+        this.steamUrl = steamUrl;
+    }
+
+    public String getInstagramUrl() {
+        return instagramUrl;
+    }
+
+    public void setInstagramUrl(String instagramUrl) {
+        this.instagramUrl = instagramUrl;
+    }
+
+    public String getTwitterUrl() {
+        return twitterUrl;
+    }
+
+    public void setTwitterUrl(String twitterUrl) {
+        this.twitterUrl = twitterUrl;
+    }
+
+    public String getRedditUrl() {
+        return redditUrl;
+    }
+
+    public void setRedditUrl(String redditUrl) {
+        this.redditUrl = redditUrl;
+    }
+
+    public String getYoutubeUrl() {
+        return youtubeUrl;
+    }
+
+    public void setYoutubeUrl(String youtubeUrl) {
+        this.youtubeUrl = youtubeUrl;
+    }
+
+    public String getDiscordUrl() {
+        return discordUrl;
+    }
+
+    public void setDiscordUrl(String discordUrl) {
+        this.discordUrl = discordUrl;
     }
 
     @Override

@@ -16,6 +16,10 @@ public interface ProfileGameRepository extends MongoRepository<ProfileGame, Obje
 
     List<SimpleProfileGame> findProjectedByUserIdAndFavoriteIsTrue(ObjectId userId);
 
+    List<SimpleProfileGame> findProjectedByUserIdAndMasteredIsTrue(ObjectId userId);
+
+    List<SimpleProfileGame> findProjectedByUserIdAndPlayingIsTrue(ObjectId userId);
+
     Optional<SimpleProfileGame> findProjectedByUsernameAndGameSlug(String username, String gameSlug);
 
     List<BaseProfileGame> findProjectedByUsername(String username);

@@ -13,23 +13,31 @@ public class FindUserResponse {
     private String fullName;
     private String bio;
     private String avatarUrl;
-    private String steamUrl;
-    private String letterboxdUrl;
     private String locale;
     private long followingCount;
     private long followerCount;
     private MobileDeviceType mobileDevice;
     private List<SimpleProfileGame> favoriteGames;
     private List<LastReviewItemResponse> lastReviews;
+    private List<SimpleProfileGame> masteredGames;
+    private List<SimpleProfileGame> playingGames;
+
+    //social links
+    private String steamUrl;
+    private String psnUrl;
+    private String xboxUrl;
+    private String letterboxdUrl;
+    private String instagramUrl;
+    private String twitterUrl;
+    private String redditUrl;
+    private String youtubeUrl;
+    private String discordUrl;
 
 
-    public String getLetterboxdUrl() {
-        return letterboxdUrl;
-    }
 
-    public void setLetterboxdUrl(String letterboxdUrl) {
-        this.letterboxdUrl = letterboxdUrl;
-    }
+
+
+
 
     public String getId() {
         return id;
@@ -71,14 +79,6 @@ public class FindUserResponse {
         this.avatarUrl = avatarUrl;
     }
 
-    public String getSteamUrl() {
-        return steamUrl;
-    }
-
-    public void setSteamUrl(String steamUrl) {
-        this.steamUrl = steamUrl;
-    }
-
     public String getLocale() {
         return locale;
     }
@@ -109,6 +109,22 @@ public class FindUserResponse {
         this.lastReviews = lastReviews;
     }
 
+    public List<SimpleProfileGame> getMasteredGames() {
+        return masteredGames;
+    }
+
+    public void setMasteredGames(List<SimpleProfileGame> masteredGames) {
+        this.masteredGames = masteredGames;
+    }
+
+    public List<SimpleProfileGame> getPlayingGames() {
+        return playingGames;
+    }
+
+    public void setPlayingGames(List<SimpleProfileGame> playingGames) {
+        this.playingGames = playingGames;
+    }
+
     public String getFullName() {
         return fullName;
     }
@@ -131,5 +147,77 @@ public class FindUserResponse {
 
     public void setFollowerCount(long followerCount) {
         this.followerCount = followerCount;
+    }
+
+    public String getLetterboxdUrl() {
+        return letterboxdUrl;
+    }
+
+    public void setLetterboxdUrl(String letterboxdUrl) {
+        this.letterboxdUrl = letterboxdUrl;
+    }
+
+    public String getSteamUrl() {
+        return steamUrl;
+    }
+
+    public void setSteamUrl(String steamUrl) {
+        this.steamUrl = steamUrl;
+    }
+
+    public String getPsnUrl() {
+        return psnUrl;
+    }
+
+    public void setPsnUrl(String psnUrl) {
+        this.psnUrl = psnUrl;
+    }
+
+    public String getXboxUrl() {
+        return xboxUrl;
+    }
+
+    public void setXboxUrl(String xboxUrl) {
+        this.xboxUrl = xboxUrl;
+    }
+
+    public String getInstagramUrl() {
+        return instagramUrl;
+    }
+
+    public void setInstagramUrl(String instagramUrl) {
+        this.instagramUrl = instagramUrl;
+    }
+
+    public String getTwitterUrl() {
+        return twitterUrl;
+    }
+
+    public void setTwitterUrl(String twitterUrl) {
+        this.twitterUrl = twitterUrl;
+    }
+
+    public String getRedditUrl() {
+        return redditUrl;
+    }
+
+    public void setRedditUrl(String redditUrl) {
+        this.redditUrl = redditUrl;
+    }
+
+    public String getYoutubeUrl() {
+        return youtubeUrl;
+    }
+
+    public void setYoutubeUrl(String youtubeUrl) {
+        this.youtubeUrl = youtubeUrl;
+    }
+
+    public String getDiscordUrl() {
+        return discordUrl;
+    }
+
+    public void setDiscordUrl(String discordUrl) {
+        this.discordUrl = discordUrl;
     }
 }

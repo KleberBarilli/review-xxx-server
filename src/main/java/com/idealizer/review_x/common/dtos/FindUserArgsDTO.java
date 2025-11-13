@@ -2,5 +2,9 @@ package com.idealizer.review_x.common.dtos;
 
 public record FindUserArgsDTO(
         boolean favorite,
-        boolean lastReviews, boolean lastActivities) {
+        boolean lastReviews,
+        boolean lastActivities,
+        boolean mastered,
+        boolean playing
+        ) {
 }

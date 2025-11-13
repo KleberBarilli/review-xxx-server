@@ -38,21 +38,25 @@ public class FindUserByNameUseCase {
         if (user == null)
             return null;
 
-
         ObjectId userId = new ObjectId(user.getId());
-
         if (args.favorite()) {
             List<SimpleProfileGame> favoriteGames =
                     profileGameRepository.findProjectedByUserIdAndFavoriteIsTrue(userId);
             user.setFavoriteGames(favoriteGames);
         }
-
         if (args.lastReviews()) {
             List<LastReviewItemResponse> lastReviews =
                     findLastReviewsByUserUseCase.execute(userId);
             user.setLastReviews(lastReviews);
         }
-
+        if(args.mastered()){
+            List<SimpleProfileGame> masteredGames = profileGameRepository.findProjectedByUserIdAndMasteredIsTrue(userId);
+            user.setMasteredGames(masteredGames);
+        }
+        if(args.playing()){
+            List<SimpleProfileGame> playingGames = profileGameRepository.findProjectedByUserIdAndPlayingIsTrue(userId);
+            user.setPlayingGames(playingGames);
+        }
         return user;
     }
 }

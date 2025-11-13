@@ -10,6 +10,7 @@ public enum CommonError {
     EMAIL_ALREADY_EXISTS("E-1010", HttpStatus.CONFLICT, "Email already exists"),
     USERNAME_ALREADY_EXISTS("E-1020", HttpStatus.CONFLICT, "Username already exists"),
     CREATE_USER_GENERIC_ERROR("E-1021", HttpStatus.BAD_REQUEST, "Create user generic error"),
+    UPDATE_USER_GENERIC_ERROR("E-1022", HttpStatus.BAD_REQUEST, "Update user generic error"),
     INVALID_CREDENTIALS("E-1030", HttpStatus.UNAUTHORIZED, "Invalid credentials");
 
     private final String code;

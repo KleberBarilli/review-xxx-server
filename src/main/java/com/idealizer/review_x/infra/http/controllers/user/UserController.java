@@ -2,17 +2,19 @@ package com.idealizer.review_x.infra.http.controllers.user;
 
 import com.idealizer.review_x.application.user.responses.AccessTokenResponse;
 import com.idealizer.review_x.application.user.responses.FindUserResponse;
-import com.idealizer.review_x.application.user.responses.LoginResponse;
 import com.idealizer.review_x.application.user.usecases.*;
 import com.idealizer.review_x.common.CommonError;
 import com.idealizer.review_x.common.LocaleUtil;
 import com.idealizer.review_x.common.MessageUtil;
 import com.idealizer.review_x.common.dtos.FindUserArgsDTO;
+import com.idealizer.review_x.common.dtos.user.UpdateUserDTO;
 import com.idealizer.review_x.common.exceptions.DuplicatedException;
 import com.idealizer.review_x.infra.http.controllers.user.dto.LoginRequestDTO;
 import com.idealizer.review_x.infra.http.controllers.user.dto.SignupRequestDTO;
+import com.idealizer.review_x.security.services.UserDetailsImpl;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import org.bson.types.ObjectId;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -36,6 +38,7 @@ import java.util.logging.Logger;
 public class UserController {
     private final Logger logger = Logger.getLogger(UserController.class.getName());
 
+    private final UpdateUserUseCase updateUserUseCase;
     private final SignUpUseCase signUpUseCase;
     private final MobileSignInUseCase mobileSignInUseCase;
     private final FindUserByNameUseCase findUserByNameUseCase;
@@ -43,8 +46,11 @@ public class UserController {
     private final RemoveAvatarUseCase removeAvatarUseCase;
     private final MessageUtil messageUtil;
 
-    public UserController(SignUpUseCase signUpUseCase, MobileSignInUseCase mobileSignInUseCase, FindUserByNameUseCase findUserByNameUseCase,
+    public UserController(
+            UpdateUserUseCase updateUserUseCase,
+            SignUpUseCase signUpUseCase, MobileSignInUseCase mobileSignInUseCase, FindUserByNameUseCase findUserByNameUseCase,
                           UploadAvatarUseCase uploadAvatarUseCase, RemoveAvatarUseCase removeAvatarUseCase, MessageUtil messageUtil) {
+        this.updateUserUseCase = updateUserUseCase;
         this.signUpUseCase = signUpUseCase;
         this.mobileSignInUseCase = mobileSignInUseCase;
         this.findUserByNameUseCase = findUserByNameUseCase;
@@ -53,6 +59,20 @@ public class UserController {
         this.messageUtil = messageUtil;
     }
 
+    @PutMapping
+    public ResponseEntity<?> updateUser(@AuthenticationPrincipal UserDetails userDetails, @Valid UpdateUserDTO dto) {
+        try {
+            ObjectId userId = ((UserDetailsImpl) userDetails).getId();
+            this.updateUserUseCase.execute(userId, dto);
+            return ResponseEntity.ok(Map.of("message", "updateUser successfully"));
+        } catch (Exception e) {
+            Map<String, Object> map = new HashMap<>();
+            logger.severe("Error during user registration: " + e.getMessage());
+            map.put("message", CommonError.UPDATE_USER_GENERIC_ERROR);
+            return new ResponseEntity<Object>(map, HttpStatus.BAD_REQUEST);
+        }
+
+    }
     @PostMapping("/mobile/signin")
     public ResponseEntity<?> authenticateMobileUser(@RequestBody @Valid LoginRequestDTO dto) {
         try {
@@ -89,8 +109,10 @@ public class UserController {
             @RequestParam(name = "favorite", defaultValue = "false") boolean favorite,
             @RequestParam(name = "lastReviews", defaultValue = "false") boolean lastReviews,
             @RequestParam(name = "lastActivities", defaultValue = "false") boolean lastActivities,
+            @RequestParam(name = "mastered", defaultValue = "false") boolean mastered,
+            @RequestParam(name = "playing", defaultValue = "false") boolean playing,
             @AuthenticationPrincipal UserDetails userDetails) {
-        FindUserArgsDTO args = new FindUserArgsDTO(favorite, lastReviews, lastActivities);
+        FindUserArgsDTO args = new FindUserArgsDTO(favorite, lastReviews, lastActivities,  mastered, playing);
         FindUserResponse user = findUserByNameUseCase.execute(userDetails.getUsername(), args);
 
         return ResponseEntity.ok(user);
@@ -101,9 +123,11 @@ public class UserController {
             @PathVariable String username,
             @RequestParam(name = "favorite", defaultValue = "false") boolean favorite,
             @RequestParam(name = "lastReviews", defaultValue = "false") boolean lastReviews,
-            @RequestParam(name = "lastActivities", defaultValue = "false") boolean lastActivities
+            @RequestParam(name = "lastActivities", defaultValue = "false") boolean lastActivities,
+            @RequestParam(name = "mastered", defaultValue = "false") boolean mastered,
+            @RequestParam(name = "playing", defaultValue = "false") boolean playing
     ) {
-        FindUserArgsDTO args = new FindUserArgsDTO(favorite, lastReviews, lastActivities);
+        FindUserArgsDTO args = new FindUserArgsDTO(favorite, lastReviews, lastActivities, mastered, playing);
         FindUserResponse user = findUserByNameUseCase.execute(username, args);
 
         if(user == null) {

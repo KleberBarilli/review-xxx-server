@@ -20,6 +20,7 @@ public record PublicProfileGameDetailedResponse(
         Boolean playing,
         Boolean wishlist,
         GamePlatform playedOn,
+        Long playtimeMinutes,
         PlatformType sourcePlatform,
         Boolean hasReview,
         Instant startedAt,
@@ -28,8 +29,7 @@ public record PublicProfileGameDetailedResponse(
         Integer favoriteOrder,
         Instant createdAt,
         Review review,
-        List<Comment> comments,
-        List<Log> logs
+        List<Comment> comments
 ) {
     public record Review(
             String id,
@@ -48,13 +48,6 @@ public record PublicProfileGameDetailedResponse(
             long likeCount,
             Instant createdAt,
             Instant editedAt
-    ){}
-    public record Log(
-            int year,
-            int month,
-            int day,
-            int minutesPlayed,
-            String note
     ){}
 }
 

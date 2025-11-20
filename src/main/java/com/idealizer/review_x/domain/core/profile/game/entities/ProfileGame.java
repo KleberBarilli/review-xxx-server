@@ -58,7 +58,8 @@ public class ProfileGame {
     @Indexed
     @Field(value = "played_on")
     private GamePlatform playedOn;
-    private Integer playtime;
+    @Field(value = "playtime_minutes")
+    private Long playtimeMinutes = 0L;
     private ProfileGameStatus status;
 
     @Indexed
@@ -124,14 +125,15 @@ public class ProfileGame {
         return username;
     }
 
-    public Integer getPlaytime() {
-        return playtime;
+    public Long getPlaytimeMinutes() {
+        return playtimeMinutes;
     }
-
-    public void setPlaytime(Integer playtime) {
-        this.playtime = playtime;
+    public void setPlaytimeMinutes(Long playtimeMinutes) {
+        if (playtimeMinutes != null && playtimeMinutes < 0) {
+            throw new IllegalArgumentException("Playtime cannot be negative");
+        }
+        this.playtimeMinutes = playtimeMinutes;
     }
-
     public void setUsername(String username) {
         this.username = username;
     }

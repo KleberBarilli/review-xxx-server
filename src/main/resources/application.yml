@@ -76,7 +76,7 @@ logging:
 
 management:
   server:
-    port: 9091
+    port: 9098
   endpoints:
     web:
       exposure:
@@ -85,7 +85,7 @@ management:
 springdoc:
   override-with-generic-response: true
 server:
-  port: 9090
+  port: 9099
   error:
     whitelabel:
       enabled: false

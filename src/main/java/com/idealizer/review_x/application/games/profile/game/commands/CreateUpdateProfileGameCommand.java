@@ -15,6 +15,7 @@ public class CreateUpdateProfileGameCommand {
 
     private PlatformType sourcePlatform;
     private GamePlatform playedOn;
+    private Long playtimeMinutes;
     private Boolean hasReview;
     private ProfileGameStatus status;
     private Integer rating;
@@ -37,7 +38,7 @@ public class CreateUpdateProfileGameCommand {
     }
 
     public CreateUpdateProfileGameCommand(ObjectId userId, String username, ObjectId gameId,
-            PlatformType sourcePlatform, GamePlatform playedOn, Boolean hasReview, ProfileGameStatus status, Integer rating, Boolean playing, Boolean liked, Boolean owned, Boolean wishlist,
+            PlatformType sourcePlatform, GamePlatform playedOn, Long playtimeMinutes, Boolean hasReview, ProfileGameStatus status, Integer rating, Boolean playing, Boolean liked, Boolean owned, Boolean wishlist,
             Boolean mastered, List<String> favoriteScreenshots, Boolean favorite, int favoriteOrder, String gameName,
             String gameSlug, String gameCover, Instant startedAt, Instant finishedAt) {
         this.userId = userId;
@@ -45,6 +46,7 @@ public class CreateUpdateProfileGameCommand {
         this.gameId = gameId;
         this.sourcePlatform = sourcePlatform;
         this.playedOn = playedOn;
+        this.playtimeMinutes = playtimeMinutes;
         this.hasReview = hasReview;
         this.status = status;
         this.rating = rating;
@@ -73,6 +75,14 @@ public class CreateUpdateProfileGameCommand {
 
     public String getUsername() {
         return username;
+    }
+
+    public Long getPlaytimeMinutes() {
+        return playtimeMinutes;
+    }
+
+    public void setPlaytimeMinutes(Long playtimeMinutes) {
+        this.playtimeMinutes = playtimeMinutes;
     }
 
     public void setUsername(String username) {

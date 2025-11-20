@@ -21,6 +21,7 @@ public interface SimpleProfileGame {
     Boolean getPlaying();
     Boolean getWishlist();
     GamePlatform getPlayedOn();
+    Long getPlaytimeMinutes();
     PlatformType getSourcePlatform();
     Boolean getHasReview();
     Instant getStartedAt();

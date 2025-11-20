@@ -58,6 +58,7 @@ public class ProfileGame {
     @Indexed
     @Field(value = "played_on")
     private GamePlatform playedOn;
+    private Integer playtime;
     private ProfileGameStatus status;
 
     @Indexed
@@ -122,6 +123,15 @@ public class ProfileGame {
     public String getUsername() {
         return username;
     }
+
+    public Integer getPlaytime() {
+        return playtime;
+    }
+
+    public void setPlaytime(Integer playtime) {
+        this.playtime = playtime;
+    }
+
     public void setUsername(String username) {
         this.username = username;
     }

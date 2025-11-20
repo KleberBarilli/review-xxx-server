@@ -5,7 +5,6 @@ import com.idealizer.review_x.domain.core.LogID;
 import com.idealizer.review_x.domain.core.activity.comment.entities.CommentType;
 import com.idealizer.review_x.domain.core.activity.comment.repositories.CommentRepository;
 import com.idealizer.review_x.domain.core.profile.game.interfaces.SimpleProfileGame;
-import com.idealizer.review_x.domain.core.profile.game.repositories.ProfileGameLogRepository;
 import com.idealizer.review_x.domain.core.profile.game.repositories.ProfileGameRepository;
 import com.idealizer.review_x.domain.core.review.repositories.ReviewRepository;
 import org.bson.types.ObjectId;
@@ -13,7 +12,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 
@@ -24,32 +22,24 @@ public class FindProfileGameBySlugAndUsernameUseCase {
     private final ProfileGameRepository profileGameRepository;
     private final ReviewRepository reviewRepository;
     private final CommentRepository commentRepository;
-    private final ProfileGameLogRepository profileGameLogRepository;
 
     public FindProfileGameBySlugAndUsernameUseCase(ProfileGameRepository profileGameRepository,
                                                    ReviewRepository reviewRepository,
-                                                   CommentRepository commentRepository,
-                                                   ProfileGameLogRepository profileGameLogRepository
+                                                   CommentRepository commentRepository
     ) {
         this.profileGameRepository = profileGameRepository;
         this.reviewRepository = reviewRepository;
         this.commentRepository = commentRepository;
-        this.profileGameLogRepository = profileGameLogRepository;
     }
 
-    public Optional<PublicProfileGameDetailedResponse> execute(String gameSlug, String username, Boolean includeComments,
-                                                               Boolean includeLog) {
+    public Optional<PublicProfileGameDetailedResponse> execute(String gameSlug, String username, Boolean includeComments) {
         Optional<SimpleProfileGame> pgOpt = profileGameRepository.findProjectedByUsernameAndGameSlug(username, gameSlug);
-
         if (!pgOpt.isPresent()) {
             return Optional.empty();
         }
-
         var pg = pgOpt.get();
 
-
         ObjectId profileGameId = new ObjectId(pg.getId());
-
         PublicProfileGameDetailedResponse.Review reviewDto = reviewRepository
                 .findProjectedByProfileTargetIdAndTargetType(profileGameId, LogID.GAMES)
                 .map(r -> new PublicProfileGameDetailedResponse.Review((r.getId()),
@@ -77,22 +67,6 @@ public class FindProfileGameBySlugAndUsernameUseCase {
                     )).toList();
 
         }
-        List<PublicProfileGameDetailedResponse.Log> logs = List.of();
-
-        if (includeLog) {
-            logger.log(Level.INFO, "Finding profile game by profileId: " + profileGameId);
-            logger.log(Level.INFO, "Finding profile game by userId: " + new ObjectId(pg.getUserId()));
-            var list = profileGameLogRepository.findByProfileGameIdAndUserId(profileGameId, new ObjectId(pg.getUserId()));
-            logs = list.stream().map(
-                    c -> new PublicProfileGameDetailedResponse.Log(
-                            c.getYear(),
-                            c.getMonth(),
-                            c.getDay(),
-                            c.getMinutesPlayed(),
-                            c.getNote()
-                    )).toList();
-
-        }
         return Optional.of(new PublicProfileGameDetailedResponse(
                 pg.getGameId(),
                 pg.getGameName(),
@@ -106,6 +80,7 @@ public class FindProfileGameBySlugAndUsernameUseCase {
                 pg.getPlaying(),
                 pg.getWishlist(),
                 pg.getPlayedOn(),
+                pg.getPlaytimeMinutes(),
                 pg.getSourcePlatform(),
                 pg.getHasReview(),
                 pg.getStartedAt(),
@@ -114,8 +89,7 @@ public class FindProfileGameBySlugAndUsernameUseCase {
                 pg.getFavoriteOrder(),
                 pg.getCreatedAt(),
                 reviewDto,
-                comments,
-                logs
+                comments
         ));
     }
 }

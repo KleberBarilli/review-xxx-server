@@ -18,6 +18,9 @@ public class UpsertProfileGameDTO {
     @Schema(defaultValue = "PC_MICROSOFT_WINDOWS")
     private GamePlatform playedOn;
 
+    @Schema(defaultValue = "120")
+    private Long playtimeMinutes;
+
     @Schema(defaultValue = "STEAM")
     private PlatformType sourcePlatform;
 
@@ -76,12 +79,13 @@ public class UpsertProfileGameDTO {
     @Schema(defaultValue = "false")
     private Boolean reviewReplay;
 
-    public UpsertProfileGameDTO(GamePlatform playedOn, PlatformType sourcePlatform, ProfileGameStatus status
+    public UpsertProfileGameDTO(GamePlatform playedOn, Long playtimeMinutes, PlatformType sourcePlatform, ProfileGameStatus status
                                 , Boolean playing, Boolean liked, Boolean owned, Boolean backlog,
                                 Boolean wishlist, Boolean mastered, Integer rating, List<String> favoriteScreenshots, String reviewTitle,
                                 String reviewContent, Boolean reviewSpoiler, Boolean reviewReplay,
                                 Instant startedAt, Instant finishedAt) {
         this.playedOn = playedOn;
+        this.playtimeMinutes = playtimeMinutes;
         this.sourcePlatform = sourcePlatform;
         this.status = status;
         this.playing = playing;
@@ -104,6 +108,9 @@ public class UpsertProfileGameDTO {
         return playedOn;
     }
 
+    public Long getPlaytimeMinutes() {
+        return playtimeMinutes;
+    }
     public PlatformType getSourcePlatform() {
         return sourcePlatform;
     }

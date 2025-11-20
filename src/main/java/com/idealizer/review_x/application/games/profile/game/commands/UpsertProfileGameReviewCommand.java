@@ -15,6 +15,7 @@ public class UpsertProfileGameReviewCommand {
 
     private PlatformType sourcePlatform;
     private GamePlatform playedOn;
+    private Long playtimeMinutes;
     private String targetName;
     private String targetSlug;
     private ProfileGameStatus status;
@@ -40,7 +41,7 @@ public class UpsertProfileGameReviewCommand {
     }
 
     public UpsertProfileGameReviewCommand(ObjectId userId, ObjectId targetId, PlatformType sourcePlatform,
-            GamePlatform playedOn,
+            GamePlatform playedOn, Long playtimeMinutes,
             String targetName, String targetSlug, ProfileGameStatus status,
             Integer rating, Boolean playing, Boolean liked, Boolean owned, Boolean backlog, Boolean wishlist,
             Boolean mastered, List<String> favoriteScreenshots, String reviewTitle, LogID reviewType, String reviewContent,
@@ -50,6 +51,7 @@ public class UpsertProfileGameReviewCommand {
         this.targetId = targetId;
         this.sourcePlatform = sourcePlatform;
         this.playedOn = playedOn;
+        this.playtimeMinutes = playtimeMinutes;
         this.targetName = targetName;
         this.targetSlug = targetSlug;
         this.status = status;
@@ -78,6 +80,13 @@ public class UpsertProfileGameReviewCommand {
         this.userId = userId;
     }
 
+    public Long getPlaytimeMinutes() {
+        return playtimeMinutes;
+    }
+
+    public void setPlaytimeMinutes(Long playtimeMinutes) {
+        this.playtimeMinutes = playtimeMinutes;
+    }
 
     public PlatformType getSourcePlatform() {
         return sourcePlatform;

@@ -13,6 +13,7 @@ public interface BaseProfileGame {
     String getGameSlug();
     String getGameCover();
     Boolean getLiked();
+    Boolean getHasReview();
     Boolean getBacklog();
     Boolean getPlaying();
     Boolean getMastered();

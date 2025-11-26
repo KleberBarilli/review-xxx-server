@@ -73,7 +73,7 @@ public class InsertAltGameNamesProcessor {
         return provider.getAccessToken();
     }
 
-    @Scheduled(cron = "0 44 20 * * *", zone = "America/Sao_Paulo")
+    @Scheduled(cron = "0 52 17 * * *", zone = "America/Sao_Paulo")
     public void updateGames() {
         logger.info("Starting game ALT backfill from IGDB...");
         final String accessToken = getAccessToken();

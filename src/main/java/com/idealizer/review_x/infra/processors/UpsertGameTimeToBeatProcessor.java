@@ -76,7 +76,7 @@ public class UpsertGameTimeToBeatProcessor {
         return provider.getAccessToken();
     }
 
-    @Scheduled(cron = "0 20 22 * * *", zone = "America/Sao_Paulo")
+    @Scheduled(cron = "0 48 17 * * *", zone = "America/Sao_Paulo")
     public void updateGames() {
         logger.info("Starting game TTB backfill from IGDB...");
         final String accessToken = getAccessToken();

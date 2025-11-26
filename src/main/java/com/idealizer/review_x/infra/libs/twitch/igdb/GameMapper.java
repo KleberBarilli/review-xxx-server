@@ -25,7 +25,7 @@ public class GameMapper {
                     .map(sc -> sc.imageId())
                     .filter(Objects::nonNull)
                     .distinct()
-                    .limit(5)
+                    .limit(30)
                     .toList();
 
             if (!shots.isEmpty()) {

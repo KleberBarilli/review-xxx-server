@@ -67,7 +67,7 @@ public class SyncIgdbGameProcessor {
         return provider.getAccessToken();
     }
 
-    @Scheduled(cron = "0 31 00 * * *", zone = "America/Sao_Paulo")
+    @Scheduled(cron = "0 37 14 * * *", zone = "America/Sao_Paulo")
     public void syncGames() {
         logger.info("Starting game synchronization from IGDB...");
         String accessToken = getAccessToken();
@@ -144,8 +144,8 @@ public class SyncIgdbGameProcessor {
 
                     var screenshots = mapped.getScreenshots();
                     if (screenshots != null && !screenshots.isEmpty()) {
-                        var top5 = screenshots.stream().limit(5).toList();
-                        update.set("screenshots", top5);
+                        var top30 = screenshots.stream().limit(30).toList();
+                        update.set("screenshots", top30);
                     }
                     bulkOps.updateOne(q, update);
                     hasUpdates = true;

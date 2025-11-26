@@ -152,9 +152,9 @@ public class UserController {
             }
             String filename = file.getOriginalFilename();
             byte[] imageBytes = file.getBytes();
-            uploadAvatarUseCase.execute(userDetails.getUsername(), imageBytes, filename, contentType);
+            String avatar = uploadAvatarUseCase.execute(userDetails.getUsername(), imageBytes, filename, contentType);
 
-            return ResponseEntity.ok(Map.of("message", messageUtil.get("file.image.uploaded", null, LocaleUtil.from(locale.toString()))));
+            return ResponseEntity.ok(Map.of("avatarUrl", avatar));
         } catch (Exception e) {
             return ResponseEntity.status(500).body(messageUtil.get("file.image.upload.error", null, LocaleUtil.from(locale.toString())));
         }

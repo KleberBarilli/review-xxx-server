@@ -9,7 +9,6 @@ import java.util.logging.Logger;
 
 @Service
 public class UploadAvatarUseCase {
-    private static final Logger logger = Logger.getLogger(UploadAvatarUseCase.class.getName());
 
     private final UserRepository userRepository;
     private final AvatarStorageService avatarStorageService;
@@ -21,13 +20,12 @@ public class UploadAvatarUseCase {
         this.avatarStorageService = avatarStorageService;
         this.removeAvatarUseCase = removeAvatarUseCase;
     }
-    public void execute(String username, byte[] imageData, String filename, String contentType) {
-
+    public String execute(String username, byte[] imageData, String filename, String contentType) {
         User user = removeAvatarUseCase.execute(username);
         String url = avatarStorageService.uploadAvatar(username, imageData, filename, contentType);
         user.setAvatarUrl(url);
         userRepository.save(user);
-        logger.info("Avatar uploaded successfully for user:" + username);
+        return url;
     }
 
 }

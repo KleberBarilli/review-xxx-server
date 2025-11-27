@@ -75,6 +75,7 @@ public class UpsertProfileGameReviewUseCase {
             logger.warning("Profile Game already exists for ID: " + command.getTargetId());
             ProfileGame profileGame = profileGameFound.get();
             profileGameMapper.updateProfileGameFromCommand(command, profileGame);
+            if (hasReviewInRequest) profileGame.setHasReview(true);
             updateProfileGameUseCase.execute(profileGame);
 
 

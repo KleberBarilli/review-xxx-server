@@ -102,7 +102,7 @@ public class ReviewRepositoryImpl implements ReviewRepositoryCustom {
                 pre.add(new RawAggregationOperation(new Document("$addFields",
                         new Document("rating", new Document("$ifNull", Arrays.asList("$pg.rating", "$rating")))
                                 .append("liked",  new Document("$ifNull", Arrays.asList("$pg.liked",  "$liked")))
-                                .append("mastered",  new Document("$ifNull", Arrays.asList("$pg.mastered",  "mastered")))
+                                .append("mastered",  new Document("$ifNull", Arrays.asList("$pg.mastered",  "$mastered")))
                                 .append("status", new Document("$ifNull", Arrays.asList("$pg.status", "$status"))))
                 ));
 

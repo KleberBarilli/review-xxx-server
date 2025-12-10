@@ -1,6 +1,6 @@
 package com.idealizer.review_x.infra.http.controllers.activity.feed;
 
-import com.idealizer.review_x.application.activity.follow.usecases.FollowingFeedService;
+import com.idealizer.review_x.application.activity.follow.usecases.FollowingFeedUseCase;
 import com.idealizer.review_x.common.dtos.PageResponse;
 import com.idealizer.review_x.common.dtos.activity.feed.FriendReviewFeedItem;
 import com.idealizer.review_x.security.services.UserDetailsImpl;
@@ -16,9 +16,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/feed")
 public class FeedController {
 
-    private final FollowingFeedService feedService;
+    private final FollowingFeedUseCase feedService;
 
-    public FeedController(FollowingFeedService feedService) {
+    public FeedController(FollowingFeedUseCase feedService) {
         this.feedService = feedService;
     }
 

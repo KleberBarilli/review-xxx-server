@@ -17,13 +17,13 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
-public class FollowingFeedService {
+public class FollowingFeedUseCase {
 
     private final FollowRepository followRepository;
     private final ReviewRepository reviewRepository;
     private final ProfileGameRepository profileGameRepository;
 
-    public FollowingFeedService(FollowRepository followRepository, ReviewRepository reviewRepository,
+    public FollowingFeedUseCase(FollowRepository followRepository, ReviewRepository reviewRepository,
                                 ProfileGameRepository profileGameRepository
                                 ) {
         this.followRepository = followRepository;

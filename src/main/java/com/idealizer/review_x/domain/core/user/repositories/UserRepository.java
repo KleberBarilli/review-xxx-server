@@ -7,6 +7,7 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
 import org.springframework.data.mongodb.repository.Update;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface UserRepository extends MongoRepository<User, ObjectId> {
@@ -26,5 +27,8 @@ public interface UserRepository extends MongoRepository<User, ObjectId> {
     @Query("{ '_id': ?0 }")
     @Update("{ '$inc': { 'followerCount': ?1 } }")
     long incFollowers(ObjectId userId, long delta);
+
+    @Query(value = "{ '_id' : { $in : ?0 } }", fields = "{ 'name': 1, 'full_name': 1, 'avatar_url': 1, 'bio': 1 }")
+    List<User> findFromListOptimized(List<ObjectId> ids);
 
 }

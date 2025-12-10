@@ -14,14 +14,17 @@ public interface FollowRepository extends MongoRepository<Follow, ObjectId> {
     boolean existsByFollowerIdAndFolloweeId(ObjectId followerId, ObjectId followeeId);
     Optional<Follow> findByFollowerIdAndFolloweeId(ObjectId followerId, ObjectId followeeId);
 
-    Page<Follow> findAllByFollowerId(ObjectId followerId, Pageable pageable);
-    Page<Follow> findAllByFolloweeId(ObjectId followeeId, Pageable pageable);
+    List<Follow> findAllByFollowerId(ObjectId followerId);
+    List<Follow> findAllByFolloweeId(ObjectId followeeId);
 
     long deleteByFollowerIdAndFolloweeId(ObjectId followerId, ObjectId followeeId);
 
 
     @Query(value = "{ 'follower_id': ?0 }", fields = "{ 'followee_id': 1, '_id': 0 }")
     List<FolloweeIdOnly> findFolloweeIds(ObjectId followerId);
+
+    @Query(value = "{ 'follower_id': ?0, 'followee_id': { $in: ?1 } }")
+    List<Follow> findByFollowerIdAndFolloweeIdIn(ObjectId followerId, List<ObjectId> targetIds);
 
     interface FolloweeIdOnly {
         ObjectId getFolloweeId();

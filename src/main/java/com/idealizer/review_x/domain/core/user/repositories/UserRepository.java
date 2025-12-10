@@ -3,6 +3,7 @@ package com.idealizer.review_x.domain.core.user.repositories;
 import com.idealizer.review_x.domain.core.user.entities.User;
 
 import org.bson.types.ObjectId;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
 import org.springframework.data.mongodb.repository.Update;
@@ -30,5 +31,8 @@ public interface UserRepository extends MongoRepository<User, ObjectId> {
 
     @Query(value = "{ '_id' : { $in : ?0 } }", fields = "{ 'name': 1, 'full_name': 1, 'avatar_url': 1, 'bio': 1 }")
     List<User> findFromListOptimized(List<ObjectId> ids);
+
+    @Query("{ '$or': [ { 'name': { '$regex': ?0, '$options': 'i' } }, { 'fullName': { '$regex': ?0, '$options': 'i' } } ] }")
+    List<User> searchByTerm(String term, Pageable pageable);
 
 }

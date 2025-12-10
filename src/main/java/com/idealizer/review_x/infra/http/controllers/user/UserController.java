@@ -2,6 +2,7 @@ package com.idealizer.review_x.infra.http.controllers.user;
 
 import com.idealizer.review_x.application.user.responses.AccessTokenResponse;
 import com.idealizer.review_x.application.user.responses.FindUserResponse;
+import com.idealizer.review_x.application.user.responses.SearchUserResponse;
 import com.idealizer.review_x.application.user.usecases.*;
 import com.idealizer.review_x.common.CommonError;
 import com.idealizer.review_x.common.LocaleUtil;
@@ -45,11 +46,15 @@ public class UserController {
     private final UploadAvatarUseCase uploadAvatarUseCase;
     private final RemoveAvatarUseCase removeAvatarUseCase;
     private final MessageUtil messageUtil;
+    private final SearchUsersUseCase searchUsersUseCase;
+
 
     public UserController(
             UpdateUserUseCase updateUserUseCase,
             SignUpUseCase signUpUseCase, MobileSignInUseCase mobileSignInUseCase, FindUserByNameUseCase findUserByNameUseCase,
-                          UploadAvatarUseCase uploadAvatarUseCase, RemoveAvatarUseCase removeAvatarUseCase, MessageUtil messageUtil) {
+                          UploadAvatarUseCase uploadAvatarUseCase, RemoveAvatarUseCase removeAvatarUseCase, MessageUtil messageUtil,
+            SearchUsersUseCase searchUsersUseCase
+            ) {
         this.updateUserUseCase = updateUserUseCase;
         this.signUpUseCase = signUpUseCase;
         this.mobileSignInUseCase = mobileSignInUseCase;
@@ -57,6 +62,7 @@ public class UserController {
         this.uploadAvatarUseCase = uploadAvatarUseCase;
         this.removeAvatarUseCase = removeAvatarUseCase;
         this.messageUtil = messageUtil;
+        this.searchUsersUseCase = searchUsersUseCase;
     }
 
     @PutMapping
@@ -168,5 +174,11 @@ public class UserController {
         } catch (Exception e) {
             return ResponseEntity.status(500).body(messageUtil.get("file.image.remove.error", null, LocaleUtil.from(LocaleContextHolder.getLocale().toString())));
         }
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<List<SearchUserResponse>> searchUsers(@RequestParam("query") String query) {
+        List<SearchUserResponse> results = searchUsersUseCase.execute(query);
+        return ResponseEntity.ok(results);
     }
 }

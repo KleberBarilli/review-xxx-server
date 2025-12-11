@@ -121,7 +121,7 @@
 			<version>74.2</version>
 		</dependency>
 		<dependency> <groupId>org.springframework.boot</groupId><artifactId>spring-boot-starter-data-redis</artifactId></dependency>
-		<dependency> <groupId>com.nimbusds</groupId><artifactId>nimbus-jose-jwt</artifactId><version>9.37</version></dependency>
+		<dependency> <groupId>com.nimbusds</groupId><artifactId>nimbus-jose-jwt</artifactId><version>9.37.4</version></dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>

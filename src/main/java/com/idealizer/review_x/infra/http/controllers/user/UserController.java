@@ -10,8 +10,10 @@ import com.idealizer.review_x.common.MessageUtil;
 import com.idealizer.review_x.common.dtos.FindUserArgsDTO;
 import com.idealizer.review_x.common.dtos.user.UpdateUserDTO;
 import com.idealizer.review_x.common.exceptions.DuplicatedException;
+import com.idealizer.review_x.domain.core.user.entities.User;
 import com.idealizer.review_x.infra.http.controllers.user.dto.LoginRequestDTO;
 import com.idealizer.review_x.infra.http.controllers.user.dto.SignupRequestDTO;
+import com.idealizer.review_x.infra.http.controllers.user.dto.UpdateUsernameDTO;
 import com.idealizer.review_x.security.services.UserDetailsImpl;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -47,13 +49,14 @@ public class UserController {
     private final RemoveAvatarUseCase removeAvatarUseCase;
     private final MessageUtil messageUtil;
     private final SearchUsersUseCase searchUsersUseCase;
+    private final UpdateUsernameUseCase updateUsernameUseCase;
 
 
     public UserController(
             UpdateUserUseCase updateUserUseCase,
             SignUpUseCase signUpUseCase, MobileSignInUseCase mobileSignInUseCase, FindUserByNameUseCase findUserByNameUseCase,
                           UploadAvatarUseCase uploadAvatarUseCase, RemoveAvatarUseCase removeAvatarUseCase, MessageUtil messageUtil,
-            SearchUsersUseCase searchUsersUseCase
+            SearchUsersUseCase searchUsersUseCase, UpdateUsernameUseCase updateUsernameUseCase
             ) {
         this.updateUserUseCase = updateUserUseCase;
         this.signUpUseCase = signUpUseCase;
@@ -63,6 +66,7 @@ public class UserController {
         this.removeAvatarUseCase = removeAvatarUseCase;
         this.messageUtil = messageUtil;
         this.searchUsersUseCase = searchUsersUseCase;
+        this.updateUsernameUseCase = updateUsernameUseCase;
     }
 
     @PutMapping
@@ -180,5 +184,14 @@ public class UserController {
     public ResponseEntity<List<SearchUserResponse>> searchUsers(@RequestParam("query") String query) {
         List<SearchUserResponse> results = searchUsersUseCase.execute(query);
         return ResponseEntity.ok(results);
+    }
+    @PatchMapping("/updateUsername")
+    public ResponseEntity<Void> finishOnboarding(
+            @AuthenticationPrincipal UserDetails userDetails,
+            @RequestBody @Valid UpdateUsernameDTO dto
+    ) {
+        ObjectId userId = ((UserDetailsImpl) userDetails).getId();
+        updateUsernameUseCase.execute(userId, dto.name());
+        return ResponseEntity.noContent().build();
     }
 }

@@ -3,22 +3,23 @@ package com.idealizer.review_x.config;
 import com.idealizer.review_x.application.user.usecases.FindUserByEmailUseCase;
 import com.idealizer.review_x.application.user.usecases.SignUpUseCase;
 import com.idealizer.review_x.infra.http.controllers.user.dto.SignupRequestDTO;
+import com.idealizer.review_x.domain.core.tokens.CookieUtil;
+import com.idealizer.review_x.domain.core.tokens.RefreshService;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.ResponseCookie;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
+import org.springframework.web.util.UriComponentsBuilder;
+
 import java.io.IOException;
-import com.idealizer.review_x.domain.core.tokens.CookieUtil;
-import com.idealizer.review_x.domain.core.tokens.RefreshService;
 import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
 
 @Component
 public class OAuth2LoginSuccessHandler extends SavedRequestAwareAuthenticationSuccessHandler {
@@ -67,38 +68,42 @@ public class OAuth2LoginSuccessHandler extends SavedRequestAwareAuthenticationSu
             }
 
             Optional<?> userOpt = findUserByEmailUseCase.execute(email);
-            if (userOpt.isEmpty()) {
-                String username = email.contains("@") ? email.substring(0, email.indexOf('@')) : "user";
-                signUpUseCase.execute(new SignupRequestDTO(username, email, null, null, null, null));
+            boolean isNewUser = userOpt.isEmpty();
+
+            if (isNewUser) {
+                String tempUsername = generateTempUsername(email);
+
+                String avatarUrl = attrs.containsKey("picture") ? attrs.get("picture").toString() : null;
+
+                signUpUseCase.execute(new SignupRequestDTO(tempUsername, email, null, avatarUrl, null, null));
             }
 
             var user = findUserByEmailUseCase.execute(email)
                     .orElseThrow(() -> new IllegalStateException("User not found after signup"));
 
             var pair = refreshService.issue(user.getId().toHexString(), null, refreshDays);
+
             cookies.setRefreshCookie(response, pair.cookieValue(), refreshDays * 24 * 3600, COOKIE_DOMAIN);
 
-
-            boolean isHttps = request.isSecure() || "true".equals(System.getenv("COOKIE_SECURE"));
-            String name = isHttps ? "__Host-refresh" : "refresh";
-
-            ResponseCookie cookie = ResponseCookie.from(name, pair.cookieValue())
-                    .httpOnly(true)
-                    .secure(isHttps)
-                    .sameSite("Lax")
-                    .path("/")
-                    .maxAge(refreshDays * 24L * 3600L)
-                    .build();
-
-            response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
+            String targetUrl = UriComponentsBuilder.fromHttpUrl(frontendUrl + "/redirect")
+                    .queryParam("is_new_user", isNewUser)
+                    .build()
+                    .toUriString();
 
             this.setAlwaysUseDefaultTargetUrl(true);
-            this.setDefaultTargetUrl(frontendUrl + "/redirect");
+            this.setDefaultTargetUrl(targetUrl);
+
             super.onAuthenticationSuccess(request, response, authentication);
 
         } catch (Exception e) {
-            logger.error(e);
+            logger.error("OAuth2 Login Error", e);
             response.sendRedirect(frontendUrl + "/auth/error?code=token_issue_failed");
         }
+    }
+
+    private String generateTempUsername(String email) {
+        String prefix = email.split("@")[0];
+        String suffix = UUID.randomUUID().toString().substring(0, 4);
+        return prefix + "_" + suffix;
     }
 }

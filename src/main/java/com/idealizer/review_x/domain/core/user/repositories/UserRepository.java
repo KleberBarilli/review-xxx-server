@@ -35,4 +35,8 @@ public interface UserRepository extends MongoRepository<User, ObjectId> {
     @Query("{ '$or': [ { 'name': { '$regex': ?0, '$options': 'i' } }, { 'fullName': { '$regex': ?0, '$options': 'i' } } ] }")
     List<User> searchByTerm(String term, Pageable pageable);
 
+    @Query("{ '_id': ?0 }")
+    @Update("{ '$set': { 'name': ?1 } }")
+    long updateNameById(ObjectId userId, String newName);
+
 }

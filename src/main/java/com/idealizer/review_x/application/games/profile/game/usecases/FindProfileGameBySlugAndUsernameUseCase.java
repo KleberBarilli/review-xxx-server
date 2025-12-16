@@ -4,6 +4,7 @@ import com.idealizer.review_x.application.games.profile.game.responses.PublicPro
 import com.idealizer.review_x.domain.core.LogID;
 import com.idealizer.review_x.domain.core.activity.comment.entities.CommentType;
 import com.idealizer.review_x.domain.core.activity.comment.repositories.CommentRepository;
+import com.idealizer.review_x.domain.core.activity.like.repositories.LikeRepository;
 import com.idealizer.review_x.domain.core.profile.game.interfaces.SimpleProfileGame;
 import com.idealizer.review_x.domain.core.profile.game.repositories.ProfileGameRepository;
 import com.idealizer.review_x.domain.core.review.repositories.ReviewRepository;
@@ -22,51 +23,69 @@ public class FindProfileGameBySlugAndUsernameUseCase {
     private final ProfileGameRepository profileGameRepository;
     private final ReviewRepository reviewRepository;
     private final CommentRepository commentRepository;
+    private final LikeRepository likeRepository;
 
     public FindProfileGameBySlugAndUsernameUseCase(ProfileGameRepository profileGameRepository,
                                                    ReviewRepository reviewRepository,
-                                                   CommentRepository commentRepository
+                                                   CommentRepository commentRepository,
+                                                   LikeRepository likeRepository
     ) {
         this.profileGameRepository = profileGameRepository;
         this.reviewRepository = reviewRepository;
         this.commentRepository = commentRepository;
+        this.likeRepository = likeRepository;
     }
 
-    public Optional<PublicProfileGameDetailedResponse> execute(String gameSlug, String username, Boolean includeComments) {
+    public Optional<PublicProfileGameDetailedResponse> execute(String gameSlug, String username, Boolean includeComments, ObjectId userLoggedId) {
+
         Optional<SimpleProfileGame> pgOpt = profileGameRepository.findProjectedByUsernameAndGameSlug(username, gameSlug);
         if (!pgOpt.isPresent()) {
             return Optional.empty();
         }
         var pg = pgOpt.get();
-
         ObjectId profileGameId = new ObjectId(pg.getId());
-        PublicProfileGameDetailedResponse.Review reviewDto = reviewRepository
-                .findProjectedByProfileTargetIdAndTargetType(profileGameId, LogID.GAMES)
-                .map(r -> new PublicProfileGameDetailedResponse.Review((r.getId()),
-                        r.getContent(),
-                        r.getSpoiler(),
-                        r.getReplay(),
-                        r.getLikeCount(),
-                        r.getCreatedAt()
-                ))
-                .orElse(null);
 
+        var reviewProjOpt = reviewRepository.findProjectedByProfileTargetIdAndTargetType(profileGameId, LogID.GAMES);
+
+        PublicProfileGameDetailedResponse.Review reviewDto = null;
         List<PublicProfileGameDetailedResponse.Comment> comments = List.of();
-        if (includeComments) {
-            var list = commentRepository.findAllByTargetIdAndTargetTypeAndDeletedAtIsNull(
-                    new ObjectId(reviewDto.id()), CommentType.REVIEW);
-            comments = list.stream().map(
-                    c -> new PublicProfileGameDetailedResponse.Comment(
-                            c.getUsername(),
-                            c.getFullName(),
-                            c.getContent(),
-                            c.getSpoiler(),
-                            c.getLikeCount(),
-                            c.getCreatedAt(),
-                            c.getEditedAt()
-                    )).toList();
 
+        if (reviewProjOpt.isPresent()) {
+            var r = reviewProjOpt.get();
+            String reviewIdStr = r.getId();
+            ObjectId reviewIdObj = new ObjectId(reviewIdStr);
+
+            boolean isLikedByCurrentUser = false;
+            if (userLoggedId != null) {
+                isLikedByCurrentUser = this.likeRepository.existsByTargetIdAndUserId(reviewIdObj, userLoggedId);
+            }
+
+            reviewDto = new PublicProfileGameDetailedResponse.Review(
+                    reviewIdStr,
+                    r.getContent(),
+                    r.getSpoiler(),
+                    r.getReplay(),
+                    r.getLikeCount(),
+                    isLikedByCurrentUser,
+                    r.getCreatedAt()
+            );
+
+            if (Boolean.TRUE.equals(includeComments)) {
+                var list = commentRepository.findAllByTargetIdAndTargetTypeAndDeletedAtIsNull(
+                        reviewIdObj, CommentType.REVIEW);
+
+                comments = list.stream().map(c -> new PublicProfileGameDetailedResponse.Comment(
+                        c.getUsername(),
+                        c.getFullName(),
+                        c.getContent(),
+                        c.getSpoiler(),
+                        c.getLikeCount(),
+                        c.getCreatedAt(),
+                        c.getEditedAt()
+                )).toList();
+            }
         }
+
         return Optional.of(new PublicProfileGameDetailedResponse(
                 pg.getGameId(),
                 pg.getGameName(),
@@ -88,7 +107,7 @@ public class FindProfileGameBySlugAndUsernameUseCase {
                 pg.getStatus(),
                 pg.getFavoriteOrder(),
                 pg.getCreatedAt(),
-                reviewDto,
+                reviewDto, // Pode ser null se não tiver review, conforme seu design original
                 comments
         ));
     }

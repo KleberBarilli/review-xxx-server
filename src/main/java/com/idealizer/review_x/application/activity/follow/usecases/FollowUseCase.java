@@ -5,11 +5,14 @@ import com.idealizer.review_x.domain.core.activity.follow.entities.Follow;
 import com.idealizer.review_x.domain.core.activity.follow.repositories.FollowRepository;
 import com.idealizer.review_x.domain.core.user.repositories.UserRepository;
 import org.bson.types.ObjectId;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class FollowUseCase {
+    private static final Logger log = LoggerFactory.getLogger(FollowUseCase.class);
     private final FollowRepository followRepository;
     private final UserRepository userRepository;
 
@@ -23,8 +26,6 @@ public class FollowUseCase {
         if (userId.equals(followedId)) {
             throw new IllegalArgumentException("You cannot follow yourself");
         }
-
-
         boolean created = false;
         try {
             followRepository.insert(new Follow(userId, followedId));

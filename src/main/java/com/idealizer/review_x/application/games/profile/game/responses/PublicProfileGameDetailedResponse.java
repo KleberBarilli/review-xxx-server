@@ -37,6 +37,7 @@ public record PublicProfileGameDetailedResponse(
             Boolean spoiler,
             Boolean replay,
             long likeCount,
+            Boolean likedByCurrentUser,
             Instant createdAt
     ) {}
 

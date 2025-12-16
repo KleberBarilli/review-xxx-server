@@ -93,12 +93,17 @@ public class ProfileGameController {
 
     }
     @GetMapping("/public/{username}/{gameSlug}")
-    public ResponseEntity<Optional<PublicProfileGameDetailedResponse>> getPublicGameInfoFromUser(
+    public ResponseEntity<Optional<PublicProfileGameDetailedResponse>> getPublicGameInfoFromUser(@AuthenticationPrincipal UserDetails user,
             @PathVariable String username, @PathVariable String gameSlug,
             @RequestParam(required = false, defaultValue = "false") Boolean includeComments
         ) {
+
+        ObjectId userLoggedId = null;
+        if (user instanceof UserDetailsImpl userImpl) {
+            userLoggedId = userImpl.getId();
+        }
         Optional<PublicProfileGameDetailedResponse> response = findProfileGameBySlugAndUsernameUseCase.execute(gameSlug,
-                username, includeComments);
+                username, includeComments, userLoggedId);
         return ResponseEntity.ok(response);
     }
     @Operation(summary = "Set favorite games (max10)", description = "All favorites must be sent")

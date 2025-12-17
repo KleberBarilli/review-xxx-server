@@ -1,48 +1,100 @@
 package com.idealizer.review_x.security.jwt;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.ExpiredJwtException;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.MalformedJwtException;
-import io.jsonwebtoken.UnsupportedJwtException;
+import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
-import jakarta.servlet.http.HttpServletRequest;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseCookie;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import com.idealizer.review_x.security.services.UserDetailsImpl;
 
 import javax.crypto.SecretKey;
+import java.nio.charset.StandardCharsets;
 import java.security.Key;
+import java.time.Duration;
 import java.time.Instant;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+
 @Component
 public class JwtUtils {
-    private static final Logger logger = LoggerFactory.getLogger(JwtUtils.class);
-
-    @Value("${JWT_SECRET}")
+    @Value("${auth.jwtSecret}")
     private String jwtSecret;
+
+    @Value("${auth.jwtExpirationDays:7}")
+    private int jwtExpirationDays;
+
+    @Value("${auth.cookieSecure:false}")
+    private boolean cookieSecure;
 
     @Value("${JWT_EXPIRATION_IN_MS}")
     private long jwtExpirationMs;
 
-    public String getJwtFromHeader(HttpServletRequest request) {
-        String bearerToken = request.getHeader("Authorization");
-        if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
-            return bearerToken.substring(7);
-        }
-        return null;
+    private SecretKey key;
+
+    @PostConstruct
+    public void init() {
+        this.key = Keys.hmacShaKeyFor(jwtSecret.getBytes(StandardCharsets.UTF_8));
     }
 
-    public String generateToken(UserDetailsImpl p, long ttlMillis, Map<String, Object> extraClaims) {
+    public ResponseCookie generateJwtCookie(UserDetailsImpl userPrincipal) {
+        String jwt = generateTokenFromUsername(userPrincipal);
+        return generateCookie("LV_SESSION", jwt, Duration.ofDays(jwtExpirationDays));
+    }
+
+    public ResponseCookie getCleanJwtCookie() {
+        return generateCookie("LV_SESSION", "", Duration.ZERO);
+    }
+
+    public String getUserNameFromJwtToken(String token) {
+        return Jwts.parser().setSigningKey(key).build()
+                .parseClaimsJws(token).getBody().getSubject();
+    }
+    public Integer getTokenVersion(String token) {
+        return (Integer) Jwts.parser().setSigningKey(key).build()
+                .parseClaimsJws(token).getBody().get("v");
+    }
+
+    public boolean validateJwtToken(String authToken) {
+        try {
+            Jwts.parser().setSigningKey(key).build().parse(authToken);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    public Date getIssuedAtDateFromJwtToken(String token) {
+        return Jwts.parser().setSigningKey(key).build()
+                .parseClaimsJws(token).getBody().getIssuedAt();
+    }
+    private String generateTokenFromUsername(UserDetailsImpl user) {
+        return Jwts.builder()
+                .setSubject(user.getUsername())
+                .claim("id", user.getId())
+                .claim("v", user.getTokenVersion()) // Importante: Salva a versão
+                .setIssuedAt(new Date())
+                .setExpiration(Date.from(Instant.now().plus(Duration.ofDays(jwtExpirationDays))))
+                .signWith(key, SignatureAlgorithm.HS512)
+                .compact();
+    }
+
+    private ResponseCookie generateCookie(String name, String value, Duration maxAge) {
+        return ResponseCookie.from(name, value)
+                .httpOnly(true)
+                .secure(cookieSecure)
+                .path("/")
+                .maxAge(maxAge.getSeconds())
+                .sameSite("Lax")
+                .build();
+    }
+
+    public String generateMobileToken(UserDetailsImpl p, long ttlMillis, Map<String, Object> extraClaims) {
         Instant now = Instant.now();
         Instant exp = now.plusMillis(ttlMillis);
 
@@ -67,40 +119,9 @@ public class JwtUtils {
                 .compact();
     }
 
-    public String generateToken(UserDetailsImpl p) {
+    public String generateMobileToken(UserDetailsImpl p) {
         Map<String, Object> webClaims = Map.of("aud", "web", "typ", "access");
-        return generateToken(p, jwtExpirationMs, webClaims);
-    }
-
-    public String getUserNameFromJwtToken(String token) {
-        Claims claims = Jwts.parser()
-                .verifyWith((SecretKey) key())
-                .build()
-                .parseSignedClaims(token)
-                .getPayload();
-
-        String username = claims.get("username", String.class);
-        if (username != null && !username.isBlank()) {
-            return username;
-        }
-
-        return claims.getSubject();
-    }
-
-    public boolean validateJwtToken(String authToken) {
-        try {
-            Jwts.parser().verifyWith((SecretKey) key()).build().parseSignedClaims(authToken);
-            return true;
-        } catch (MalformedJwtException e) {
-            logger.error("Invalid JWT token: {}", e.getMessage());
-        } catch (ExpiredJwtException e) {
-            logger.error("JWT token is expired: {}", e.getMessage());
-        } catch (UnsupportedJwtException e) {
-            logger.error("JWT token is unsupported: {}", e.getMessage());
-        } catch (IllegalArgumentException e) {
-            logger.error("JWT claims string is empty: {}", e.getMessage());
-        }
-        return false;
+        return generateMobileToken(p, jwtExpirationMs, webClaims);
     }
 
     private Key key() {

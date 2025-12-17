@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import javax.naming.AuthenticationException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -63,6 +64,17 @@ public class GlobalExceptionHandler {
                 HttpStatus.INTERNAL_SERVER_ERROR.value(),
                 "Internal server error",
                 List.of());
+    }
+
+    @ExceptionHandler(AuthenticationException.class)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    public ResponseError handleAuthenticationException(AuthenticationException e) {
+        logger.warn("Authentication failed: {}", e.getMessage());
+        return new ResponseError(
+                HttpStatus.UNAUTHORIZED.value(),
+                "Invalid credentials",
+                List.of()
+        );
     }
 
 }

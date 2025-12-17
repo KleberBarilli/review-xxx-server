@@ -10,7 +10,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Service;
 
-import java.time.Duration;
 import java.util.List;
 import java.util.Map;
 
@@ -20,7 +19,6 @@ public class MobileSignInUseCase {
     private final AuthenticationManager authenticationManager;
     private final JwtUtils jwtUtils;
 
-    // Apenas para informar o app; o TTL real do token hoje vem de jwtUtils.jwtExpirationMs
     @Value("${auth.mobile.ttl.days:60}")
     private int mobileTtlDays;
 
@@ -35,9 +33,8 @@ public class MobileSignInUseCase {
         );
         UserDetailsImpl p = (UserDetailsImpl) auth.getPrincipal();
 
-        // Usa a assinatura existente (1 argumento)
         long ttlMillis = java.time.Duration.ofDays(mobileTtlDays).toMillis();
-        String access = jwtUtils.generateToken(
+        String access = jwtUtils.generateMobileToken(
                 p,
                 ttlMillis,
                 Map.of("aud", "mobile", "typ", "access")
@@ -49,7 +46,7 @@ public class MobileSignInUseCase {
 
         return new AccessTokenResponse(
                 access,
-                mobileTtlDays * 24L * 3600L, // apenas informativo por enquanto
+                mobileTtlDays * 24L * 3600L,
                 new AccessTokenResponse.User(p.getId().toHexString(), p.getUsername(), roles)
         );
     }

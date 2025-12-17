@@ -23,5 +23,7 @@ services:
       - REDIS_URL=${REDIS_URL}
       - REDIS_PASSWORD=${REDIS_PASSWORD}
       - SPRING_DATA_REDIS_URL=${SPRING_DATA_REDIS_URL}
+      - AUTH_COOKIE_SECURE=${AUTH_COOKIE_SECURE}
+      - JWT_SECRET=${JWT_SECRET}
     volumes:
       - ./logs:/app/logs

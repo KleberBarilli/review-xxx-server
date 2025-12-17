@@ -19,16 +19,18 @@ public class UserDetailsImpl implements UserDetails {
     private String email;
     @JsonIgnore
     private String password;
+    private Integer tokenVersion;
 
     public UserDetailsImpl() {
     }
 
-    public UserDetailsImpl(ObjectId id, String name, String fullName, String email, String password) {
+    public UserDetailsImpl(ObjectId id, String name, String fullName, String email, String password,  Integer tokenVersion) {
         this.id = id;
         this.name = name;
         this.fullName = fullName;
         this.email = email;
         this.password = password;
+        this.tokenVersion = tokenVersion;
     }
 
     public static UserDetailsImpl build(User user) {
@@ -37,7 +39,8 @@ public class UserDetailsImpl implements UserDetails {
                 user.getName(),
                 user.getFullName(),
                 user.getEmail(),
-                user.getPassword()
+                user.getPassword(),
+                user.getTokenVersion()
 
         );
     }
@@ -103,6 +106,14 @@ public class UserDetailsImpl implements UserDetails {
 
     public String getEmail() {
         return email;
+    }
+
+    public Integer getTokenVersion() {
+        return tokenVersion;
+    }
+
+    public void setTokenVersion(Integer tokenVersion) {
+        this.tokenVersion = tokenVersion;
     }
 
     public void setEmail(String email) {

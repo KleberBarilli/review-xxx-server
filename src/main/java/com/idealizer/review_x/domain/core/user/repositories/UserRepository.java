@@ -8,6 +8,7 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
 import org.springframework.data.mongodb.repository.Update;
 
+import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 
@@ -38,5 +39,9 @@ public interface UserRepository extends MongoRepository<User, ObjectId> {
     @Query("{ '_id': ?0 }")
     @Update("{ '$set': { 'name': ?1 } }")
     long updateNameById(ObjectId userId, String newName);
+
+    @Query("{ '_id' : ?0 }")
+    @Update("{ '$set' : { 'last_login' : ?1 } }")
+    void updateLastLogin(ObjectId id, Instant lastLogin);
 
 }

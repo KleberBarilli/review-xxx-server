@@ -1,3 +1,9 @@
+
+auth:
+  jwtSecret: ${JWT_SECRET}
+  jwtExpirationDays: 7
+  cookieSecure: ${AUTH_COOKIE_SECURE:false}
+
 spring:
   cloud:
     aws:
@@ -6,8 +12,8 @@ spring:
       region:
         static: ${AWS_REGION}
       credentials:
-          access-key: ${AWS_ACCESS_KEY}
-          secret-key: ${AWS_SECRET_KEY}
+        access-key: ${AWS_ACCESS_KEY}
+        secret-key: ${AWS_SECRET_KEY}
   application:
     name: review-x
 
@@ -34,12 +40,6 @@ spring:
       auto-index-creation: true
       repositories:
         enabled: false
-    redis:
-      url: ${SPRING_DATA_REDIS_URL}
-      client-type: lettuce
-      connect-timeout: 3s
-      timeout: 5s
-
 
   main:
     lazy-initialization: true

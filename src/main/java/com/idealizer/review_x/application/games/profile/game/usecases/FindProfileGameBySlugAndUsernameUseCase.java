@@ -107,7 +107,7 @@ public class FindProfileGameBySlugAndUsernameUseCase {
                 pg.getStatus(),
                 pg.getFavoriteOrder(),
                 pg.getCreatedAt(),
-                reviewDto, // Pode ser null se não tiver review, conforme seu design original
+                reviewDto,
                 comments
         ));
     }

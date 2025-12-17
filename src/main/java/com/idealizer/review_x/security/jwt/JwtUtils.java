@@ -55,8 +55,6 @@ public class JwtUtils {
         return Jwts.parser().setSigningKey(key).build()
                 .parseClaimsJws(token).getBody().getSubject();
     }
-
-    // Recupera a versão do token para validar se foi revogado
     public Integer getTokenVersion(String token) {
         return (Integer) Jwts.parser().setSigningKey(key).build()
                 .parseClaimsJws(token).getBody().get("v");

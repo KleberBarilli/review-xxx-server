@@ -1,25 +1,21 @@
 package com.idealizer.review_x.security.jwt;
 
 import io.jsonwebtoken.*;
-import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseCookie;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Component;
-
 import com.idealizer.review_x.security.services.UserDetailsImpl;
 
 import javax.crypto.SecretKey;
 import java.nio.charset.StandardCharsets;
-import java.security.Key;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-
 
 @Component
 public class JwtUtils {
@@ -32,7 +28,7 @@ public class JwtUtils {
     @Value("${auth.cookieSecure:false}")
     private boolean cookieSecure;
 
-    @Value("${JWT_EXPIRATION_IN_MS}")
+    @Value("${JWT_EXPIRATION_IN_MS:3600000}")
     private long jwtExpirationMs;
 
     private SecretKey key;
@@ -52,35 +48,54 @@ public class JwtUtils {
     }
 
     public String getUserNameFromJwtToken(String token) {
-        return Jwts.parser().setSigningKey(key).build()
-                .parseClaimsJws(token).getBody().getSubject();
+        Claims claims = Jwts.parser()
+                .setSigningKey(key)
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
+
+        String username = claims.get("username", String.class);
+        return (username != null) ? username : claims.getSubject();
     }
+
     public Integer getTokenVersion(String token) {
-        return (Integer) Jwts.parser().setSigningKey(key).build()
-                .parseClaimsJws(token).getBody().get("v");
+        return (Integer) Jwts.parser()
+                .setSigningKey(key)
+                .build()
+                .parseClaimsJws(token)
+                .getBody()
+                .get("v");
     }
 
     public boolean validateJwtToken(String authToken) {
         try {
-            Jwts.parser().setSigningKey(key).build().parse(authToken);
+            Jwts.parser()
+                    .setSigningKey(key)
+                    .build()
+                    .parseClaimsJws(authToken);
             return true;
         } catch (Exception e) {
-            return false;
         }
+        return false;
     }
 
     public Date getIssuedAtDateFromJwtToken(String token) {
-        return Jwts.parser().setSigningKey(key).build()
-                .parseClaimsJws(token).getBody().getIssuedAt();
+        return Jwts.parser()
+                .setSigningKey(key)
+                .build()
+                .parseClaimsJws(token)
+                .getBody()
+                .getIssuedAt();
     }
+
     private String generateTokenFromUsername(UserDetailsImpl user) {
         return Jwts.builder()
                 .setSubject(user.getUsername())
                 .claim("id", user.getId())
-                .claim("v", user.getTokenVersion()) // Importante: Salva a versão
+                .claim("v", user.getTokenVersion())
                 .setIssuedAt(new Date())
                 .setExpiration(Date.from(Instant.now().plus(Duration.ofDays(jwtExpirationDays))))
-                .signWith(key, SignatureAlgorithm.HS512)
+                .signWith(key, SignatureAlgorithm.HS512) // Assinatura consistente
                 .compact();
     }
 
@@ -102,29 +117,29 @@ public class JwtUtils {
         if (p.getUsername() != null) claims.put("username", p.getUsername());
         if (p.getFullName() != null) claims.put("fullName", p.getFullName());
         if (p.getEmail() != null) claims.put("email", p.getEmail());
+
+        claims.put("v", p.getTokenVersion());
+
         if (p.getAuthorities() != null && !p.getAuthorities().isEmpty()) {
             claims.put("roles", p.getAuthorities().stream()
                     .map(GrantedAuthority::getAuthority).toList());
         }
+
         if (extraClaims != null && !extraClaims.isEmpty()) {
             claims.putAll(extraClaims);
         }
 
         return Jwts.builder()
-                .subject(p.getId().toHexString())
-                .issuedAt(Date.from(now))
-                .expiration(Date.from(exp))
-                .claims(claims)
-                .signWith(key())
+                .setSubject(p.getId().toHexString())
+                .setIssuedAt(Date.from(now))
+                .setExpiration(Date.from(exp))
+                .addClaims(claims)
+                .signWith(key, SignatureAlgorithm.HS512)
                 .compact();
     }
 
     public String generateMobileToken(UserDetailsImpl p) {
-        Map<String, Object> webClaims = Map.of("aud", "web", "typ", "access");
-        return generateMobileToken(p, jwtExpirationMs, webClaims);
-    }
-
-    private Key key() {
-        return Keys.hmacShaKeyFor(Decoders.BASE64.decode(jwtSecret));
+        Map<String, Object> mobileClaims = Map.of("aud", "mobile", "typ", "access");
+        return generateMobileToken(p, jwtExpirationMs, mobileClaims);
     }
 }

@@ -1,4 +1,3 @@
-// src/main/java/com/idealizer/review_x/infra/persistence/mongo/MongoSanityLogger.java
 package com.idealizer.review_x.infra.persistence.mongo;
 
 import com.mongodb.ConnectionString;

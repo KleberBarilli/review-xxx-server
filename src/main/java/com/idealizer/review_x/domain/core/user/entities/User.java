@@ -44,6 +44,8 @@ public class User {
     @Field(value = "updated_at")
     @LastModifiedDate
     private Instant updatedAt;
+    @Field(value = "last_login")
+    private Instant lastLogin;
 
 
     //Social links
@@ -65,6 +67,16 @@ public class User {
     private String youtubeUrl;
     @Field("discord_url")
     private String discordUrl;
+
+    public Integer tokenVersion = 0;
+
+    public Integer getTokenVersion() {
+        return tokenVersion;
+    }
+
+    public void setTokenVersion(Integer tokenVersion) {
+        this.tokenVersion = tokenVersion;
+    }
 
     public ObjectId getId() {
         return id;
@@ -248,6 +260,13 @@ public class User {
 
     public void setDiscordUrl(String discordUrl) {
         this.discordUrl = discordUrl;
+    }
+    public Instant getLastLogin() {
+        return lastLogin;
+    }
+
+    public void setLastLogin(Instant lastLogin) {
+        this.lastLogin = lastLogin;
     }
 
     @Override

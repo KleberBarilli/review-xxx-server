@@ -4,6 +4,7 @@ package com.idealizer.review_x;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.data.mongodb.config.EnableMongoAuditing;
+import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
 import org.springframework.boot.autoconfigure.mongo.MongoAutoConfiguration;
@@ -13,6 +14,7 @@ import org.springframework.boot.autoconfigure.data.mongo.MongoDataAutoConfigurat
 		MongoAutoConfiguration.class,
 		MongoDataAutoConfiguration.class
 })
+@EnableAsync
 @EnableMongoAuditing()
 @EnableScheduling
 public class ReviewXApplication {

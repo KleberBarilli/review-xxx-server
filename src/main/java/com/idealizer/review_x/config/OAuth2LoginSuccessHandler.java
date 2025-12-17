@@ -3,8 +3,6 @@ package com.idealizer.review_x.config;
 import com.idealizer.review_x.application.user.usecases.FindUserByEmailUseCase;
 import com.idealizer.review_x.application.user.usecases.SignUpUseCase;
 import com.idealizer.review_x.infra.http.controllers.user.dto.SignupRequestDTO;
-import com.idealizer.review_x.domain.core.tokens.CookieUtil;
-import com.idealizer.review_x.domain.core.tokens.RefreshService;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -26,8 +24,6 @@ public class OAuth2LoginSuccessHandler extends SavedRequestAwareAuthenticationSu
 
     private final SignUpUseCase signUpUseCase;
     private final FindUserByEmailUseCase findUserByEmailUseCase;
-    private final RefreshService refreshService;
-    private final CookieUtil cookies;
 
     @Value("${app.frontend.url}")
     private String frontendUrl;
@@ -39,14 +35,11 @@ public class OAuth2LoginSuccessHandler extends SavedRequestAwareAuthenticationSu
 
     public OAuth2LoginSuccessHandler(
             SignUpUseCase signUpUseCase,
-            FindUserByEmailUseCase findUserByEmailUseCase,
-            RefreshService refreshService,
-            CookieUtil cookies
+            FindUserByEmailUseCase findUserByEmailUseCase
     ) {
         this.signUpUseCase = signUpUseCase;
         this.findUserByEmailUseCase = findUserByEmailUseCase;
-        this.refreshService = refreshService;
-        this.cookies = cookies;
+
     }
 
     @Override
@@ -81,9 +74,7 @@ public class OAuth2LoginSuccessHandler extends SavedRequestAwareAuthenticationSu
             var user = findUserByEmailUseCase.execute(email)
                     .orElseThrow(() -> new IllegalStateException("User not found after signup"));
 
-            var pair = refreshService.issue(user.getId().toHexString(), null, refreshDays);
 
-            cookies.setRefreshCookie(response, pair.cookieValue(), refreshDays * 24 * 3600, COOKIE_DOMAIN);
 
             String targetUrl = UriComponentsBuilder.fromHttpUrl(frontendUrl + "/redirect")
                     .queryParam("is_new_user", isNewUser)

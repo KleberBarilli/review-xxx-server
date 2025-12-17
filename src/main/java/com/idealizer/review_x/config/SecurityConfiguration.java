@@ -1,7 +1,10 @@
 package com.idealizer.review_x.config;
 
+import com.idealizer.review_x.application.user.usecases.UpdateLastLoginUseCase;
 import com.idealizer.review_x.security.jwt.AuthEntryPointJwt;
 import com.idealizer.review_x.security.jwt.JwtAuthTokenFilter;
+import com.idealizer.review_x.security.jwt.JwtUtils;
+import com.idealizer.review_x.security.services.UserDetailsServiceImpl;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
@@ -20,27 +23,35 @@ import java.util.List;
 
 @Configuration
 @EnableWebSecurity
-
 public class SecurityConfiguration {
 
     private final AuthEntryPointJwt unauthorizedHandler;
-    private final JwtAuthTokenFilter jwtAuthTokenFilter;
-    private final @Lazy OAuth2LoginSuccessHandler oAuth2LoginSuccessHandler;
-    private final @Lazy OAuth2LoginFailureHandler oAuth2LoginFailureHandler;
-    private final RefreshOriginFilter refreshOriginFilter;
 
-    public SecurityConfiguration (AuthEntryPointJwt unauthorizedHandler,
-                                  JwtAuthTokenFilter jwtAuthTokenFilter,
-                                  OAuth2LoginSuccessHandler oAuth2LoginSuccessHandler,
-                                  OAuth2LoginFailureHandler oAuth2LoginFailureHandler,
-                                  RefreshOriginFilter refreshOriginFilter
-                                  ){
+    private final JwtUtils jwtUtils;
+    private final UserDetailsServiceImpl userDetailsService;
+    private final UpdateLastLoginUseCase updateLastLoginUseCase;
+
+    private final OAuth2LoginSuccessHandler oAuth2LoginSuccessHandler;
+    private final OAuth2LoginFailureHandler oAuth2LoginFailureHandler;
+
+    public SecurityConfiguration(AuthEntryPointJwt unauthorizedHandler,
+                                 JwtUtils jwtUtils,
+                                 UserDetailsServiceImpl userDetailsService,
+                                 UpdateLastLoginUseCase updateLastLoginUseCase,
+                                 @Lazy OAuth2LoginSuccessHandler oAuth2LoginSuccessHandler,
+                                 @Lazy OAuth2LoginFailureHandler oAuth2LoginFailureHandler) {
         this.unauthorizedHandler = unauthorizedHandler;
-        this.jwtAuthTokenFilter = jwtAuthTokenFilter;
+        this.jwtUtils = jwtUtils;
+        this.userDetailsService = userDetailsService;
+        this.updateLastLoginUseCase = updateLastLoginUseCase;
         this.oAuth2LoginSuccessHandler = oAuth2LoginSuccessHandler;
         this.oAuth2LoginFailureHandler = oAuth2LoginFailureHandler;
-        this.refreshOriginFilter = refreshOriginFilter;
+    }
 
+    // Criamos o Bean do filtro manualmente, passando as dependências
+    @Bean
+    public JwtAuthTokenFilter authenticationJwtTokenFilter() {
+        return new JwtAuthTokenFilter(jwtUtils, userDetailsService, updateLastLoginUseCase);
     }
 
     @Bean
@@ -62,7 +73,6 @@ public class SecurityConfiguration {
                                 "/api/users/signup",
                                 "/api/users/mobile/signin",
                                 "/api/auth/logout",
-                                "/api/auth/refresh",
                                 "/api/csrf-token"
                         ).permitAll()
                         .anyRequest().authenticated()
@@ -71,8 +81,9 @@ public class SecurityConfiguration {
                         .successHandler(oAuth2LoginSuccessHandler)
                         .failureHandler(oAuth2LoginFailureHandler)
                 );
-        http.addFilterBefore(refreshOriginFilter, UsernamePasswordAuthenticationFilter.class);
-        http.addFilterBefore(jwtAuthTokenFilter, UsernamePasswordAuthenticationFilter.class);
+
+        http.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
+
         return http.build();
     }
 

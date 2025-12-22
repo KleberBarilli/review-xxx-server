@@ -110,7 +110,7 @@ public class ProfileGameController {
     @PutMapping("/set/favorites")
     public void setFavorites(@AuthenticationPrincipal UserDetails user, @Valid @RequestBody UpdateFavoriteGameDTO dto) {
         ObjectId userId = ((UserDetailsImpl) user).getId();
-        updateFavoriteGamesUseCase.execute(userId, dto);
+        updateFavoriteGamesUseCase.execute(userId, user.getUsername(), dto);
     }
     @DeleteMapping("/review/{id}")
     public ResponseEntity<?> deleteReview(@AuthenticationPrincipal UserDetails user, @PathVariable String id) {

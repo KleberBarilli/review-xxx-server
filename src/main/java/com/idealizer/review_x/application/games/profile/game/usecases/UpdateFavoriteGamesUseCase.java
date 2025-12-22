@@ -29,7 +29,7 @@ public class UpdateFavoriteGamesUseCase {
         this.gameRepository = gameRepository;
     }
 
-    public void execute(ObjectId userId, UpdateFavoriteGameDTO dto) {
+    public void execute(ObjectId userId, String username, UpdateFavoriteGameDTO dto) {
 
         Set<Integer> uniqueOrders = new HashSet<>();
         Set<ObjectId> newFavoriteIds = new HashSet<>();
@@ -76,6 +76,7 @@ public class UpdateFavoriteGamesUseCase {
                 CreateUpdateProfileGameCommand profileGameCommand = new CreateUpdateProfileGameCommand();
                 profileGameCommand.setGameId(gameId);
                 profileGameCommand.setUserId(userId);
+                profileGameCommand.setUsername(username);
                 profileGameCommand.setFavorite(true);
                 profileGameCommand.setFavoriteOrder(order);
                 profileGameCommand.setGameName(game.getName());

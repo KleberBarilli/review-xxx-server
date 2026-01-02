@@ -74,7 +74,10 @@ public class FindProfileGameBySlugAndUsernameUseCase {
                 var list = commentRepository.findAllByTargetIdAndTargetTypeAndDeletedAtIsNull(
                         reviewIdObj, CommentType.REVIEW);
 
+
+
                 comments = list.stream().map(c -> new PublicProfileGameDetailedResponse.Comment(
+                        c.getId().toString(),
                         c.getUsername(),
                         c.getFullName(),
                         c.getContent(),

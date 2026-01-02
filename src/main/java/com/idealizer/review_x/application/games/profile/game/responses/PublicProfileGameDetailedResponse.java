@@ -42,6 +42,7 @@ public record PublicProfileGameDetailedResponse(
     ) {}
 
     public record Comment(
+            String id,
             String username,
             String fullName,
             String content,

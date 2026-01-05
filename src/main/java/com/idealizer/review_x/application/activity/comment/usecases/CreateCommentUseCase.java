@@ -13,11 +13,9 @@ public class CreateCommentUseCase {
         this.commentRepository = commentRepository;
     }
 
-    public void execute(ObjectId userId,String username, String fullName, ObjectId targetId, CommentType targetType, String content, Boolean spoiler) {
+    public void execute(ObjectId userId, ObjectId targetId, CommentType targetType, String content, Boolean spoiler) {
         Comment comment = new Comment();
         comment.setUserId(userId);
-        comment.setUsername(username);
-        comment.setFullName(fullName);
         comment.setTargetId(targetId);
         comment.setTargetType(targetType);
         comment.setContent(content);

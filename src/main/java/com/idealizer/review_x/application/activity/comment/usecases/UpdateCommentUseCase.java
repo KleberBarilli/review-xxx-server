@@ -20,8 +20,6 @@ public class UpdateCommentUseCase {
         Comment c = commentRepository.findByIdAndUserIdAndDeletedAtIsNull(id, userId)
                 .orElseThrow(() -> new NotFoundException("Comment not found"));
         c.setContent(content);
-        c.setUsername(username);
-        c.setFullName(fullName);
         c.setSpoiler(spoiler);
         c.setEditedAt(Instant.now());
         commentRepository.save(c);

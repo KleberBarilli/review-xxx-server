@@ -33,6 +33,9 @@ public class FindUserResponse {
     private String youtubeUrl;
     private String discordUrl;
 
+    //utils
+    private boolean isFollowing;
+    private boolean isMe;
 
 
 
@@ -45,6 +48,22 @@ public class FindUserResponse {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public void setIsFollowing(boolean isFollowing) {
+        this.isFollowing = isFollowing;
+    }
+
+    public boolean isFollowing() {
+        return isFollowing;
+    }
+
+    public boolean isMe() {
+        return isMe;
+    }
+
+    public void setIsMe(boolean isMe) {
+        this.isMe = isMe;
     }
 
     public String getUsername() {

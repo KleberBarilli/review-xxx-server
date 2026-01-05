@@ -140,7 +140,6 @@ public class ProfileGameRepositoryImpl implements ProfileGameRepositoryCustom {
 
         base.add(Aggregation.unwind("$events"));
 
-        // 3. Filtros globais (Ano, Tipo)
         if (f != null) {
             if (f.types() != null && !f.types().isEmpty()) {
                 base.add(Aggregation.match(Criteria.where("events.type").in(f.types())));

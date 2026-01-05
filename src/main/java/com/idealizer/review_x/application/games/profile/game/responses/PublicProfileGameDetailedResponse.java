@@ -8,6 +8,7 @@ import java.time.Instant;
 import java.util.List;
 
 public record PublicProfileGameDetailedResponse(
+        String id,
         String gameId,
         String gameName,
         String gameSlug,
@@ -43,9 +44,10 @@ public record PublicProfileGameDetailedResponse(
 
     public record Comment(
             String id,
-            String username,
-            String fullName,
             String content,
+            String authorUsername,
+            String authorFullName,
+            String authorAvatar,
             Boolean spoiler,
             long likeCount,
             Instant createdAt,

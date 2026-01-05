@@ -123,13 +123,14 @@ public class UserController {
             @RequestParam(name = "playing", defaultValue = "false") boolean playing,
             @AuthenticationPrincipal UserDetails userDetails) {
         FindUserArgsDTO args = new FindUserArgsDTO(favorite, lastReviews, lastActivities,  mastered, playing);
-        FindUserResponse user = findUserByNameUseCase.execute(userDetails.getUsername(), args);
+        FindUserResponse user = findUserByNameUseCase.execute(userDetails.getUsername(), args, ((UserDetailsImpl) userDetails).getId());
 
         return ResponseEntity.ok(user);
     }
 
     @GetMapping("/public/u/{username}")
     public ResponseEntity<?> findByUsername(
+            @AuthenticationPrincipal UserDetails userLogged,
             @PathVariable String username,
             @RequestParam(name = "favorite", defaultValue = "false") boolean favorite,
             @RequestParam(name = "lastReviews", defaultValue = "false") boolean lastReviews,
@@ -137,12 +138,19 @@ public class UserController {
             @RequestParam(name = "mastered", defaultValue = "false") boolean mastered,
             @RequestParam(name = "playing", defaultValue = "false") boolean playing
     ) {
+
+        ObjectId userLoggedId = null;
+        if (userLogged instanceof UserDetailsImpl userImpl) {
+            userLoggedId = userImpl.getId();
+        }
+
         FindUserArgsDTO args = new FindUserArgsDTO(favorite, lastReviews, lastActivities, mastered, playing);
-        FindUserResponse user = findUserByNameUseCase.execute(username, args);
+        FindUserResponse user = findUserByNameUseCase.execute(username, args, userLoggedId);
 
         if(user == null) {
             return ResponseEntity.notFound().build();
         }
+
 
         return ResponseEntity.ok(user);
     }

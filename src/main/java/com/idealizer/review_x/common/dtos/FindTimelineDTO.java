@@ -8,5 +8,6 @@ public record FindTimelineDTO(
         String sort,
         String order,
         Integer year,
-        List<String> types
+        List<String> types,
+        boolean onlyReview
 ) {}

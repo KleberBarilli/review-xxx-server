@@ -10,5 +10,8 @@ import java.util.Optional;
 
 public interface CommentRepository extends MongoRepository<Comment, ObjectId> {
     Optional<Comment> findByIdAndUserIdAndDeletedAtIsNull(ObjectId id, ObjectId userId);
-    List<Comment> findAllByTargetIdAndTargetTypeAndDeletedAtIsNull(ObjectId targetId, CommentType targetType);
+    List<Comment> findTop20ByTargetIdAndTargetTypeAndDeletedAtIsNullOrderByCreatedAtDesc(
+            ObjectId targetId,
+            CommentType targetType
+    );
 }

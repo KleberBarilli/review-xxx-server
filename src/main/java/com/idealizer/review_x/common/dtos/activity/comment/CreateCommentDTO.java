@@ -13,5 +13,6 @@ public record CreateCommentDTO(
         @Size(min = 1, max = 2000)
         String content,
         @Schema(description = "Indicates if the comment contains spoilers")
-        Boolean spoiler) {
+        Boolean spoiler
+        ) {
 }
